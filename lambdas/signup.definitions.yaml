@@ -1,0 +1,88 @@
+implementationFiles:
+    signup:
+        - signup.js
+linkFiles:
+    common:
+        - PasswordHash.js
+        - UserIdentity.js
+        - UniqueID.js
+        - APIParamVerify.js
+        - node_modules
+AWSCLIProfile: adminuser
+lambdaInfo:
+    awsResources:
+        -
+            type: dynamodbInfo
+            resourceName: users
+        -
+            type: dynamodbInfo
+            resourceName: userEmail
+        -
+            type: cognitoIdentityPoolInfo
+            resourceName: testPool
+    roleName: userCreator
+    functionName: signup
+    region: us-east-1
+    language: nodejs4.3
+    eventParamPaths:
+        /signup:
+            post:
+                type: object
+                required:
+                    - email
+                    - password
+                properties:
+                    email: {type: string}
+                    password: {type: string}
+apiInfo:
+    paths:
+        /signup:
+            post:
+                description: 'Signup to the application'
+                operationId: signup
+                produces:
+                    - application/json
+                parameters:
+                    - {name: authRequest, in: body, required: true, schema: {$ref: '#/definitions/authRequest'}}
+                responses:
+                    '200': {description: ok, schema: {$ref: '#/definitions/credentials'}}
+                    '400': {description: '400 response', schema: {$ref: '#/definitions/Error'}}
+                    '404': {description: '400 response', schema: {$ref: '#/definitions/Error'}}
+                    '405': {description: '400 response', schema: {$ref: '#/definitions/Error'}}
+                x-amazon-apigateway-integration:
+                    credentials: lambdaExecuteRole
+                    responses: {default: {statusCode: '200', responseTemplates: {application/json: __passthrough__}}, '.*httpStatus\":400.*': {statusCode: '400', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":404.*': {statusCode: '404', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":405.*': {statusCode: '405', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}}
+definitions:
+    authRequest:
+        type: object
+        required:
+            - email
+            - password
+        properties:
+            email:
+                type: string
+            password:
+                type: string
+    credentials:
+        type: object
+        required:
+            - IdentityId
+            - Token
+        properties:
+            IdentityId:
+                type: string
+            Token:
+                type: string
+    Error:
+        type: object
+        required:
+            - message
+            - type
+            - request-id
+        properties:
+            message:
+                type: string
+            type:
+                type: string
+            request-id:
+                type: string

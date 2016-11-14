@@ -1,0 +1,113 @@
+enviroment:
+    AWSCLIUserProfile: adminuser
+cognitoIdentityPoolInfo:
+    testPool:
+        lambdaAliases:
+            resource: IDENTITY_POOL
+        authProviders:
+            custom:
+                developerProvider: testProvider
+        allowUnauthedIdentities: false
+lambdaInfo:
+    roleDefinitions:
+        userConsumer:
+            policyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - {Effect: Allow, Principal: {Service: lambda.amazonaws.com}, Action: 'sts:AssumeRole'}
+            policies:
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+                    name: AmazonDynamoDBFullAccess
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/AmazonCognitoReadOnly'
+                    name: AmazonCognitoReadOnly
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+                    name: AWSLambdaBasicExecutionRole
+        userCreator:
+            policyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - {Effect: Allow, Principal: {Service: lambda.amazonaws.com}, Action: 'sts:AssumeRole'}
+            policies:
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+                    name: AmazonDynamoDBFullAccess
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/AmazonCognitoPowerUser'
+                    name: AmazonCognitoPowerUser
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+                    name: AWSLambdaBasicExecutionRole
+apiInfo:
+    roleDefinitions:
+        lambdaExecuteRole:
+            policyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - {Effect: Allow, Principal: {Service: apigateway.amazonaws.com}, Action: 'sts:AssumeRole'}
+            policies:
+                -
+                    arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
+                    name: LambdaInvocation
+    defaultDeployStage: dev
+    region: us-east-1
+    AWSSwaggerHeader:
+        swagger: '2.0'
+        info:
+            version: 1.0.0
+            title: 'Swagger Auth'
+            description: 'Developer Provider Auth'
+            termsOfService: 'http://noneyet.com/'
+            contact:
+                name: HN
+                email: horsenoggin@gmail.com
+                url: 'http://horsenoggin.some'
+            license:
+                name: MIT
+                url: 'http://opensource.org/licenses/MIT'
+        schemes:
+            - https
+        consumes:
+            - application/json
+        produces:
+            - application/json
+dynamodbInfo:
+    users:
+        lambdaAliases:
+            resource: USERS
+            attributes:
+                ID: id
+                EMAIL: email
+                LAST_LOGIN_TIMESTAMP: lastLoginTimestamp
+                PASSWORD: password
+                SIGNUP_TIMESTAMP: signupTimestamp
+        attributeDefinitions:
+            -
+                AttributeName: id
+                AttributeType: S
+        keySchema:
+            -
+                AttributeName: id
+                KeyType: HASH
+        provisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+    userEmail:
+        lambdaAliases:
+            resource: EMAILS
+            attributes:
+                EMAIL: email
+                ID: id
+        attributeDefinitions:
+            -
+                AttributeName: email
+                AttributeType: S
+        keySchema:
+            -
+                AttributeName: email
+                KeyType: HASH
+        provisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5

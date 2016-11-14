@@ -1,0 +1,27 @@
+{
+  "ecmaVersion": 6,
+  "libs": [],
+  "plugins": {
+    "doc_comment": {
+      "fullDocs": true,
+      "strong": true
+    },
+    "node": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "node_resolve": {},
+    "modules": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "requirejs": {
+      "baseURL": "",
+      "paths": "",
+      "override": ""
+    },
+    "commonjs": {}
+  }
+}
