@@ -192,7 +192,7 @@ class AWSRequest extends EventEmitter {
     this.response.errorId = "That String";
     var regExp = /\(([^)]+)\)/;
     var matches = regExp.exec(this.response.stderr);
-    if (matches.length > 1) {
+    if (matches && matches.length > 1) {
       this.response.errorId = matches[1];
     } else {
       this.response.errorId = "unknown"

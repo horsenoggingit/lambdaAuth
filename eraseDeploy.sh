@@ -15,3 +15,4 @@ AWSTools/deleteIdentityPool.js
 # remove roles
 AWSTools/deleteRole.js --roleType api
 AWSTools/deleteRole.js --roleType lambda
+AWSTools/deleteRole.js --roleType cognito

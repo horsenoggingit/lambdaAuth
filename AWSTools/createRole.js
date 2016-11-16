@@ -14,7 +14,7 @@ var argv = require('yargs')
 .default('s','./base.definitions.yaml')
 .alias('t', 'roleType')
 .describe('t', 'which roles to create [api | lambda]')
-.choices('t', ['api', 'lambda'])
+.choices('t', ['api', 'lambda', 'cognito'])
 .demand(['t'])
 .help('h')
 .alias('h', 'help')
@@ -32,6 +32,9 @@ switch (argv.roleType) {
     break;
   case 'lambda':
     roleBase = 'lambdaInfo';
+  break;
+  case 'cognito':
+    roleBase = 'cognitoIdentityPoolInfo';
   break;
   default:
 }

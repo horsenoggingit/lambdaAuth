@@ -1,13 +1,31 @@
 enviroment:
     AWSCLIUserProfile: adminuser
 cognitoIdentityPoolInfo:
-    testPool:
-        lambdaAliases:
-            resource: IDENTITY_POOL
-        authProviders:
-            custom:
-                developerProvider: testProvider
-        allowUnauthedIdentities: false
+    roleDefinitions:
+        apiAccessRole:
+            policyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - {Effect: Allow, Principal: {Service: apigateway.amazonaws.com}, Action: 'sts:AssumeRole'}
+            policies:
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
+                    name: AmazonAPIGatewayInvokeFullAccess
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs'
+                    name: AmazonAPIGatewayPushToCloudWatchLogs
+            arnRole: 'arn:aws:iam::940223146162:role/apiAccessRole'
+    identityPools:
+        testPool:
+            lambdaAliases:
+                resource: IDENTITY_POOL
+            authProviders:
+                custom:
+                    developerProvider: testProvider
+            allowUnauthedIdentities: false
+            roles:
+                authenticated: apiAccessRole
+            identityPoolId: 'us-east-1:5a3d8f64-6f83-4feb-ae76-99f8e0697067'
 lambdaInfo:
     roleDefinitions:
         userConsumer:
@@ -25,6 +43,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/userConsumer'
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -40,6 +59,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/userCreator'
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
@@ -51,6 +71,7 @@ apiInfo:
                 -
                     arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
                     name: LambdaInvocation
+            arnRole: 'arn:aws:iam::940223146162:role/lambdaExecuteRole'
     defaultDeployStage: dev
     region: us-east-1
     AWSSwaggerHeader:
@@ -73,6 +94,13 @@ apiInfo:
             - application/json
         produces:
             - application/json
+    awsId: ko1e75elqh
+    lastDeploy:
+        uploadResult:
+            description: 'Yet another deploy...'
+            id: h6c6mw
+            createdDate: 1479256919
+        invokeURL: 'https://ko1e75elqh.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     users:
         lambdaAliases:
@@ -94,6 +122,25 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/users'
+            AttributeDefinitions:
+                -
+                    AttributeName: id
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: users
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: id
+            ItemCount: 0
+            CreationDateTime: 1479145991.442
     userEmail:
         lambdaAliases:
             resource: EMAILS
@@ -111,3 +158,22 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/userEmail'
+            AttributeDefinitions:
+                -
+                    AttributeName: email
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: userEmail
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: email
+            ItemCount: 0
+            CreationDateTime: 1479145991.621

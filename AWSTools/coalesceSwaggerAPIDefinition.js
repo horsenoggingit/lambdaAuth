@@ -47,6 +47,8 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
   }
   swaggerBaseFile.paths = {};
   swaggerBaseFile.definitions = {};
+  swaggerBaseFile.securityDefinitions = {};
+
   for (var index = 0; index < files.length; index++) {
     var fileName = files[index];
     var fileNameComponents = fileName.split('.');
@@ -65,6 +67,12 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
       if (typeof definitions.definitions == 'object') {
         Object.keys(definitions.definitions).forEach(function(key) {
           swaggerBaseFile.definitions[key] = definitions.definitions[key];
+        });
+      }
+      // I'm going to assume that all security defitions are going to be under "definitions"
+      if (typeof definitions.securityDefinitions == 'object') {
+        Object.keys(definitions.securityDefinitions).forEach(function(key) {
+          swaggerBaseFile.securityDefinitions[key] = definitions.securityDefinitions[key];
         });
       }
     }

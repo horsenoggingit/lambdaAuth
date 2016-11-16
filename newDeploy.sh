@@ -3,6 +3,7 @@
 # create roles and attach policies
 AWSTools/createRole.js --roleType lambda
 AWSTools/createRole.js --roleType api
+AWSTools/createRole.js --roleType cognito
 
 # create storage (db and identity pool)
 AWSTools/createDynamodb.js

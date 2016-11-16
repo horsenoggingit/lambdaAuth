@@ -34,6 +34,7 @@ lambdaInfo:
                 properties:
                     email: {type: string}
                     password: {type: string}
+    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:signup'
 apiInfo:
     paths:
         /signup:

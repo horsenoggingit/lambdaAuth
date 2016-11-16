@@ -30,22 +30,23 @@ if (!awscommon.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s
   console.log("using \"default\" AWSCLIUserProfile");
 }
 
-awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
+awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
-var numIdentityPools = Object.keys(baseDefinitions.cognitoIdentityPoolInfo).length;
+var numIdentityPools = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).length;
 var successDecCount = numIdentityPools;
 
 // first lets get the identity pools to see if one with our name exists already
 getIdentityPools(function (serverIdentityPools) {
   // now see which ones are valid and which ones need to be createed
   var poolCreateRequests = [];
-  var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo).forEach(function (identityPoolName) {
-    var poolDef = baseDefinitions.cognitoIdentityPoolInfo[identityPoolName];
+  var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolName) {
+    var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName];
     if (serverIdentityPools) {
       for (var index = 0; index < serverIdentityPools.IdentityPools.length; index ++) {
         if (identityPoolName === serverIdentityPools.IdentityPools[index].IdentityPoolName) {
-          baseDefinitions.cognitoIdentityPoolInfo[identityPoolName].identityPoolId = serverIdentityPools.IdentityPools[index].IdentityPoolId;
+          baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].identityPoolId = serverIdentityPools.IdentityPools[index].IdentityPoolId;
           console.log("Found identity pool \"" + identityPoolName + "\" on aws.");
+          setRoles(identityPoolName);
           numIdentityPools --;
           successDecCount --;
           if (numIdentityPools == 0) {
@@ -58,8 +59,8 @@ getIdentityPools(function (serverIdentityPools) {
       }
     }
     // validate to make sure we have everything
-    awscommon.verifyPath(poolDef, ['allowUnauthedIdentities'], 'b', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
-    awscommon.verifyPath(poolDef, ['authProviders'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
+    awscommon.verifyPath(poolDef, ['allowUnauthedIdentities'], 'b', "identity pool definition \"" + identityPoolName + "\"").exitOnError();
+    awscommon.verifyPath(poolDef, ['authProviders'], 'o', "identity pool definition \"" + identityPoolName + "\"").exitOnError();
 
     var params={
         'identity-pool-name': {type: 'string', value: identityPoolName},
@@ -84,8 +85,14 @@ getIdentityPools(function (serverIdentityPools) {
         returnSchema:'json',
         returnValidation:[{path:['IdentityPoolId'], type:'s'}],
         parameters:params
+      },
+      function (request) {
+        if (!request.response.error) {
+          // set roles if present
+          setRoles(request.context.identityPoolName);
+        }
       })
-    )
+    );
   });
   AwsRequest.createBatch(poolCreateRequests, function (batch) {
     batch.requestArray.forEach(function (request) {
@@ -95,7 +102,7 @@ getIdentityPools(function (serverIdentityPools) {
       } else {
         console.log("Successfully createed pool " + request.context.poolName + ".");
         successDecCount --;
-        baseDefinitions.cognitoIdentityPoolInfo[request.context.poolName]['identityPoolId'] = request.response.parsedJSON.IdentityPoolId;
+        baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName]['identityPoolId'] = request.response.parsedJSON.IdentityPoolId;
       }
     })
     writeout();
@@ -118,6 +125,7 @@ function writeout() {
     if (successDecCount != 0) {
       console.log("Some creation operations failed.")
     }
+
     console.log("Done.")
   });
 }
@@ -141,4 +149,34 @@ function getIdentityPools (doneCallback) {
     }
     doneCallback(request.response.parsedJSON);
   }).startRequest();
+}
+
+function setRoles(identityPoolName){
+  if (!awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools', identityPoolName, 'roles'], 'o',"").isVerifyError) {
+    var roles = {};
+    // TODO GET ROLE ARN!!!
+    roles = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].roles;
+    var identityPoolRoles = {};
+    Object.keys(roles).forEach(function (roleType) {
+      identityPoolRoles[roleType] = baseDefinitions.cognitoIdentityPoolInfo.roleDefinitions[roles[roleType]].arnRole;
+    })
+    AwsRequest.createRequest({
+      serviceName: 'cognito-identity',
+      functionName: 'set-identity-pool-roles',
+      context: {poolName: identityPoolName},
+      returnSchema:'none',
+      parameters: {
+        'identity-pool-id' : {type:'string', value:baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].identityPoolId},
+        'roles' : {type: 'JSONObject', value:identityPoolRoles},
+        'profile': {type: 'string', value:AWSCLIUserProfile}
+      }
+    },
+    function (roleReq) {
+      if (roleReq.response.error) {
+        throw roleReq.response.error;
+      } else {
+        console.log("Set Roles for \"" + roleReq.context.poolName + "\"");
+      }
+    }).startRequest();
+  }
 }

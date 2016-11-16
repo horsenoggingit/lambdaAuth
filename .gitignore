@@ -36,3 +36,13 @@ lambdas/signup/UniqueID.js
 lambdas/signup/UserIdentity.js
 
 swaggerAPI.yaml
+
+base.definitions.yaml 2.yaml
+
+base.definitions.yaml 3.yaml
+
+lambdas/userMe.definitions.yaml.old
+
+lambdas/userMe.zip
+
+lambdas/userMe/AWSConstants.json
