@@ -48,6 +48,12 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
   swaggerBaseFile.paths = {};
   swaggerBaseFile.definitions = {};
   swaggerBaseFile.securityDefinitions = {};
+  if (typeof baseDefinitions.apiInfo.sharedDefinitions == 'object') {
+    swaggerBaseFile.definitions = baseDefinitions.apiInfo.sharedDefinitions;
+  }
+  if (typeof baseDefinitions.apiInfo.sharedSecurityDefinitions == 'object') {
+    swaggerBaseFile.securityDefinitions = baseDefinitions.apiInfo.sharedSecurityDefinitions;
+  }
 
   for (var index = 0; index < files.length; index++) {
     var fileName = files[index];

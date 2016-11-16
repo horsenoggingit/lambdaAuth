@@ -33,9 +33,3 @@ apiInfo:
                     responses: {default: {statusCode: '200', responseTemplates: {application/json: __passthrough__}}, '.*httpStatus\":400.*': {statusCode: '400', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":404.*': {statusCode: '404', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":405.*': {statusCode: '405', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}}
                 security:
                     - sigv4: []
-securityDefinitions:
-    sigv4:
-        type: "apiKey"
-        name: "Authorization"
-        in: "header"
-        x-amazon-apigateway-authtype: "awsSigv4"

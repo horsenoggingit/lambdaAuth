@@ -51,37 +51,3 @@ apiInfo:
                 x-amazon-apigateway-integration:
                     credentials: lambdaExecuteRole
                     responses: {default: {statusCode: '200', responseTemplates: {application/json: __passthrough__}}, '.*httpStatus\":400.*': {statusCode: '400', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":404.*': {statusCode: '404', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":405.*': {statusCode: '405', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}}
-definitions:
-    authRequest:
-        type: object
-        required:
-            - email
-            - password
-        properties:
-            email:
-                type: string
-            password:
-                type: string
-    credentials:
-        type: object
-        required:
-            - IdentityId
-            - Token
-        properties:
-            IdentityId:
-                type: string
-            Token:
-                type: string
-    Error:
-        type: object
-        required:
-            - message
-            - type
-            - request-id
-        properties:
-            message:
-                type: string
-            type:
-                type: string
-            request-id:
-                type: string

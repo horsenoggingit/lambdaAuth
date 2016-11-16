@@ -94,6 +94,46 @@ apiInfo:
             - application/json
         produces:
             - application/json
+    sharedDefinitions:
+        authRequest:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+        credentials:
+            type: object
+            required:
+                - IdentityId
+                - Token
+            properties:
+                IdentityId:
+                    type: string
+                Token:
+                    type: string
+        Error:
+            type: object
+            required:
+                - message
+                - type
+                - request-id
+            properties:
+                message:
+                    type: string
+                type:
+                    type: string
+                request-id:
+                    type: string
+    sharedSecurityDefinitions:
+        sigv4:
+            type: "apiKey"
+            name: "Authorization"
+            in: "header"
+            x-amazon-apigateway-authtype: "awsSigv4"
     awsId: ko1e75elqh
     lastDeploy:
         uploadResult:
