@@ -24,7 +24,7 @@ apiInfo:
                 produces:
                     - application/json
                 responses:
-                    '200': {description: ok, schema: {$ref: '#/definitions/credentials'}}
+                    '200': {description: ok, schema: {$ref: '#/definitions/user'}}
                     '400': {description: '400 response', schema: {$ref: '#/definitions/Error'}}
                     '404': {description: '404 response', schema: {$ref: '#/definitions/Error'}}
                     '405': {description: '405 response', schema: {$ref: '#/definitions/Error'}}

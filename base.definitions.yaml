@@ -95,6 +95,13 @@ apiInfo:
         produces:
             - application/json
     sharedDefinitions:
+        user:
+            type: object
+            required:
+                - email
+            properties:
+                email:
+                    type: string        
         authRequest:
             type: object
             required:

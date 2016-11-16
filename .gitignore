@@ -46,3 +46,9 @@ lambdas/userMe.definitions.yaml.old
 lambdas/userMe.zip
 
 lambdas/userMe/AWSConstants.json
+
+lambdas/node_modules
+
+node_modules
+
+lambdas/userMe/APIParamVerify.js
