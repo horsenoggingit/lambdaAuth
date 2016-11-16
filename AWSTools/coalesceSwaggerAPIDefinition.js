@@ -48,6 +48,9 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
   swaggerBaseFile.paths = {};
   swaggerBaseFile.definitions = {};
   swaggerBaseFile.securityDefinitions = {};
+  // see if there are any common definitions and use them to start.
+  // individual paths can also create their own defitions, but these will
+  // overwrite the existing ones.
   if (typeof baseDefinitions.apiInfo.sharedDefinitions == 'object') {
     swaggerBaseFile.definitions = baseDefinitions.apiInfo.sharedDefinitions;
   }
