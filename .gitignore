@@ -52,3 +52,13 @@ lambdas/node_modules
 node_modules
 
 lambdas/userMe/APIParamVerify.js
+
+clients/angular/lambda-auth/app/aws/apiGateway-js-sdk
+
+clients/angular/lambda-auth/app/aws/api.zip
+
+clients/angular/lambda-auth/app/bower_components
+
+clients/angular/lambda-auth/node_modules
+
+

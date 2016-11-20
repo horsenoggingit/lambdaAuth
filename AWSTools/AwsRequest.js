@@ -85,6 +85,7 @@ class AWSRequest extends EventEmitter {
     apply(this,requestObject,{'serviceName':{type:'s',required:true},
                              'functionName':{type:'s',required:true},
                              'parameters':{type:'o',required:true},
+                             'outFile':{type:'s', required:false},
                              'context':{type:'o',required:false},
                              'returnSchema':{type:{oneOfs:['none','json']},required:true},
                              'returnValidation':{type:'a',required:false}});
@@ -142,6 +143,10 @@ class AWSRequest extends EventEmitter {
       paramStringArray.push(paramString);
     }
     var command = "aws " + [this.serviceName, this.functionName].concat(paramStringArray).join(' ');
+
+    if (this.outFile) {
+      command += " '" + this.outFile + "'"
+    }
     this.awsCommand = command;
     this.executeRequest();
   }

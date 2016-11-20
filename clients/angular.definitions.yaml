@@ -1,0 +1,5 @@
+apiInfo:
+  clientSDK:
+    downloadPath: 'angular/lambda-auth/app/aws'
+    downloadFilename: "aws-sdk.js"
+    sdkType: javascript

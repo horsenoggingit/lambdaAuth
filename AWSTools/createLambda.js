@@ -26,19 +26,16 @@ var yargs = require('yargs')
 var argv = yargs.argv;
 
 if (!fs.existsSync(argv.baseDefinitionsFile)) {
-  console.log("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.")
   yargs.showHelp("log");
-  process.exit(1);
+  throw new Error("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.");
 }
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
-  console.log("Lambda's path \"" + argv.lambdasPath + "\" not found.")
   yargs.showHelp("log");
-  process.exit(1);
+  throw new Error("Lambda's path \"" + argv.lambdaDefinitionsDir + "\" not found.");
 }
-
-var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 var AWSCLIUserProfile = "default"
 if (typeof baseDefinitions.enviroment != 'object') {
