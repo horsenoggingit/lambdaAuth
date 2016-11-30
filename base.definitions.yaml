@@ -161,8 +161,8 @@ apiInfo:
     lastDeploy:
         uploadResult:
             description: 'Yet another deploy...'
-            id: lzowu9
-            createdDate: 1480547299
+            id: fn7s7g
+            createdDate: 1480549375
         invokeURL: 'https://un2k185gjj.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     users:

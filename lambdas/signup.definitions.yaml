@@ -80,10 +80,24 @@ apiInfo:
                         description: '404 response'
                         schema:
                             $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
                     '405':
                         description: '405 response'
                         schema:
                             $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
                     '409':
                         description: '409 response'
                         schema:
@@ -118,10 +132,18 @@ apiInfo:
                             statusCode: '404'
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":405.*':
                             statusCode: '405'
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":409.*':
                             statusCode: '409'
                             responseTemplates:
