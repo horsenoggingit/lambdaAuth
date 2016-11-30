@@ -112,7 +112,7 @@ getIdentityPools(function (serverIdentityPools) {
 function writeout() {
   // now delete role
   awscommon.updateFile(argv.baseDefinitionsFile, function () {
-    return YAML.stringify(baseDefinitions, 6);
+    return YAML.stringify(baseDefinitions, 15);
   }, function (backupErr, writeErr) {
     if (backupErr) {
       console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". pool id was not updated.");

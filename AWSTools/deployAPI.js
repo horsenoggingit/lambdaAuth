@@ -95,7 +95,7 @@ const child = exec('aws ' + params.join(" "), (err, stdout, stderr) => {
         baseDefinitions.apiInfo.lastDeploy["uploadResult"] = parsedOutput;
         baseDefinitions.apiInfo.lastDeploy["invokeURL"] = 'https://' + baseDefinitions.apiInfo.awsId + ".execute-api." + baseDefinitions.apiInfo.region + ".amazonaws.com/" + argv.stageName;
         console.log("Invocation URL: \"" + baseDefinitions.apiInfo.lastDeploy["invokeURL"] + "\"");
-        return YAML.stringify(baseDefinitions, 6);
+        return YAML.stringify(baseDefinitions, 15);
       }, function (backupErr, writeErr) {
         if (backupErr) {
           console.log(backupErr);

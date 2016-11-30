@@ -40,7 +40,6 @@ exports.handler = (event, context, callback) => {
     Key:{}
   };
   params.Key[AWSConstants.DYNAMO_DB.EMAILS.EMAIL] =  event.email;
-
   docClient.get(params, function (err, data) {
     if (err) {
       callback(err);
@@ -48,7 +47,14 @@ exports.handler = (event, context, callback) => {
       // it we get some objects back from the email table then the users has already signed up
       if (typeof data.Item == "object") {
         console.log(data)
-        callback(new Error("item exists"));
+        var errorObject = {
+          requestId: context.awsRequestId,
+          errorType : "Conflict",
+          httpStatus : 409,
+          message : "Item exists"
+        };
+        console.log(errorObject);
+        callback(JSON.stringify(errorObject));
       } else {
         // generate a unique id for the user and create table items accordingly
         UniqueID.getUniqueId(AWSConstants.DYNAMO_DB.USERS.name, docClient, function(err, newID) {

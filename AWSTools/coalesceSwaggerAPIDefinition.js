@@ -94,7 +94,7 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
   }
   // now that we have a full file, lets
 
-  fs.writeFile(argv.outputFilename, YAML.stringify(swaggerBaseFile, 6), function (err) {
+  fs.writeFile(argv.outputFilename, YAML.stringify(swaggerBaseFile, 15), function (err) {
     if (err) {
       console.log(err);
     } else {
@@ -118,10 +118,13 @@ function updateLambadInvocation(definitions) {
       if (awsc.verifyPath(methodDef,['x-amazon-apigateway-integration'], 'o',"").isVerifyError) {
         methodDef['x-amazon-apigateway-integration'] = {};
       }
-      var uri = 'arn:aws:apigateway:' + definitions.lambdaInfo.region + ':lambda:path//2015-03-31/functions/' + definitions.lambdaInfo.arnLambda + '/invocations';
-      methodDef['x-amazon-apigateway-integration']['uri'] = uri;
-      methodDef['x-amazon-apigateway-integration']['type'] = 'aws';
-      methodDef['x-amazon-apigateway-integration']['httpMethod'] = 'POST';
+      // if there isn;t an integration type already integrate the lambda
+      if (awsc.verifyPath(methodDef,['x-amazon-apigateway-integration','type'], 's',"").isVerifyError) {
+        var uri = 'arn:aws:apigateway:' + definitions.lambdaInfo.region + ':lambda:path//2015-03-31/functions/' + definitions.lambdaInfo.arnLambda + '/invocations';
+        methodDef['x-amazon-apigateway-integration']['uri'] = uri;
+        methodDef['x-amazon-apigateway-integration']['type'] = 'aws';
+        methodDef['x-amazon-apigateway-integration']['httpMethod'] = 'POST';
+      }
     });
   });
 }

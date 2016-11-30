@@ -7,6 +7,6 @@ function login() {
 angular
 .module('login', ['ngRoute'])
 .component('login', {
-  templateUrl: 'login/login.html',
+  templateUrl: 'components/login/login.html',
   controller: login
 })

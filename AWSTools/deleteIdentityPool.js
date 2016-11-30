@@ -80,7 +80,7 @@ function requestsDoneFunction(requestBatch){
   }
   // write out the result file
   awscommon.updateFile(argv.baseDefinitionsFile, function () {
-    return YAML.stringify(baseDefinitions, 6);
+    return YAML.stringify(baseDefinitions, 15);
   }, function (backupErr, writeErr) {
     if (backupErr) {
       console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". pool id was not updated.");

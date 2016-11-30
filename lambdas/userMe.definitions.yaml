@@ -14,6 +14,7 @@ lambdaInfo:
     functionName: userMe
     region: us-east-1
     language: nodejs4.3
+    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:userMe'
 apiInfo:
     paths:
         /user/me:
@@ -23,12 +24,41 @@ apiInfo:
                 produces:
                     - application/json
                 responses:
-                    '200': {description: ok, schema: {$ref: '#/definitions/user'}}
-                    '400': {description: '400 response', schema: {$ref: '#/definitions/Error'}}
-                    '404': {description: '404 response', schema: {$ref: '#/definitions/Error'}}
-                    '405': {description: '405 response', schema: {$ref: '#/definitions/Error'}}
+                    '200':
+                        description: ok
+                        schema:
+                            $ref: '#/definitions/user'
+                    '400':
+                        description: '400 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                    '404':
+                        description: '404 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                    '405':
+                        description: '405 response'
+                        schema:
+                            $ref: '#/definitions/Error'
                 x-amazon-apigateway-integration:
                     credentials: lambdaExecuteRole
-                    responses: {default: {statusCode: '200', responseTemplates: {application/json: __passthrough__}}, '.*httpStatus\":400.*': {statusCode: '400', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":404.*': {statusCode: '404', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}, '.*httpStatus\":405.*': {statusCode: '405', responseTemplates: {application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"}}}
+                    responses:
+                        default:
+                            statusCode: '200'
+                            responseTemplates:
+                                application/json: __passthrough__
+                        '.*httpStatus\":400.*':
+                            statusCode: '400'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                        '.*httpStatus\":404.*':
+                            statusCode: '404'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                        '.*httpStatus\":405.*':
+                            statusCode: '405'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
                 security:
-                    - {sigv4: []}
+                    -
+                        sigv4: []

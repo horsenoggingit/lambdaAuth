@@ -112,7 +112,7 @@ function deletePolicies(policyArray, roleName, userProfile) {
           numRoles --;
           if (numRoles == 0) {
             awscommon.updateFile(argv.baseDefinitionsFile, function () {
-              return YAML.stringify(baseDefinitions, 6);
+              return YAML.stringify(baseDefinitions, 15);
             }, function (backupErr, writeErr) {
               if (backupErr) {
                 console.log(backupErr);

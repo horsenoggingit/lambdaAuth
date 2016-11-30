@@ -100,7 +100,7 @@ var roleNames = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(f
     console.log("Updating definitions file with results")
     if (createRoleComplete === Object.keys(baseDefinitions[roleBase].roleDefinitions).length) {
       awscommon.updateFile(argv.baseDefinitionsFile, function () {
-        return YAML.stringify(baseDefinitions, 6);
+        return YAML.stringify(baseDefinitions, 15);
       }, function (backupErr, writeErr) {
         if (backupErr) {
           console.log(backupErr);

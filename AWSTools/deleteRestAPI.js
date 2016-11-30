@@ -61,7 +61,7 @@ AwsRequest.createRequest({
   awsc.updateFile(argv.baseDefinitionsFile, function () {
     delete baseDefinitions.apiInfo["awsId"];
     delete baseDefinitions.apiInfo["lastDeploy"];
-    return YAML.stringify(baseDefinitions, 6);
+    return YAML.stringify(baseDefinitions, 15);
   }, function (backupErr, writeErr) {
     if (backupErr) {
       console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". API Id was not updated.");

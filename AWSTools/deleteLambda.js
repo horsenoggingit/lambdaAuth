@@ -92,7 +92,7 @@ function deleteLambda(reqParams, defaultsFileName) {
     var localDefinitions = YAML.load(defaultsFileName);
     vp.updateFile(defaultsFileName, function () {
       delete localDefinitions.lambdaInfo["arnLambda"];
-      return YAML.stringify(localDefinitions, 6);
+      return YAML.stringify(localDefinitions, 15);
     }, function (backupErr, writeErr) {
       if (backupErr) {
         console.log("Could not create backup of \"" + defaultsFileName + "\". arnLambda was not updated.");
