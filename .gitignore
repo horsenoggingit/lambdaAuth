@@ -62,3 +62,13 @@ clients/angular/lambda-auth/app/bower_components
 clients/angular/lambda-auth/node_modules
 
 
+
+lambdas/userMe.definitions.yaml.yaml
+
+lambdas/signup.definitions.yaml.yaml
+
+lambdas/login.definitions.yaml.yaml
+
+base.definitions 2.yaml
+
+base.definitions 3.yaml

@@ -1,5 +1,10 @@
 apiInfo:
   clientSDK:
-    downloadPath: 'angular/lambda-auth/app/aws'
+    downloadPath: "angular/lambda-auth/app/aws"
     downloadFilename: "aws-sdk.js"
     sdkType: javascript
+lambdaInfo:
+    awsResources:
+      -
+      type: cognitoIdentityPoolInfo
+      resourceName: testPool

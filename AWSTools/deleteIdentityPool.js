@@ -31,11 +31,11 @@ if (!awscommon.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s
   console.log("using \"default\" AWSCLIUserProfile");
 }
 
-awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
+awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var deleteRequests = [];
-var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo).forEach(function (identityPoolName) {
-  var poolDef = baseDefinitions.cognitoIdentityPoolInfo[identityPoolName];
+var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolName) {
+  var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName];
   var verifyError = awscommon.verifyPath(poolDef, ['identityPoolId'], 's', "definitions file \""+argv.baseDefinitionsFile+"\"").callbackOnError(function(verifyError) {
     console.log(verifyError.toString());
     console.log("Skipping delete request for \"" + identityPoolName + "\".")
@@ -68,7 +68,7 @@ function requestsDoneFunction(requestBatch){
     if (request.response.error) {
       console.log(request.response.error);
     } else {
-      delete baseDefinitions.cognitoIdentityPoolInfo[request.context.poolName].identityPoolId;
+      delete baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName].identityPoolId;
       successCount++;
     }
   });

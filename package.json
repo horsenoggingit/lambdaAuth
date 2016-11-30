@@ -12,6 +12,8 @@
     "yargs": "latest"
   },
   "scripts" : {
-    "postinstall": "./installLambdaModules.sh"
+    "postinstall": "./installLambdaModules.sh",
+    "start": "./newDeploy.sh",
+    "stop": "./eraseDeploy.sh"
   }
 }
