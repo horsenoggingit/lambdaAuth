@@ -1,7 +1,7 @@
 'use strict';
 
-function signup(apigClient) {
-  this.apigClient = apigClient;
+function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo) {
+  this.email = lastLoginSignupInfo.email;
   var ctrl = this;
   console.log(this);
   ctrl.$onInit = function() {
@@ -9,17 +9,31 @@ function signup(apigClient) {
   };
 
   ctrl.signup = function() {
-    console.log("button clicked");
-    console.log("email: " + ctrl.email);
-    console.log("password: " + ctrl.password);
+    console.log("signup button clicked");
 
-    ctrl.apigClient.signupPost({},{password: ctrl.password, email: ctrl.email})
+    apiUnauthedClientFactory.signupPost({},{password: ctrl.password, email: ctrl.email})
     .then(function(result){
         //This is where you would put a success callback
-        console.log("success");
-    }).catch( function(result){
+        console.log("signup success");
+        console.log(result);
+        authService.setIdentityAndToken(result.data.IdentityId, result.data.Token, function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            authService.authedClient().userMeGet().then(function(result){
+              console.log("user me get success");
+              console.log(result);
+            }).catch(function(result) {
+              console.log("user me get fail");
+              console.log(result);
+            });
+          }
+        });
+
+      }).catch( function(result){
         //This is where you would put an error callback
-        console.log("fail");
+        console.log("signup fail");
+        console.log(result)
     });
 
   };
@@ -28,10 +42,14 @@ function signup(apigClient) {
     console.log("change" + changes.toString());
   };
 
+  ctrl.$onDestroy = function () {
+    lastLoginSignupInfo.email = ctrl.email;
+  }
+
 };
 
 angular
-.module('signup',['awsAPIClientModule'])
+.module('signup',['awsAPIClients','credentialModule'])
 .component('signup', {
   templateUrl: 'components/signup/signup.html',
   controller: signup

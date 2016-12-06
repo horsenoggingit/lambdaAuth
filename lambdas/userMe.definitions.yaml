@@ -76,7 +76,7 @@ apiInfo:
                             responseTemplates:
                                 application/json: __passthrough__
                             responseParameters:
-                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":400.*':
@@ -84,7 +84,7 @@ apiInfo:
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
-                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":404.*':
@@ -92,7 +92,7 @@ apiInfo:
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
-                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":405.*':
@@ -100,7 +100,7 @@ apiInfo:
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
-                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                 security:
@@ -123,7 +123,7 @@ apiInfo:
                         default:
                             statusCode: '200'
                             responseParameters:
-                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                             responseTemplates:

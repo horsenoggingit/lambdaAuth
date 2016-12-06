@@ -1,7 +1,7 @@
 'use strict';
 
-function login(apigClient) {
-  this.apigClient = apigClient;
+function login(apiUnauthedClientFactory, lastLoginSignupInfo) {
+  this.email = lastLoginSignupInfo.email;
   var ctrl = this;
   console.log(this);
   ctrl.$onInit = function() {
@@ -13,7 +13,7 @@ function login(apigClient) {
     console.log("email: " + ctrl.email);
     console.log("password: " + ctrl.password);
 
-    ctrl.apigClient.loginPost({},{password: ctrl.password, email: ctrl.email})
+    apiUnauthedClientFactory.loginPost({},{password: ctrl.password, email: ctrl.email})
     .then(function(result){
         //This is where you would put a success callback
         console.log("success");
@@ -28,10 +28,14 @@ function login(apigClient) {
     console.log("change" + changes.toString());
   };
 
+  ctrl.$onDestroy = function () {
+    lastLoginSignupInfo['email'] = ctrl.email;
+  }
+
 };
 
 angular
-.module('login',['awsAPIClientModule'])
+.module('login',['awsAPIClients', 'credentialModule'])
 .component('login', {
   templateUrl: 'components/login/login.html',
   controller: login

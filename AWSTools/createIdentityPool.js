@@ -85,12 +85,6 @@ getIdentityPools(function (serverIdentityPools) {
         returnSchema:'json',
         returnValidation:[{path:['IdentityPoolId'], type:'s'}],
         parameters:params
-      },
-      function (request) {
-        if (!request.response.error) {
-          // set roles if present
-          setRoles(request.context.identityPoolName);
-        }
       })
     );
   });
@@ -103,6 +97,7 @@ getIdentityPools(function (serverIdentityPools) {
         console.log("Successfully createed pool " + request.context.poolName + ".");
         successDecCount --;
         baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName]['identityPoolId'] = request.response.parsedJSON.IdentityPoolId;
+        setRoles(request.context.poolName);
       }
     })
     writeout();
@@ -160,6 +155,7 @@ function setRoles(identityPoolName){
     Object.keys(roles).forEach(function (roleType) {
       identityPoolRoles[roleType] = baseDefinitions.cognitoIdentityPoolInfo.roleDefinitions[roles[roleType]].arnRole;
     })
+    console.log(identityPoolRoles)
     AwsRequest.createRequest({
       serviceName: 'cognito-identity',
       functionName: 'set-identity-pool-roles',
