@@ -47,6 +47,7 @@ getIdentityPools(function (serverIdentityPools) {
           baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].identityPoolId = serverIdentityPools.IdentityPools[index].IdentityPoolId;
           console.log("Found identity pool \"" + identityPoolName + "\" on aws.");
           setRoles(identityPoolName);
+          updateRolePolicyDocumentStatementConditions(identityPoolName);
           numIdentityPools --;
           successDecCount --;
           if (numIdentityPools == 0) {
@@ -98,6 +99,7 @@ getIdentityPools(function (serverIdentityPools) {
         successDecCount --;
         baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName]['identityPoolId'] = request.response.parsedJSON.IdentityPoolId;
         setRoles(request.context.poolName);
+        updateRolePolicyDocumentStatementConditions(request.context.poolName);
       }
     })
     writeout();
@@ -155,7 +157,7 @@ function setRoles(identityPoolName){
     Object.keys(roles).forEach(function (roleType) {
       identityPoolRoles[roleType] = baseDefinitions.cognitoIdentityPoolInfo.roleDefinitions[roles[roleType]].arnRole;
     })
-    console.log(identityPoolRoles)
+
     AwsRequest.createRequest({
       serviceName: 'cognito-identity',
       functionName: 'set-identity-pool-roles',
@@ -175,4 +177,77 @@ function setRoles(identityPoolName){
       }
     }).startRequest();
   }
+}
+
+function updateRolePolicyDocumentStatementConditions(identityPoolName) {
+  // first get the role
+  var roles = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].roles;
+  Object.keys(roles).forEach(function (roleType) {
+    var role = roles[roleType];
+    if (!awscommon.verifyPath(baseDefinitions,['cognitoIdentityPoolInfo','identityPools',identityPoolName,'rolePolicyDocumentStatementConditions',role],'a').isVerifyError) {
+      // get the role
+      AwsRequest.createRequest({
+        serviceName: 'iam',
+        functionName: 'get-role',
+        context: {poolName: identityPoolName, roleName:role},
+        returnSchema:'json',
+        parameters: {
+          'role-name' : {type:'string', value:role},
+          'profile': {type: 'string', value:AWSCLIUserProfile}
+        }
+      },
+      function (roleReq) {
+        if (roleReq.response.error) {
+          console.log("no policy document statemets for role \"" + roleReq.context.roleName + "to update. Is the role created?");
+          console.log(roleReq.response.error);
+        } else {
+          if (!awscommon.verifyPath(roleReq.response.parsedJSON,['Role','AssumeRolePolicyDocument','Statement'],'a').isVerifyError) {
+            // for each matching policy action add the conditions
+            var statementArray = roleReq.response.parsedJSON.Role.AssumeRolePolicyDocument.Statement;
+            var conditionArray = baseDefinitions.cognitoIdentityPoolInfo.identityPools[roleReq.context.poolName].rolePolicyDocumentStatementConditions[role];
+            for (var conditionIndex = 0; conditionIndex < conditionArray.length; conditionIndex ++) {
+              for (var statementIndex = 0; statementIndex < statementArray.length; statementIndex ++) {
+                if (statementArray[statementIndex].Action === conditionArray[conditionIndex].Action) {
+                  statementArray[statementIndex]['Condition'] = conditionArray[conditionIndex].Condition;
+                  // we may want to replace the identity pool ID in some of the conditions
+                  Object.keys(statementArray[statementIndex]['Condition']).forEach(function(conditionType) {
+                    var theCondition = statementArray[statementIndex]['Condition'][conditionType];
+                    Object.keys(theCondition).forEach(function(conditionTypeParam) {
+                      var val = theCondition[conditionTypeParam];
+                      if (val === '$identityPoolId') {
+                        theCondition[conditionTypeParam] = baseDefinitions.cognitoIdentityPoolInfo.identityPools[roleReq.context.poolName].identityPoolId;
+                      }
+                    });
+                  });
+                }
+              }
+            }
+            // UPDATE THE MODIFIED POLICY
+            AwsRequest.createRequest({
+              serviceName: 'iam',
+              functionName: 'update-assume-role-policy',
+              context: {poolName: roleReq.context.poolName, roleName:roleReq.context.roleName},
+              returnSchema:'none',
+              parameters: {
+                'role-name': {type:'string', value:roleReq.context.roleName},
+                'policy-document': {type: 'JSONObject', value:roleReq.response.parsedJSON.Role.AssumeRolePolicyDocument},
+                'profile': {type: 'string', value:AWSCLIUserProfile},
+              }
+            },
+            function (putPolReq) {
+              if (putPolReq.response.error) {
+                console.log("Error updating policy doc for role \"" + putPolReq.context.roleName + "\"");
+                console.log(putPolReq.response.error);
+              } else {
+                console.log("Updated policy doc for role \"" + putPolReq.context.roleName + "\"");
+              }
+            }).startRequest();
+          }
+        }
+      }).startRequest();
+    }
+
+  });
+
+
 }

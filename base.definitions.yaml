@@ -10,12 +10,12 @@ cognitoIdentityPoolInfo:
                         Effect: Allow
                         Principal:
                             Federated: cognito-identity.amazonaws.com
-                        Action: sts:AssumeRoleWithWebIdentity
+                        Action: 'sts:AssumeRoleWithWebIdentity'
                         Condition:
                             StringEquals:
-                                cognito-identity.amazonaws.com:aud: us-east-1:a312d3e3-c45b-49eb-8d72-5b7acd73edc0
-                            ForAnyValue:StringLike:
-                                cognito-identity.amazonaws.com:amr: authenticated
+                                'cognito-identity.amazonaws.com:aud': 'us-east-1:a312d3e3-c45b-49eb-8d72-5b7acd73edc0'
+                            'ForAnyValue:StringLike':
+                                'cognito-identity.amazonaws.com:amr': authenticated
             policies:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
@@ -31,7 +31,16 @@ cognitoIdentityPoolInfo:
             allowUnauthedIdentities: false
             roles:
                 authenticated: apiAccessRole
-            identityPoolId: 'us-east-1:a312d3e3-c45b-49eb-8d72-5b7acd73edc0'
+            rolePolicyDocumentStatementConditions:
+                apiAccessRole:
+                    -
+                        Action: 'sts:AssumeRoleWithWebIdentity'
+                        Condition:
+                            StringEquals:
+                                'cognito-identity.amazonaws.com:aud': $identityPoolId
+                            'ForAnyValue:StringLike':
+                                'cognito-identity.amazonaws.com:amr': authenticated
+            identityPoolId: 'us-east-1:9ec13d78-e816-4d30-aeef-bfbd53ccf78e'
 lambdaInfo:
     roleDefinitions:
         userConsumer:
@@ -159,13 +168,13 @@ apiInfo:
             name: Authorization
             in: header
             x-amazon-apigateway-authtype: awsSigv4
-    awsId: vfur0d2qck
+    awsId: 79zsqwk9x7
     lastDeploy:
         uploadResult:
             description: 'Yet another deploy...'
-            id: 3rbzq6
-            createdDate: 1481014124
-        invokeURL: 'https://vfur0d2qck.execute-api.us-east-1.amazonaws.com/dev'
+            id: xbmodk
+            createdDate: 1481072600
+        invokeURL: 'https://79zsqwk9x7.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     users:
         lambdaAliases:
@@ -205,7 +214,7 @@ dynamodbInfo:
                     KeyType: HASH
                     AttributeName: id
             ItemCount: 0
-            CreationDateTime: 1481010489.666
+            CreationDateTime: 1481072585.911
     userEmail:
         lambdaAliases:
             resource: EMAILS
@@ -241,4 +250,4 @@ dynamodbInfo:
                     KeyType: HASH
                     AttributeName: email
             ItemCount: 0
-            CreationDateTime: 1481010489.673
+            CreationDateTime: 1481072585.902
