@@ -1,3 +1,5 @@
-- Roles for cognito are not handled correctly (need a way to update the policy with pool ID)
 - need to add an authed page in the app that verifies that was actually have auth, and if not kicks back to the login/signup screen.
 - also need to understand how to refresh credentials from the stored AWS token.
+
+
+- DONE: Roles for cognito are not handled correctly (need a way to update the policy with pool ID)

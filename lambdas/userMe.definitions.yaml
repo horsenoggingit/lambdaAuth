@@ -70,6 +70,8 @@ apiInfo:
                                 type: string
                 x-amazon-apigateway-integration:
                     credentials: lambdaExecuteRole
+                    requestTemplates:
+                      application/json: "{\n    \"identity_id\" : \"$context.identity.cognitoIdentityId\"\n}"
                     responses:
                         default:
                             statusCode: '200'

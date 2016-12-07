@@ -44,36 +44,40 @@ exports.handler = (event, context, callback) => {
     } else {
       // it we get some objects back from the email table then the users has already signed up
       if (typeof data.Item == "object") {
-        console.log(data)
-        // now lookup in the user table
-        params = {
-          TableName: AWSConstants.DYNAMO_DB.USERS.name,
-          Key:{}
-        }
-        params.Key[AWSConstants.DYNAMO_DB.USERS.ID] = data.Item.id;
-
-        docClient.get(params,function(err, userData) {
+        // go to cognito and pull up the identity
+        UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, data.Item.id, function (err,OpenIDToken) {
           if (err) {
             callback(err);
           } else {
-            if (typeof userData.Item.password == 'string') {
-              if (PH.passwordHash(event.password) === userData.Item.password) {
-                UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, data.Item.id, function (err,OpenIDToken) {
-                  if (err) {
-                    callback(err);
-                  } else {
-                    callback(null,OpenIDToken);
-                  }
-                });
-              } else {
-                // should be vague about this
-                callback(new Error("Incorrect password"));
-              }
-            } else {
-              callback(new Error("Invalid record: " + data.Item.id));
+            // now lookup in the user table
+            params = {
+              TableName: AWSConstants.DYNAMO_DB.USERS.name,
+              Key:{}
             }
+            params.Key[AWSConstants.DYNAMO_DB.USERS.ID] = OpenIDToken.IdentityId;
+
+            docClient.get(params,function(err, userData) {
+              if (err) {
+                callback(err);
+              } else {
+                if (typeof userData.Item.password == 'string') {
+                  if (PH.passwordHash(event.password) === userData.Item.password) {
+                    callback(null,OpenIDToken);
+                  } else {
+                    // should be vague about this
+                    callback(new Error("Incorrect password"));
+                  }
+                } else {
+                  callback(new Error("Invalid record: " + data.Item.id));
+                }
+              }
+            });
           }
         });
+
+
+
+
 
       } else {
         callback(new Error("Account not found"));

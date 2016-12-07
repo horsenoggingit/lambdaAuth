@@ -29,3 +29,6 @@ AWSTools/createRestAPI.js
 
 # deploy API
 AWSTools/deployAPI.js
+
+# get the SDK's for the clients
+AWSTools/getClientSDK.js

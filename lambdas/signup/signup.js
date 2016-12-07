@@ -56,45 +56,48 @@ exports.handler = (event, context, callback) => {
         console.log(errorObject);
         callback(JSON.stringify(errorObject));
       } else {
-        // generate a unique id for the user and create table items accordingly
+        // generate a unique id for the user as the developer provier id
         UniqueID.getUniqueId(AWSConstants.DYNAMO_DB.USERS.name, docClient, function(err, newID) {
           if (err) {
             console.log(err)
             callback(new Error("Could not generate new id"))
           } else {
-            // Add the email to the email table
-            var paramsEmail = {
-              TableName: AWSConstants.DYNAMO_DB.EMAILS.name,
-              Item: {}
-            }
 
-            paramsEmail.Item[AWSConstants.DYNAMO_DB.EMAILS.EMAIL] = event.email;
-            paramsEmail.Item[AWSConstants.DYNAMO_DB.EMAILS.ID] = newID;
-
-            docClient.put(paramsEmail, function (err, emailData) {
+            // now create a cognito identity with ths id and custome provider
+            UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, newID ,function (err,OpenIDToken) {
               if (err) {
-                console.log(err)
-              }
-            })
-            var now = Date.now();
-            // Add the user to the user table
-            var paramsUser = {
-              TableName: AWSConstants.DYNAMO_DB.USERS.name,
-              Item: {}
-            }
-
-            paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.ID] = newID;
-            paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.PASSWORD] = PH.passwordHash(event.password);
-            paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL] = event.email;
-            paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP] = now;
-            paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] = -1;
-
-            docClient.put(paramsUser, function (err, userData) {
-              if (err) {
-                console.log(err);
+                callback(err);
               } else {
-                // finally return the OpenIDTOken for the user
-                UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, newID ,function (err,OpenIDToken) {
+
+                // Add the email to the email table with provier token
+                // login will use this to lookup the identity
+                var paramsEmail = {
+                  TableName: AWSConstants.DYNAMO_DB.EMAILS.name,
+                  Item: {}
+                }
+
+                paramsEmail.Item[AWSConstants.DYNAMO_DB.EMAILS.EMAIL] = event.email;
+                paramsEmail.Item[AWSConstants.DYNAMO_DB.EMAILS.ID] = newID;
+
+                docClient.put(paramsEmail, function (err, emailData) {
+                  if (err) {
+                    callback(err)
+                  }
+                })
+                var now = Date.now();
+                // Add the user to the user table
+                var paramsUser = {
+                  TableName: AWSConstants.DYNAMO_DB.USERS.name,
+                  Item: {}
+                }
+
+                paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.ID] = OpenIDToken.IdentityId;
+                paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.PASSWORD] = PH.passwordHash(event.password);
+                paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL] = event.email;
+                paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP] = now;
+                paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] = -1;
+
+                docClient.put(paramsUser, function (err, userData) {
                   if (err) {
                     callback(err);
                   } else {
