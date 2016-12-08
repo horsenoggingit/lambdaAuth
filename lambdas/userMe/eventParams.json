@@ -1,0 +1,1 @@
+{"/user/me":{"get":{"type":"object","required":["identity_id"],"properties":{"identity_id":{"type":"string"}}}}}

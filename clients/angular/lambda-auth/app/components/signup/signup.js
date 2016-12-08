@@ -49,7 +49,7 @@ function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo) {
 };
 
 angular
-.module('signup',['awsAPIClients','credentialModule'])
+.module('signup',['awsAPIClients','sharedInfo'])
 .component('signup', {
   templateUrl: 'components/signup/signup.html',
   controller: signup

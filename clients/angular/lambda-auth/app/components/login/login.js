@@ -35,7 +35,7 @@ function login(apiUnauthedClientFactory, lastLoginSignupInfo) {
 };
 
 angular
-.module('login',['awsAPIClients', 'credentialModule'])
+.module('login',['awsAPIClients', 'sharedInfo'])
 .component('login', {
   templateUrl: 'components/login/login.html',
   controller: login
