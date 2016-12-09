@@ -1,15 +1,12 @@
 'use strict';
 
-var menus = {signupLoginList: [{item: 'signupItem', name:'Signup', href:'#!/signup'},
-              {item:'loginItem', name:'Login', href:'#!/login'}],
-            authedList : [{item: 'logoutItem', name:'Logout', href:'#!/signup'}]};
-
-function topbar() {
+function topbar(menus) {
   var ctrl = this;
-
   ctrl.createItemList = function() {
     var items =[];
+      console.log(ctrl.menuName)
     var selectedMenu = menus[ctrl.menuName];
+
     for (var index = 0; index<selectedMenu.length; index ++) {
       var menuItem = selectedMenu[index];
       var listItem = {};
@@ -30,7 +27,7 @@ function topbar() {
 };
 
 angular
-.module('topbarModule',['awsAPIClients', 'sharedInfo'])
+.module('topbarModule',['menuProperties'])
 .component('topbar', {
   bindings: {
     selectedItem: '@',
