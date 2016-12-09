@@ -1,0 +1,6 @@
+<ul class="menu">
+  <li ng-repeat="item in $ctrl.items">
+    <a ng-if="!item.selected" href="{{item.href}}" >{{item.name}}</a>
+    <b ng-if="item.selected">{{item.name}}</b>
+  </li>
+</ul>

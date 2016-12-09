@@ -38,10 +38,6 @@ function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo) {
 
   };
 
-  ctrl.$onChanges = function (changes) {
-    console.log("change" + changes.toString());
-  };
-
   ctrl.$onDestroy = function () {
     lastLoginSignupInfo.email = ctrl.email;
   }
@@ -49,7 +45,7 @@ function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo) {
 };
 
 angular
-.module('signup',['awsAPIClients','sharedInfo'])
+.module('signupModule',['awsAPIClients','sharedInfo'])
 .component('signup', {
   templateUrl: 'components/signup/signup.html',
   controller: signup

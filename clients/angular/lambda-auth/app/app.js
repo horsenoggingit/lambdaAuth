@@ -5,17 +5,21 @@ angular.module('lambdaAuth', [
   'sharedInfo',
   'awsAPIClients',
   'ngRoute',
-  'signup',
-  'login'
+  'signupModule',
+  'loginModule',
+  'frontpageModule',
+  'topbarModule'
 ]).
 config(['$locationProvider', '$routeProvider' ,function($locationProvider, $routeProvider) {
-
   $locationProvider.hashPrefix('!');
   $routeProvider.when('/signup', {
-    template: '<signup></signup>'
+    template: '<topbar menu-name="signupLoginList" selected-item="signupItem"></topbar><signup></signup>'
   }).
   when('/login', {
-    template: '<login></login>'
+    template: '<topbar menu-name="signupLoginList" selected-item="loginItem"></topbar><login></login>'
+  }).
+  when('/frontpage', {
+    template: '<topbar menu-name="frontpageList" selected-item=""></topbar><frontpage></frontpage>'
   }).
   otherwise('/signup')
 
