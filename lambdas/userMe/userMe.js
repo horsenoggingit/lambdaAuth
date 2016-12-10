@@ -38,7 +38,15 @@ exports.handler = (event, context, callback) => {
 
   docClient.get(params,function(err, userData) {
     if (err) {
-      callback(err);
+      console.log(err);
+      console.log("Could not get user info from db for request: " + context.awsRequestId);
+      var errorObject = {
+        requestId: context.awsRequestId,
+        errorType : "InternalServerError",
+        httpStatus : 500,
+        message : "Could not get user info."
+      };
+      callback(JSON.stringify(errorObject));
     } else {
       console.log(userData);
       callback(null, {email: userData.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL]});

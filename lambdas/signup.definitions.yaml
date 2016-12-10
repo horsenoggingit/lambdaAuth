@@ -109,6 +109,17 @@ apiInfo:
                                 type: string
                             Access-Control-Allow-Origin:
                                 type: string
+                    '500':
+                        description: '500 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
                 x-amazon-apigateway-integration:
                     credentials: lambdaExecuteRole
                     responses:
@@ -146,6 +157,14 @@ apiInfo:
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":409.*':
                             statusCode: '409'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                        '.*httpStatus\":500.*':
+                            statusCode: '500'
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:

@@ -32,7 +32,7 @@ exports.handler = (event, context, callback) => {
     return;
   }
 
-  // check if the email has already been used
+  // check if the email exists
   var params = {
     TableName: AWSConstants.DYNAMO_DB.EMAILS.name,
     Key:{}
@@ -40,14 +40,30 @@ exports.handler = (event, context, callback) => {
   params.Key[AWSConstants.DYNAMO_DB.EMAILS.EMAIL] = event.email;
   docClient.get(params, function (err, data) {
     if (err) {
-      callback(err);
+      console.log(err);
+      console.log("Could not get user identity from cognito for request: " + context.awsRequestId);
+      var errorObject = {
+        requestId: context.awsRequestId,
+        errorType : "Unauthorized",
+        httpStatus : 401,
+        message : "No matching login informaiton."
+      };
+      callback(JSON.stringify(errorObject));
     } else {
       // it we get some objects back from the email table then the users has already signed up
       if (typeof data.Item == "object") {
         // go to cognito and pull up the identity
         UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, data.Item.id, function (err,OpenIDToken) {
           if (err) {
-            callback(err);
+            console.log(err);
+            console.log("Could not get user identity from cognito for request: " + context.awsRequestId);
+            var errorObject = {
+              requestId: context.awsRequestId,
+              errorType : "InternalServerError",
+              httpStatus : 500,
+              message : "Could not get user identity."
+            };
+            callback(JSON.stringify(errorObject));
           } else {
             // now lookup in the user table
             params = {
@@ -58,29 +74,52 @@ exports.handler = (event, context, callback) => {
 
             docClient.get(params,function(err, userData) {
               if (err) {
-                callback(err);
+                console.log(err);
+                console.log("Could not get user info from db for request: " + context.awsRequestId);
+                var errorObject = {
+                  requestId: context.awsRequestId,
+                  errorType : "InternalServerError",
+                  httpStatus : 500,
+                  message : "Could not get user info."
+                };
+                callback(errorObject)
               } else {
                 if (typeof userData.Item.password == 'string') {
                   if (PH.passwordHash(event.password) === userData.Item.password) {
                     callback(null,OpenIDToken);
                   } else {
-                    // should be vague about this
-                    callback(new Error("Incorrect password"));
+                    console.log("Password missmatch for request: " + context.awsRequestId);
+                    var errorObject = {
+                      requestId: context.awsRequestId,
+                      errorType : "Unauthorized",
+                      httpStatus : 401,
+                      message : "No matching login informaiton."
+                    };
+                    callback(JSON.stringify(errorObject));
                   }
                 } else {
-                  callback(new Error("Invalid record: " + data.Item.id));
+                  console.log("user does not have a valid password for request: " + context.awsRequestId);
+                  var errorObject = {
+                    requestId: context.awsRequestId,
+                    errorType : "InternalServerError",
+                    httpStatus : 500,
+                    message : "No matching login informaiton."
+                  };
+                  callback(JSON.stringify(errorObject));
                 }
               }
             });
           }
         });
-
-
-
-
-
       } else {
-        callback(new Error("Account not found"));
+        console.log("Could not get user info from db for request: " + context.awsRequestId);
+        var errorObject = {
+          requestId: context.awsRequestId,
+          errorType : "Unauthorized",
+          httpStatus : 401,
+          message : "No matching login informaiton."
+        };
+        callback(JSON.stringify(errorObject));
       }
     }
   });
