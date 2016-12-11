@@ -23,7 +23,7 @@ function verify(APIPath, reqMode, params) {
       message : "Invalid Resource"
     };
   }
-  
+
   if (typeof paramDefs[APIPath][reqMode] != 'object') {
     console.log("Undefined request mode \"" + reqMode + "\"");
     // not sure about this one
@@ -61,12 +61,12 @@ function verify(APIPath, reqMode, params) {
         // now lets validate types
         if (typeof definitions.properties == 'object') {
           for (var index = 0; index < keys.length; index++) {
-            var expectedType = definitions.properties[keys[index]];
+            var expectedType = definitions.properties[keys[index]].type;
             if (expectedType) {
               switch (expectedType) {
                 case 'object':
-                if (typeof params == 'object') {
-
+                if (typeof params[keys[index]] == 'object') {
+//                  console.log(keys[index] + 'was of type ' + expectedType);
                 } else {
                   return {
                     errorType : "BadRequest",
@@ -77,8 +77,8 @@ function verify(APIPath, reqMode, params) {
                 }
                 break;
                 case 'number':
-                if (typeof params == 'number') {
-
+                if (typeof params[keys[index]] == 'number') {
+//                  console.log(keys[index] + 'was of type ' + expectedType);
                 } else {
                   return {
                     errorType : "BadRequest",
@@ -90,7 +90,7 @@ function verify(APIPath, reqMode, params) {
                 break;
                 case 'string':
                 if (typeof params[keys[index]] == 'string') {
-                  // continue
+//                  console.log(keys[index] + 'was of type ' + expectedType);
                 } else {
                   return {
                     errorType : "BadRequest",
@@ -102,7 +102,7 @@ function verify(APIPath, reqMode, params) {
                 break;
                 case 'array':
                 if (Array.isArray(params[keys[index]])) {
-
+//                  console.log(keys[index] + 'was of type ' + expectedType);
                 } else {
                   return {
                     errorType : "BadRequest",
@@ -114,7 +114,7 @@ function verify(APIPath, reqMode, params) {
 
                 break;
                 default:
-                console.log("unexpected object parameter")
+                console.log("unexpected object parameter: \"" + expectedType + "\"")
               }
             }
 

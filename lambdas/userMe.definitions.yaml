@@ -21,8 +21,17 @@ lambdaInfo:
                 type: object
                 required:
                     - identity_id
+                    - auth_provider
+                    - auth_type
+                    - identitypool_id
                 properties:
                     identity_id:
+                        type: string
+                    auth_provider:
+                        type: string
+                    auth_type:
+                        type: string
+                    identitypool_id:
                         type: string
 apiInfo:
     paths:
@@ -91,7 +100,7 @@ apiInfo:
                 x-amazon-apigateway-integration:
                     credentials: lambdaExecuteRole
                     requestTemplates:
-                      application/json: "{\n    \"identity_id\" : \"$context.identity.cognitoIdentityId\"\n}"
+                      application/json: "{\n    \"identity_id\" : \"$context.identity.cognitoIdentityId\",\n \"auth_provider\" : \"$context.identity.cognitoAuthenticationProvider\",\n \"auth_type\" : \"$context.identity.cognitoAuthenticationType\",\n \"identitypool_id\" : \"$context.identity.cognitoIdentityPoolId\"\n}"
                     responses:
                         default:
                             statusCode: '200'

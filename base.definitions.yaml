@@ -129,7 +129,19 @@ apiInfo:
             properties:
                 email:
                     type: string
-        authRequest:
+                name:
+                    type: string
+                dob:
+                    type: number
+                last-login-timestamp:
+                    type: number
+                signup-timestamp:
+                    type: number
+                logins:
+                    type: object
+                provider-name:
+                    type: string
+        signupRequest:
             type: object
             required:
                 - email
@@ -139,6 +151,21 @@ apiInfo:
                     type: string
                 password:
                     type: string
+                name:
+                    type: string
+                dob:
+                    type: number
+        loginRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+                provider-name:
+                    type: string
+                id:
+                    type: number
         credentials:
             type: object
             required:
@@ -172,8 +199,8 @@ apiInfo:
     lastDeploy:
         uploadResult:
             description: 'Yet another deploy...'
-            id: bcyu2n
-            createdDate: 1481328510
+            id: 1d56ob
+            createdDate: 1481457684
         invokeURL: 'https://79zsqwk9x7.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     users:
@@ -182,6 +209,8 @@ dynamodbInfo:
             attributes:
                 ID: id
                 EMAIL: email
+                NAME: name
+                DOB: dob
                 LAST_LOGIN_TIMESTAMP: lastLoginTimestamp
                 PASSWORD: password
                 SIGNUP_TIMESTAMP: signupTimestamp

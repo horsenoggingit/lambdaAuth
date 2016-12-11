@@ -26,14 +26,15 @@ lambdaInfo:
         /login:
             post:
                 type: object
-                required:
-                    - email
-                    - password
                 properties:
                     email:
                         type: string
                     password:
                         type: string
+                    provider-name:
+                        type: string
+                    id:
+                        type:string
     arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:login'
 apiInfo:
     paths:
@@ -45,11 +46,11 @@ apiInfo:
                     - application/json
                 parameters:
                     -
-                        name: authRequest
+                        name: loginRequest
                         in: body
                         required: true
                         schema:
-                            $ref: '#/definitions/authRequest'
+                            $ref: '#/definitions/loginRequest'
                 responses:
                     '200':
                         description: ok

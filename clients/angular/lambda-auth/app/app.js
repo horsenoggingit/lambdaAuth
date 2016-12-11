@@ -10,6 +10,7 @@ angular.module('lambdaAuth', [
   'sharedInfo',
   'awsAPIClients',
   'ngRoute',
+  'ngAnimate',
   'signupModule',
   'loginModule',
   'frontpageModule',

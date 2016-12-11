@@ -1,6 +1,6 @@
 'use strict';
 
-function login(apiUnauthedClientFactory, lastLoginSignupInfo) {
+function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scope, $location) {
   this.email = lastLoginSignupInfo.email;
   var ctrl = this;
   console.log(this);
@@ -15,8 +15,18 @@ function login(apiUnauthedClientFactory, lastLoginSignupInfo) {
 
     apiUnauthedClientFactory.loginPost({},{password: ctrl.password, email: ctrl.email})
     .then(function(result){
-        //This is where you would put a success callback
-        console.log("success");
+      console.log("login success");
+      authService.setIdentityAndToken(result.data.IdentityId, result.data.Token, function (client, err) {
+        $scope.$apply(function(){
+//          ctrl.signupButtonDisable = false;
+          if (err) {
+            console.log(err);
+          } else {
+            $location.path('frontpage').replace();
+          }
+        });
+      });
+
     }).catch(function(result){
         //This is where you would put an error callback
         console.log("fail");
@@ -31,7 +41,7 @@ function login(apiUnauthedClientFactory, lastLoginSignupInfo) {
 };
 
 angular
-.module('loginModule',['awsAPIClients', 'sharedInfo'])
+.module('loginModule',['awsAPIClients', 'sharedInfo', 'ngRoute', 'ngAnimate'])
 .component('login', {
   templateUrl: 'components/login/login.html',
   controller: login

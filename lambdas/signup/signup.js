@@ -127,6 +127,12 @@ exports.handler = (event, context, callback) => {
                 paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL] = event.email;
                 paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP] = now;
                 paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] = -1;
+                if (event.name) {
+                  paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.NAME] = event.name;
+                }
+                if (event.dob) {
+                  paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.DOB] = event.dob;
+                }
 
                 docClient.put(paramsUser, function (err, userData) {
                   if (err) {

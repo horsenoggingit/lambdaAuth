@@ -27,7 +27,7 @@ exports.handler = (event, context, callback) => {
     callback(JSON.stringify(verifyResult));
     return;
   }
-
+  console.log(event);
   // event containes the identity_id that is filled in by API GATEWAY by payload mapping to this lambda
   // lookup in the user table
   var params = {
@@ -48,8 +48,41 @@ exports.handler = (event, context, callback) => {
       };
       callback(JSON.stringify(errorObject));
     } else {
-      console.log(userData);
-      callback(null, {email: userData.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL]});
+      var userParams = {email: userData.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL]};
+      if (userData.Item[AWSConstants.DYNAMO_DB.USERS.NAME]) {
+        userParams['name'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.NAME];
+      }
+      if (userData.Item[AWSConstants.DYNAMO_DB.USERS.DOB]) {
+        userParams['dob'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.DOB];
+      }
+      if (userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] && userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] > 0) {
+        userParams['last-login-timestamp'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP];
+      }
+      if (userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP]) {
+        userParams['signup-timestamp'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP];
+      }
+
+      userParams['logins'] = {};
+      var providerSplit = event.auth_provider.split(',');
+      if  (providerSplit.length>1) {
+        var providerName = providerSplit[0];
+        userParams['provider-name'] = providerName;
+        var providerIDSplit = providerSplit[1].split(':');
+
+        if  (providerIDSplit.length>=4) {
+          var providerID = providerIDSplit[3];
+          userParams.logins[providerName] = providerID;
+          callback(null, userParams);
+          return;
+        }
+      }
+      var errorObject = {
+        requestId: context.awsRequestId,
+        errorType : "InternalServerError",
+        httpStatus : 500,
+        message : "Could not get provider info."
+      };
+      callback(JSON.stringify(errorObject));
     }
   });
 

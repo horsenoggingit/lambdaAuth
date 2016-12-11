@@ -37,6 +37,10 @@ lambdaInfo:
                         type: string
                     password:
                         type: string
+                    name:
+                        type: string
+                    dob:
+                        type: number
     arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:signup'
 apiInfo:
     paths:
@@ -48,11 +52,11 @@ apiInfo:
                     - application/json
                 parameters:
                     -
-                        name: authRequest
+                        name: signupRequest
                         in: body
                         required: true
                         schema:
-                            $ref: '#/definitions/authRequest'
+                            $ref: '#/definitions/signupRequest'
                 responses:
                     '200':
                         description: ok
