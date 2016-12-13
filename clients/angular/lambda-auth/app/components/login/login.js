@@ -3,22 +3,47 @@
 function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scope, $location) {
   this.email = lastLoginSignupInfo.email;
   var ctrl = this;
-  console.log(this);
+  ctrl.flashEmail = false;
+  ctrl.flashPassword = false;
+  ctrl.signupButtonDisable = false;
+
   ctrl.$onInit = function() {
-    console.log("view init");
+
   };
 
+  ctrl.flash = function(name) {
+    if (ctrl[name]) {
+      return;
+    }
+    ctrl[name] = true;
+    setTimeout(function() {
+      $scope.$apply(function(){
+        ctrl[name] = false;
+      });
+    }, 500);
+  }
+
   ctrl.login = function() {
-    console.log("button clicked ");
-    console.log("email: " + ctrl.email);
-    console.log("password: " + ctrl.password);
+    console.log("login button clicked ");
+
+    if (!ctrl.email || (ctrl.email === "")) {
+      ctrl.flash('flashEmail');
+      return;
+    }
+
+    if (!ctrl.password || (ctrl.password === "")) {
+      ctrl.flash('flashPassword');
+      return;
+    }
+
+    ctrl.loginButtonDisable = true;
 
     apiUnauthedClientFactory.loginPost({},{password: ctrl.password, email: ctrl.email})
     .then(function(result){
       console.log("login success");
       authService.setIdentityAndToken(result.data.IdentityId, result.data.Token, function (client, err) {
         $scope.$apply(function(){
-//          ctrl.signupButtonDisable = false;
+          ctrl.loginButtonDisable = true;
           if (err) {
             console.log(err);
           } else {
@@ -29,6 +54,7 @@ function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scop
 
     }).catch(function(result){
         //This is where you would put an error callback
+        ctrl.loginButtonDisable = true;
         console.log("fail");
     });
 

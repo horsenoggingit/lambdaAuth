@@ -10,9 +10,8 @@ function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $loc
 
   ctrl.signupButtonDisable = false;
 
-  console.log(this);
   ctrl.$onInit = function() {
-    console.log("view init");
+
   };
 
   ctrl.flash = function(name) {

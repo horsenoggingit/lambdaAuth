@@ -1,7 +1,7 @@
 <center>
   <p><h1>Login</h1></p>
-  <p>Email: <input type="text" ng-model="$ctrl.email"/></p>
-  <p><center>Password: <input type="current-password" ng-model="$ctrl.password"/></p>
+  <p>Email: <input type="email" ng-model="$ctrl.email" placeholder="you@somewhere.com" ng-class="{flashable: $ctrl.flashEmail}"/></p>
+  <p><center>Password: <input type="current-password" ng-model="$ctrl.password" ng-class="{flashable: $ctrl.flashPassword}"/></p>
   </p>
-  <p><button ng-click="$ctrl.login()">Login</button></p>
+  <p><button ng-click="$ctrl.login()" ng-disabled="$ctrl.loginButtonDisable">Login</button></p>
 </center>
