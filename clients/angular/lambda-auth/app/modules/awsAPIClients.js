@@ -2,13 +2,14 @@
 
 var awsAPIClientsModule = angular.module("awsAPIClients", ['ngCookies']);
 
-awsAPIClientsModule.value('idendityIdTokenAuthedClient',{IdentityId:null,Token:null,AuthedClient:null,ProviderName:null,ProviderId:null});
+awsAPIClientsModule.value('idendityIdTokenAuthedClient',{IdentityId:null,Token:null,AuthedClient:null});
+awsAPIClientsModule.value('providerData',{providerName: null, providerId:null});
 
 awsAPIClientsModule.factory('apiUnauthedClientFactory', function () {
   return apigClientFactory.newClient();
 })
 
-awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, idendityIdTokenAuthedClient, $cookies) {
+awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, idendityIdTokenAuthedClient, providerData, $cookies) {
   var ctrl = this;
 
   ctrl.sessionExpired = function () {
@@ -30,24 +31,28 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
 
   ctrl.updateAuthedClient = function (callback) {
     console.log('attempting to update authed client')
-    var updateClient = function (){
+
+    if (!ctrl.sessionExpired()) {
+      console.log("session isn't expired, returning authed client")
       idendityIdTokenAuthedClient['AuthedClient'] = apigClientFactory.newClient({
           accessKey: AWS.config.credentials.accessKeyId,
           secretKey: AWS.config.credentials.secretAccessKey,
           sessionToken: AWS.config.credentials.sessionToken,
-      });
-    }
-
-    if (!ctrl.sessionExpired()) {
-      console.log("session isn't expired, returning authed client")
-      updateClient();
-      callback(idendityIdTokenAuthedClient['AuthedClient']);
+      });      callback(idendityIdTokenAuthedClient['AuthedClient']);
     } else {
       console.log("session expired, returning 'no valid session credentials'.")
       idendityIdTokenAuthedClient['AuthedClient'] = null;
       callback(null, new Error('no valid session credentials'));
     }
   };
+
+  ctrl.clearAll = function () {
+    // effectively logs out the user
+    ctrl.clearSession();
+    ctrl.clearIdentityAndToken();
+    ctrl.clearProviderData();
+    delete idendityIdTokenAuthedClient['AuthedClient'];
+  }
 
   ctrl.clearSession = function () {
     AWS.config.credentials = null;
@@ -63,39 +68,43 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         sessionObject['expireTime'] = new Date(sessionObject.expireTimeJSONDate);
         delete sessionObject.expireTimeJSONDate;
         console.log('retrieved parsable session');
-        ctrl.retrieveIdentityAndToken();
-        if (ctrl.hasIdentityAndToken()) {
-          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-             IdentityId: idendityIdTokenAuthedClient['IdentityId'],
-             Logins: {
-                'cognito-identity.amazonaws.com': idendityIdTokenAuthedClient['Token']
-             }
-          });
-          AWS.config.credentials['expireTime'] = sessionObject.expireTime;
-          AWS.config.credentials['accessKeyId'] = sessionObject.accessKeyId;
-          AWS.config.credentials['secretAccessKey'] = sessionObject.secretAccessKey;
-          AWS.config.credentials['sessionToken'] = sessionObject.sessionToken;
-          AWS.config.credentials['identityId'] = idendityIdTokenAuthedClient['IdentityId'];
+        AWS.config.credentials = {};
+        AWS.config.credentials['expireTime'] = sessionObject.expireTime;
+        AWS.config.credentials['accessKeyId'] = sessionObject.accessKeyId;
+        AWS.config.credentials['secretAccessKey'] = sessionObject.secretAccessKey;
+        AWS.config.credentials['sessionToken'] = sessionObject.sessionToken;
 
-        } else {
-          console.log("missing identityId and token")
+        if (ctrl.sessionExpired()) {
+          console.log("stored session has expired");
+          delete idendityIdTokenAuthedClient['AuthedClient'];
           AWS.config.credentials = null;
         }
-
-
       } else {
-        console.log("unknown date format")
+        console.log("unknown date format for token expiration");
         AWS.config.credentials = null;
       }
     } else {
-      console.log('invalid or missing stored session')
+      console.log('invalid or missing stored session');
       AWS.config.credentials = null;
     }
   };
 
-  ctrl.getSession = function(callback) {
+  ctrl.storeSession = function () {
+    console.log("Storing new session credentials")
+    var params = {
+      accessKeyId: AWS.config.credentials.accessKeyId,
+      secretAccessKey: AWS.config.credentials.secretAccessKey,
+      sessionToken: AWS.config.credentials.sessionToken,
+      expireTimeJSONDate: AWS.config.credentials.expireTime.toJSON()
+    }
+    $cookies.putObject('sessionCredentials', params);
+  }
 
-    console.log("attempting to get session from cognito")
+  ctrl.getNewSession = function(callback) {
+
+    console.log("attempting to get new session from cognito")
+    // try to restore provider data if we have it
+    ctrl.restoreProviederData();
 
     if (ctrl.hasIdentityAndToken()) {
       // Set the region where your identity pool exists (us-east-1, eu-west-1)
@@ -113,6 +122,15 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
             'cognito-identity.amazonaws.com': idendityIdTokenAuthedClient['Token']
          }
       });
+    } else {
+      console.log("no Identity and Token found")
+      AWS.config.credentials = null;
+      if (!ctrl.hasReceivedProviderData()) {
+        console.log("no stored provider data")
+        // nothing to do... basically need to logout
+        callback(null,new Error("not enough information to create new session"));
+        return;
+      }
     }
 
     var loginWithProviderData = function (callback){
@@ -123,21 +141,22 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         return;
       }
       console.log("trying to get Identity and Token with provider data")
-      apiUnauthedClientFactory.loginPost({},{'provider-name': idendityIdTokenAuthedClient['providerName'], 'id': idendityIdTokenAuthedClient['providerId']})
+      apiUnauthedClientFactory.loginPost({},{'provider-name': providerData['providerName'], 'id': providerData['providerId']})
       .then(function(result){
           console.log("received Identity and Token from provider data");
           ctrl.setIdentityAndToken(result.data.IdentityId, result.data.Token, callback);
       }).catch(function(result){
           console.log("fail to get Identity and Token with provider data");
+          callback(null, new Error("unable to get data for new session"));
       });
     };
 
     // Make the call to obtain session
-/*    if (ctrl.sessionExpired() && ctrl.hasReceivedProviderData()) {
+    if (!AWS.config.credentials && ctrl.hasReceivedProviderData()) {
       loginWithProviderData(callback);
       return;
     }
-*/
+
     AWS.config.credentials.get(function(err){
       if (err) {
         console.log("could not get session from IdentityID and Token with get")
@@ -145,28 +164,13 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         // try one more time with refresh
         loginWithProviderData(callback);
       } else {
-        console.log("Storing new session credentials")
-        var params = {
-          accessKeyId: AWS.config.credentials.accessKeyId,
-          secretAccessKey: AWS.config.credentials.secretAccessKey,
-          sessionToken: AWS.config.credentials.sessionToken,
-          expireTimeJSONDate: AWS.config.credentials.expireTime.toJSON()
-        }
-        $cookies.putObject('sessionCredentials', params);
+        ctrl.storeSession();
         ctrl.updateAuthedClient(function (client, err) {
-          callback(client,err); // also logout?
+          callback(client,err); // also logout if error?
           if (!err) {
             // get the curretn client provider and id
             if (!ctrl.hasReceivedProviderData()) {
-              console.log("getting provider data")
-              client.userMeGet().then(function(result){
-                console.log("received provier data")
-                ctrl.setProviderNameAndId(result.data['provider-name'], result.data.logins[result.data['provider-name']]);
-              }).catch(function(result) {
-                console.log("failed getting provider data");
-                console.log(result);
-                // also logout?
-              });
+              ctrl.getProviderData(client)
             } else {
               console.log("already have provider data, no need to get it again");
             }
@@ -179,21 +183,47 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
   ctrl.clearIdentityAndToken = function () {
     delete idendityIdTokenAuthedClient['IdentityId'];
     delete idendityIdTokenAuthedClient['Token'];
-    delete idendityIdTokenAuthedClient['AuthedClient'];
-    $cookies.putObject('idendityIdTokenAuthedClient',idendityIdTokenAuthedClient);
   }
 
+  ctrl.getProviderData = function (client) {
+    console.log("getting provider data")
+    client.userMeGet().then(function(result){
+      console.log("received provier data")
+      ctrl.setProviderNameAndId(result.data['provider-name'], result.data.logins[result.data['provider-name']]);
+      // this infromation is no longer needed
+      ctrl.clearIdentityAndToken();
+    }).catch(function(result) {
+      console.log("failed getting provider data");
+      console.log(result);
+      // also logout?
+    });
+  };
+
   ctrl.hasReceivedProviderData = function () {
-    if (idendityIdTokenAuthedClient['providerName']&&idendityIdTokenAuthedClient['providerId']) {
+    if (providerData['providerName'] && providerData['providerId']) {
       return true;
     }
     return false;
   }
 
+  ctrl.restoreProviederData = function () {
+    var providerFromStorage = $cookies.getObject('providerData');
+    if (providerFromStorage) {
+      providerData.providerName = providerFromStorage.providerName;
+      providerData.providerId = providerFromStorage.providerId;
+    }
+  }
+
   ctrl.setProviderNameAndId = function (providerName, providerId) {
-    idendityIdTokenAuthedClient['providerName'] = providerName;
-    idendityIdTokenAuthedClient['providerId'] = providerId;
-    $cookies.putObject('idendityIdTokenAuthedClient',idendityIdTokenAuthedClient);
+    providerData['providerName'] = providerName;
+    providerData['providerId'] = providerId;
+    $cookies.putObject('providerData',providerData);
+  }
+
+  ctrl.clearProviderData = function () {
+    delete providerData['providerName'];
+    delete providerData['providerId'];
+    $cookies.remove('providerData');
   }
 
   ctrl.hasIdentityAndToken = function () {
@@ -204,28 +234,12 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
   }
 
   ctrl.setIdentityAndToken = function (identityId, token, callback) {
+    delete idendityIdTokenAuthedClient['AuthedClient'];
     ctrl.clearIdentityAndToken();
     ctrl.clearSession();
     idendityIdTokenAuthedClient['IdentityId'] = identityId;
     idendityIdTokenAuthedClient['Token'] = token;
-    $cookies.putObject('idendityIdTokenAuthedClient',idendityIdTokenAuthedClient);
     ctrl.authedClient(callback);
-  }
-
-  ctrl.retrieveIdentityAndToken = function () {
-    console.log("attempting to retrieve retrieveIdentityAndToken");
-    var idendityIdToken = $cookies.getObject('idendityIdTokenAuthedClient');
-    if (idendityIdToken) {
-      console.log("retrieved IdentityAndToken");
-      idendityIdTokenAuthedClient['IdentityId'] = idendityIdToken.IdentityId;
-      idendityIdTokenAuthedClient['Token'] = idendityIdToken.Token;
-      idendityIdTokenAuthedClient['providerName'] = idendityIdToken.providerName;
-      idendityIdTokenAuthedClient['providerId'] = idendityIdToken.providerId;
-
-    } else {
-      console.log("no retrieveIdentityAndToken found clearing");
-      ctrl.clearIdentityAndToken();
-    }
   }
 
   ctrl.authedClient = function (callback) {
@@ -248,20 +262,23 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         console.log("updating authed client")
         if (err) {
           // try to start from identityID & token
-          ctrl.retrieveIdentityAndToken();
-          if (ctrl.hasIdentityAndToken() || ctrl.hasReceivedProviderData()) {
-            ctrl.getSession(function (authedClient,err) {
-              if (err) {
-                callback(null,err); // could not get session
-              } else {
-                callback(authedClient);
-              }
-            })
-          } else {
-            callback(null, new Error('no idendityIdTokenAuthedClient'));
-          }
+          ctrl.getNewSession(function (authedClient,err) {
+            if (err) {
+              callback(null,err); // could not get session
+            } else {
+              callback(authedClient);
+            }
+          })
         } else {
           callback(client);
+          // check to make sure we have provider data.
+          if (!ctrl.hasReceivedProviderData()) {
+            // lets see if it can be
+            ctrl.restoreProviederData();
+            if (!ctrl.hasReceivedProviderData()) {
+              ctrl.getProviderData(client);
+            }
+          }
         }
       });
     } else {
