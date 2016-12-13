@@ -4,7 +4,6 @@ function topbar(menus) {
   var ctrl = this;
   ctrl.createItemList = function() {
     var items =[];
-      console.log(ctrl.menuName)
     var selectedMenu = menus[ctrl.menuName];
 
     for (var index = 0; index<selectedMenu.length; index ++) {
