@@ -3,5 +3,5 @@
   <p>Email: <input type="email" ng-model="$ctrl.email" placeholder="you@somewhere.com" ng-class="{flashable: $ctrl.flashEmail}"/></p>
   <p><center>Password: <input type="current-password" ng-model="$ctrl.password" ng-class="{flashable: $ctrl.flashPassword}"/></p>
   </p>
-  <p><button ng-click="$ctrl.login()" ng-disabled="$ctrl.loginButtonDisable">Login</button></p>
+  <p><button ng-click="$ctrl.login()" ng-disabled="$ctrl.loginButtonDisable" ng-class="{shakable: $ctrl.shakeLoginButton}">Login</button></p>
 </center>

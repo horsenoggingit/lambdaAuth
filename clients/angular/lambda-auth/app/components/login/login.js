@@ -56,6 +56,13 @@ function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scop
         //This is where you would put an error callback
         $scope.$apply(function(){
           ctrl.loginButtonDisable = false;
+          ctrl.shakeLoginButton = true;
+          setTimeout(function() {
+            $scope.$apply(function(){
+              ctrl.shakeLoginButton = false;
+            });
+          }, 500);
+
         });
         console.log("fail");
     });

@@ -1,7 +1,9 @@
 - cleanup logs
+- signing up w an existing email does not do anything
 - work on iOS app with same setup as angular
 - login and singup don't do anything if response returns error
 - usage of "-" and "_" in params is not consistent
+- setup web site on s3 (add tools for that)
 
 - DONE: need to add an authed page in the app that verifies that was actually have auth, and if not kicks back to the login/signup screen.
 - DONE: also need to understand how to refresh credentials from the stored AWS token.
