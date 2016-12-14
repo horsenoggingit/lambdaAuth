@@ -43,7 +43,7 @@ function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scop
       console.log("login success");
       authService.setIdentityAndToken(result.data.IdentityId, result.data.Token, function (client, err) {
         $scope.$apply(function(){
-          ctrl.loginButtonDisable = true;
+          ctrl.loginButtonDisable = false;
           if (err) {
             console.log(err);
           } else {
@@ -54,7 +54,9 @@ function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scop
 
     }).catch(function(result){
         //This is where you would put an error callback
-        ctrl.loginButtonDisable = true;
+        $scope.$apply(function(){
+          ctrl.loginButtonDisable = false;
+        });
         console.log("fail");
     });
 

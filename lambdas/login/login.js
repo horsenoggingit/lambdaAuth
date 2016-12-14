@@ -118,12 +118,12 @@ exports.handler = (event, context, callback) => {
                 callback(JSON.stringify(errorObject));
               }
             } else {
-              console.log("user does not have a valid password for request: " + context.awsRequestId);
+              console.log("user does not have a valid password data for request: " + context.awsRequestId);
               var errorObject = {
                 requestId: awsRequestId,
                 errorType : "InternalServerError",
                 httpStatus : 500,
-                message : "No matching login informaiton."
+                message : "Could not get user info."
               };
               callback(JSON.stringify(errorObject));
             }
@@ -147,7 +147,7 @@ exports.handler = (event, context, callback) => {
   docClient.get(params, function (err, data) {
     if (err) {
       console.log(err);
-      console.log("Could not get user identity from cognito for request: " + context.awsRequestId);
+      console.log("Could not get user identity from email db for request: " + context.awsRequestId);
       var errorObject = {
         requestId: context.awsRequestId,
         errorType : "Unauthorized",
@@ -159,7 +159,44 @@ exports.handler = (event, context, callback) => {
       // it we get some objects back from the email table then the users has already signed up
       if (typeof data.Item == "object") {
         // go to cognito and pull up the identity
-        getIdentityIDAndToken(data.Item.id, event, context.awsRequestId, callback);
+        getIdentityIDAndToken(data.Item.id, event, context.awsRequestId, function (err, data) {
+          if (err || !data || !data.IdentityId || !data.Token) {
+            console.log("Could not get user identity from cognito for request: " + context.awsRequestId);
+            var errorObject = {
+              requestId: context.awsRequestId,
+              errorType : "Unauthorized",
+              httpStatus : 401,
+              message : "No matching login informaiton."
+            };
+            callback(JSON.stringify(errorObject));
+          } else {
+            // have user data
+            // update login timestamp
+            var paramsUser = {
+              TableName: AWSConstants.DYNAMO_DB.USERS.name,
+              Key : {},
+              UpdateExpression: "set " + AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP + " = :t",
+              ExpressionAttributeValues: {
+                  ":t": Date.now()
+                }
+            }
+            paramsUser.Key[AWSConstants.DYNAMO_DB.USERS.ID] = data.IdentityId;
+            docClient.update(paramsUser, function (err, updateData) {
+              if (err) {
+                console.log("unable to update login timestamp for request: " + context.awsRequestId);
+                var errorObject = {
+                  requestId: context.awsRequestId,
+                  errorType : "InternalServerError",
+                  httpStatus : 500,
+                  message : "Could not set user info."
+                };
+                callback(JSON.stringify(errorObject));
+              } else {
+                callback(null, data);
+              }
+            });
+          }
+        });
       } else {
         console.log("Could not get user info from db for request: " + context.awsRequestId);
         var errorObject = {

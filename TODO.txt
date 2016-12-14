@@ -1,9 +1,10 @@
 - cleanup logs
 - work on iOS app with same setup as angular
-- login doesn't seem to update the login timestamp
+- login and singup don't do anything if response returns error
 - usage of "-" and "_" in params is not consistent
 
 - DONE: need to add an authed page in the app that verifies that was actually have auth, and if not kicks back to the login/signup screen.
 - DONE: also need to understand how to refresh credentials from the stored AWS token.
 - DONE: Roles for cognito are not handled correctly (need a way to update the policy with pool ID)
 - DONE: rework login page to match signup in terms of behavior
+- DONE: login doesn't seem to update the login timestamp
