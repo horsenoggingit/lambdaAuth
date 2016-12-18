@@ -16,3 +16,6 @@ AWSTools/deleteIdentityPool.js
 AWSTools/deleteRole.js --roleType api
 AWSTools/deleteRole.js --roleType lambda
 AWSTools/deleteRole.js --roleType cognito
+
+# remove Angular client s3 bucket
+AWSTools/deleteAngularClientBucket.js

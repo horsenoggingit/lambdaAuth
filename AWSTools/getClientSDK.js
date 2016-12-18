@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 const fs = require('fs');
 const YAML = require('yamljs');
 const exec = require('child_process').exec;
@@ -9,7 +8,7 @@ const awsc = require(path.join(__dirname, 'awscommonutils'))
 const AWSRequest = require(path.join(__dirname, 'AWSRequest'));
 
 var yargs = require('yargs')
-.usage('Create the lambdas for the project.\nIf a lambda with the same name already exists the operation will fail.\nUse "deleteLambda" first to remove the exisiting function.\nUsage: $0 [options]')
+.usage('Get AWS API Gateway SDK for the project clients.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that containes information about your API')
 .default('s','./base.definitions.yaml')
@@ -107,8 +106,6 @@ forEachLambdaDefinition(function (fileName) {
     }).startRequest();
   }
 );
-
-
 
 function forEachLambdaDefinition (callback, doneCallback) {
   fs.readdir(argv.clientDefinitionsDir, function (err, files) {

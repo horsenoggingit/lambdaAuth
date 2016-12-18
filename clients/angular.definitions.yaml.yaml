@@ -19,18 +19,17 @@ s3Info:
                     Action: 's3:GetObject'
                     Resource: 'arn:aws:s3:::$name/*'
         region: us-east-1
-        name: lambdaauth5179
-        location: /lambdaauth5179
-    fileSyncInfo:
-        syncPath: angular/lambda-auth/app
-        acl: public-read
-        syncExclusions:
-            - '*/.*'
-            - .DS_Store
-            - '*.md'
-            - '*.zip'
-            - '*_test.js'
-            - '*-test.js'
+        name: lambdaauth3790
+        location: /lambdaauth3790
+fileSyncInfo:
+    syncPath: angular/lambda-auth/app
+    syncExclusions:
+        - '*/.*'
+        - .DS_Store
+        - '*.md'
+        - '*.zip'
+        - '*_test.js'
+        - '*-test.js'
 lambdaInfo:
     awsResources:
         -

@@ -32,3 +32,9 @@ AWSTools/deployAPI.js
 
 # get the SDK's for the clients
 AWSTools/getClientSDK.js
+
+# create s3 bucket for Angular app distribution
+AWSTools/createAngularClientBucket.js
+
+# now that we have a bucket we can sync the static angular substitue
+AWSTools/syncAngularClientBucket.js
