@@ -40,6 +40,7 @@ if (!awsc.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').is
 }
 
 var awsRequests = [];
+console.log("Deleting Angular clinet s3 bucket.")
 forEachLambdaDefinition(function (fileName) {
   // here we would want to fork to do ops in parallel
   var definitions = YAML.load(path.join(argv.clientDefinitionsDir,fileName));
@@ -51,6 +52,9 @@ forEachLambdaDefinition(function (fileName) {
     awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'namePrefix'], 's', 'in angular client definition file').exitOnError();
     // no bucket - lets create one.
     deleteBucket(definitions, function (err, definitions) {
+      if (err) {
+        console.log(err);
+      }
       delete definitions.s3Info.bucketInfo.name;
       delete definitions.s3Info.bucketInfo.location;
       writeOut(path.join(argv.clientDefinitionsDir, fileName), definitions, "bucket name was not removed.", function () {
@@ -66,13 +70,14 @@ function deleteBucket(definitions, callback) {
 
   AWSRequest.createRequest(
     {
-      serviceName: "s3api",
-      functionName: "delete-bucket",
+      serviceName: "s3",
+      functionName: "rb",
       context:{definitions : definitions},
       parameters: {
-        'bucket' : {type:'string', value:definitions.s3Info.bucketInfo.name},
-        'profile' : {type:'string', value:AWSCLIUserProfile}
+        'force' : {type:'none', value:""},
+        'profile' : {type:'string', value:AWSCLIUserProfile},
       },
+      customParamString: "s3://" + definitions.s3Info.bucketInfo.name,
       returnSchema: 'none',
     },
     function (request) {

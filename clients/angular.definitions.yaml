@@ -1,7 +1,6 @@
 apiInfo:
     clientSDK:
         downloadPath: angular/lambda-auth/app/aws
-        downloadFilename: aws-sdk.js
         sdkType: javascript
 s3Info:
     bucketInfo:
@@ -19,8 +18,6 @@ s3Info:
                     Action: 's3:GetObject'
                     Resource: 'arn:aws:s3:::$name/*'
         region: us-east-1
-        name: lambdaauth5179
-        location: /lambdaauth5179
     fileSyncInfo:
         syncPath: angular/lambda-auth/app
         acl: public-read

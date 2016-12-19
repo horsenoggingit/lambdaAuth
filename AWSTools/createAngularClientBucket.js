@@ -40,6 +40,7 @@ if (!awsc.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').is
 }
 
 var awsRequests = [];
+console.log("Creating Angular client s3 bucket.")
 forEachLambdaDefinition(function (fileName) {
   // here we would want to fork to do ops in parallel
   var definitions = YAML.load(path.join(argv.clientDefinitionsDir,fileName));

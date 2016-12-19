@@ -61,7 +61,7 @@ clients/angular/lambda-auth/app/bower_components
 
 clients/angular/lambda-auth/node_modules
 
-
+clients/iOS/lambdaAuth/aws/aws-apigateway-ios
 
 lambdas/userMe.definitions.yaml.yaml
 
@@ -72,3 +72,5 @@ lambdas/login.definitions.yaml.yaml
 base.definitions 2.yaml
 
 base.definitions 3.yaml
+
+clients/iOS/lambdaAuth/aws/api.zip

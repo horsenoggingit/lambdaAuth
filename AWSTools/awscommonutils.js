@@ -194,19 +194,21 @@ exports.updateFile = function updateFile(fName, dataCallback, callback) {
   if (fs.existsSync(fName + ".old")) {
       fs.unlinkSync(fName + ".old");
   }
-
-  fs.rename(fName, fName + ".old", function (err){
-    if (err) {
-      callback(err,null);
-      return;
-    }
-
-    fs.writeFile(fName, dataCallback(), function (err) {
+  setTimeout(function () {
+    fs.rename(fName, fName + ".old", function (err){
       if (err) {
-        callback(null,err);
+        callback(err,null);
         return;
       }
-      callback(null,null);
+      setTimeout(function () {
+        fs.writeFile(fName, dataCallback(), function (err) {
+          if (err) {
+            callback(null,err);
+            return;
+          }
+          callback(null,null);
+        });
+      },250);
     });
-  });
+  }, 250);
 }

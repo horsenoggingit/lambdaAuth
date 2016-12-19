@@ -150,7 +150,7 @@ class AWSRequest extends EventEmitter {
     }
 
     if (this.outFile) {
-      command += " '" + tthis.outFile + "'"
+      command += " '" + this.outFile + "'"
     }
     this.awsCommand = command;
     this.executeRequest();
