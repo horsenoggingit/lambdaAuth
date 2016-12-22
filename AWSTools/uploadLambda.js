@@ -8,13 +8,13 @@ const path = require('path');
 var yargs = require('yargs')
 .usage('Update project lambdas.\n"createLambda" should have been previously called.\n"Usage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('l','lambdaDefinitionsDir')
-.describe('l','directory that containes lambda definition files and implementations')
+.describe('l','directory that contains lambda definition files and implementations')
 .default('l','./lambdas')
 .alias('l','lambdaDefinitionsDir')
-.describe('l','directory that containes lambda definition files and implementations. <lambdaName>.zip archives will be placed here.')
+.describe('l','directory that contains lambda definition files and implementations. <lambdaName>.zip archives will be placed here.')
 .default('l','./lambdas')
 .alias('n','lambdaName')
 .describe('n','a specific lambda to process. If not specified all lambdas found will be uploaded')
@@ -40,10 +40,10 @@ if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 var AWSCLIUserProfile = "default"
-if (typeof baseDefinitions.enviroment != 'object') {
+if (typeof baseDefinitions.environment != 'object') {
 } else {
-  if (typeof baseDefinitions.enviroment.AWSCLIUserProfile == 'string') {
-    AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+  if (typeof baseDefinitions.environment.AWSCLIUserProfile == 'string') {
+    AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
   }
 }
 

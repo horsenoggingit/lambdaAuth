@@ -11,7 +11,7 @@ var YAML = require('yamljs');
 var argv = require('yargs')
 .usage('Delete project identity pools.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .help('h')
 .alias('h', 'help')
@@ -25,8 +25,8 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 var AWSCLIUserProfile = "default";
-if (!awscommon.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 } else {
   console.log("using \"default\" AWSCLIUserProfile");
 }

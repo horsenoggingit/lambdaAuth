@@ -10,10 +10,10 @@ const AWSRequest = require(path.join(__dirname, 'AWSRequest'));
 var yargs = require('yargs')
 .usage('Delete the project lambdas.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('l','lambdaDefinitionsDir')
-.describe('l','directory that containes lambda definition files and implementations. <lambdaName>.zip archives will be placed here.')
+.describe('l','directory that contains lambda definition files and implementations. <lambdaName>.zip archives will be placed here.')
 .default('l','./lambdas')
 .alias('n','lambdaName')
 .describe('n','a specific lambda to process. If not specified all lambdas found will be uploaded')
@@ -37,10 +37,10 @@ if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 var AWSCLIUserProfile = "default"
-if (typeof baseDefinitions.enviroment != 'object') {
+if (typeof baseDefinitions.environment != 'object') {
 } else {
-  if (typeof baseDefinitions.enviroment.AWSCLIUserProfile == 'string') {
-    AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+  if (typeof baseDefinitions.environment.AWSCLIUserProfile == 'string') {
+    AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
   }
 }
 
@@ -72,16 +72,18 @@ forEachLambdaDefinition(function (fileName) {
 });
 
 function deleteLambda(reqParams, defaultsFileName) {
-
-  AWSRequest.createRequest({
+  var deleteRequest = AWSRequest.createRequest({
     serviceName: "lambda",
     functionName: "delete-function",
     parameters:reqParams,
+    retryCount: 3,
+    retryErrorIds: ['ServiceException'],
+    retryDelay: 2000,
     returnSchema:'none'
   },
   function (request) {
     if (request.response.error) {
-      if (request.response.errorId == 'ResourceNotFoundException') {
+      if (request.response.errorId === 'ResourceNotFoundException') {
         console.log("Warning: lambda \"" + request.parameters["function-name"].value + "\" not found.")
       } else {
         throw request.response.error;
@@ -104,8 +106,13 @@ function deleteLambda(reqParams, defaultsFileName) {
       }
       console.log("Done.");
     });
+  });
 
-  }).startRequest();
+  deleteRequest.on('AwsRequestRetry', function () {
+    console.log("Warning: unable to delete lambda \"" + this.parameters["function-name"].value + "\" due to \"ServiceException\". This happens occasionally when deleting a number of lambdas at once. Trying again...");
+  });
+
+  deleteRequest.startRequest();
 }
 
 function forEachLambdaDefinition (callback) {

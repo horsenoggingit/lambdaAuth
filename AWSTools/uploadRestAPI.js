@@ -9,7 +9,7 @@ const YAML = require('yamljs');
 var argv = require('yargs')
 .usage('Upldate project API.\n"createAPI" should have been previously called.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('a','apiDefinitionFile')
 .describe('a','yaml swagger API file to upload to AWS')
@@ -36,8 +36,8 @@ awsc.verifyPath(baseDefinitions,['apiInfo','awsId'],'s', "base definitions file 
 awsc.verifyPath(baseDefinitions,['apiInfo','region'],'s', "base definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
 
 var AWSCLIUserProfile = "default";
-if (!awsc.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 } else {
   console.log("using \"default\" AWSCLIUserProfile");
 }

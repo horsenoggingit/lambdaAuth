@@ -10,7 +10,7 @@ var YAML = require('yamljs');
 var argv = require('yargs')
 .usage('Create project roles and attach policies.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('t', 'roleType')
 .describe('t', 'which roles to create [api | lambda]')
@@ -43,8 +43,8 @@ var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 awscommon.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \"" + argv.baseDefinitionsFile+"\"").exitOnError();
 
 var AWSCLIUserProfile = "default";
-if (!awscommon.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 }
 
 var createRoleComplete = 0;

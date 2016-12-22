@@ -28,7 +28,7 @@ exports.handler = (event, context, callback) => {
     return;
   }
   console.log(event);
-  // event containes the identity_id that is filled in by API GATEWAY by payload mapping to this lambda
+  // event contains the identity_id that is filled in by API GATEWAY by payload mapping to this lambda
   // lookup in the user table
   var params = {
     TableName: AWSConstants.DYNAMO_DB.USERS.name,

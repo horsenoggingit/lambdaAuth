@@ -9,10 +9,10 @@ const AWSRequest = require(path.join(__dirname, 'AWSRequest'));
 var yargs = require('yargs')
 .usage('Creates an s3 bucket if needed and configures as static web host.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('l','clientDefinitionsDir')
-.describe('l','directory that containes client definition files and implementations.')
+.describe('l','directory that contains client definition files and implementations.')
 .default('l','./clients')
 .help('h')
 .alias('h', 'help')
@@ -33,8 +33,8 @@ if (!fs.existsSync(argv.clientDefinitionsDir)) {
 }
 
 var AWSCLIUserProfile = "default";
-if (!awsc.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 } else {
   console.log("using \"default\" AWSCLIUserProfile");
 }
@@ -166,7 +166,7 @@ function enableWeb(definitions, callback) {
 function addBucketPolicy(definitions, callback) {
   if (!awsc.verifyPath(definitions,['s3Info', 'bucketInfo', 'policy'],'o').isVerifyError) {
     console.log("Found bucket policy.")
-    // substitue any occurance of $name in Resources with bucket name.
+    // substitute any occurrence of $name in Resources with bucket name.
     var policy = definitions.s3Info.bucketInfo.policy;
     for (index = 0; index < policy.Statement.length; index++) {
       policy.Statement[index].Resource = policy.Statement[index].Resource.replace('$name', definitions.s3Info.bucketInfo.name);

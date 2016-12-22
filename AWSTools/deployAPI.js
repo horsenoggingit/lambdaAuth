@@ -10,7 +10,7 @@ var YAML = require('yamljs');
 var yargs = require('yargs')
 .usage('Deploy API to a stage.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('d','description')
 .describe('d','The description for the  Deployment resource to create.')
@@ -38,10 +38,10 @@ if (typeof baseDefinitions.apiInfo == 'object') {
 }
 
 var AWSCLIUserProfile = "default"
-if (typeof baseDefinitions.enviroment != 'object') {
+if (typeof baseDefinitions.environment != 'object') {
 } else {
-  if (typeof baseDefinitions.enviroment.AWSCLIUserProfile == 'string') {
-    AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+  if (typeof baseDefinitions.environment.AWSCLIUserProfile == 'string') {
+    AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
   }
 }
 

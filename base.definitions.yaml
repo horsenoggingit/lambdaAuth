@@ -1,4 +1,4 @@
-enviroment:
+environment:
     AWSCLIUserProfile: adminuser
 cognitoIdentityPoolInfo:
     roleDefinitions:
@@ -20,6 +20,7 @@ cognitoIdentityPoolInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
                     name: AmazonAPIGatewayInvokeFullAccess
+            arnRole: 'arn:aws:iam::940223146162:role/apiAccessRole'
     identityPools:
         testPool:
             lambdaAliases:
@@ -39,6 +40,7 @@ cognitoIdentityPoolInfo:
                                 'cognito-identity.amazonaws.com:aud': $identityPoolId
                             'ForAnyValue:StringLike':
                                 'cognito-identity.amazonaws.com:amr': authenticated
+            identityPoolId: 'us-east-1:435e3193-c758-47d1-9f2e-62fc0878554c'
 lambdaInfo:
     roleDefinitions:
         userConsumer:
@@ -60,6 +62,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/userConsumer'
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -79,6 +82,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/userCreator'
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
@@ -94,6 +98,7 @@ apiInfo:
                 -
                     arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
                     name: LambdaInvocation
+            arnRole: 'arn:aws:iam::940223146162:role/lambdaExecuteRole'
     defaultDeployStage: dev
     region: us-east-1
     AWSSwaggerHeader:
@@ -190,6 +195,13 @@ apiInfo:
             name: Authorization
             in: header
             x-amazon-apigateway-authtype: awsSigv4
+    awsId: dog0d7vjyd
+    lastDeploy:
+        uploadResult:
+            description: 'Yet another deploy...'
+            id: 71abbe
+            createdDate: 1482432022
+        invokeURL: 'https://dog0d7vjyd.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     users:
         lambdaAliases:
@@ -213,6 +225,25 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/users'
+            AttributeDefinitions:
+                -
+                    AttributeName: id
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: users
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: id
+            ItemCount: 0
+            CreationDateTime: 1482431997.538
     userEmail:
         lambdaAliases:
             resource: EMAILS
@@ -230,3 +261,22 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/userEmail'
+            AttributeDefinitions:
+                -
+                    AttributeName: email
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: userEmail
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: email
+            ItemCount: 0
+            CreationDateTime: 1482431997.366
