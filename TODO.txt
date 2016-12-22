@@ -31,3 +31,5 @@ An error occurred (ServiceException) when calling the DeleteFunction operation (
 - DONE: Roles for cognito are not handled correctly (need a way to update the policy with pool ID)
 - DONE: rework login page to match signup in terms of behavior
 - DONE: login doesn't seem to update the login timestamp
+
+Test
