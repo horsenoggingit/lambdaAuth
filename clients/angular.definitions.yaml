@@ -18,8 +18,6 @@ s3Info:
                     Action: 's3:GetObject'
                     Resource: 'arn:aws:s3:::$name/*'
         region: us-east-1
-        name: lambdaauth0551
-        location: /lambdaauth0551
     fileSyncInfo:
         syncPath: angular/lambda-auth/app
         acl: public-read
