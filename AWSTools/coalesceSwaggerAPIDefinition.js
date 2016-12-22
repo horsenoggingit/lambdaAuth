@@ -6,7 +6,7 @@ const awsc = require(path.join(__dirname, 'awscommonutils'))
 var argv = require('yargs')
 .usage('Create a single API definitions file to upload to AWS.\nx-amazon-apigateway-integration fields are updated with latest role and lambda arn.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes top level definitions including swagger template header')
+.describe('s','yaml file that contains top level definitions including swagger template header')
 .default('s','./base.definitions.yaml')
 .alias('l','lambdaDefinitionsDir')
 .describe('l','directory containing lambda definition yaml files')
@@ -15,7 +15,7 @@ var argv = require('yargs')
 .describe('o','coalesced yaml file for upload to AWS')
 .default('o','swaggerAPI.yaml')
 .alias('c','commonModelDefinitionFile')
-.describe('c','yaml file with common defintions of models')
+.describe('c','yaml file with common definitions of models')
 .help('h')
 .alias('h', 'help')
 .argv;
@@ -47,6 +47,17 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
   }
   swaggerBaseFile.paths = {};
   swaggerBaseFile.definitions = {};
+  swaggerBaseFile.securityDefinitions = {};
+  // see if there are any common definitions and use them to start.
+  // individual paths can also create their own defitions, but these will
+  // overwrite the existing ones.
+  if (typeof baseDefinitions.apiInfo.sharedDefinitions == 'object') {
+    swaggerBaseFile.definitions = baseDefinitions.apiInfo.sharedDefinitions;
+  }
+  if (typeof baseDefinitions.apiInfo.sharedSecurityDefinitions == 'object') {
+    swaggerBaseFile.securityDefinitions = baseDefinitions.apiInfo.sharedSecurityDefinitions;
+  }
+
   for (var index = 0; index < files.length; index++) {
     var fileName = files[index];
     var fileNameComponents = fileName.split('.');
@@ -67,6 +78,12 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
           swaggerBaseFile.definitions[key] = definitions.definitions[key];
         });
       }
+      // I'm going to assume that all security defitions are going to be under "definitions"
+      if (typeof definitions.securityDefinitions == 'object') {
+        Object.keys(definitions.securityDefinitions).forEach(function(key) {
+          swaggerBaseFile.securityDefinitions[key] = definitions.securityDefinitions[key];
+        });
+      }
     }
   }
   if (typeof argv.commonModelDefinitionFile == 'string') {
@@ -77,7 +94,7 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
   }
   // now that we have a full file, lets
 
-  fs.writeFile(argv.outputFilename, YAML.stringify(swaggerBaseFile, 6), function (err) {
+  fs.writeFile(argv.outputFilename, YAML.stringify(swaggerBaseFile, 15), function (err) {
     if (err) {
       console.log(err);
     } else {
@@ -101,10 +118,13 @@ function updateLambadInvocation(definitions) {
       if (awsc.verifyPath(methodDef,['x-amazon-apigateway-integration'], 'o',"").isVerifyError) {
         methodDef['x-amazon-apigateway-integration'] = {};
       }
-      var uri = 'arn:aws:apigateway:' + definitions.lambdaInfo.region + ':lambda:path//2015-03-31/functions/' + definitions.lambdaInfo.arnLambda + '/invocations';
-      methodDef['x-amazon-apigateway-integration']['uri'] = uri;
-      methodDef['x-amazon-apigateway-integration']['type'] = 'aws';
-      methodDef['x-amazon-apigateway-integration']['httpMethod'] = 'POST';
+      // if there isn;t an integration type already integrate the lambda
+      if (awsc.verifyPath(methodDef,['x-amazon-apigateway-integration','type'], 's',"").isVerifyError) {
+        var uri = 'arn:aws:apigateway:' + definitions.lambdaInfo.region + ':lambda:path//2015-03-31/functions/' + definitions.lambdaInfo.arnLambda + '/invocations';
+        methodDef['x-amazon-apigateway-integration']['uri'] = uri;
+        methodDef['x-amazon-apigateway-integration']['type'] = 'aws';
+        methodDef['x-amazon-apigateway-integration']['httpMethod'] = 'POST';
+      }
     });
   });
 }

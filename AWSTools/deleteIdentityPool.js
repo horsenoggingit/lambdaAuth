@@ -11,7 +11,7 @@ var YAML = require('yamljs');
 var argv = require('yargs')
 .usage('Delete project identity pools.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .help('h')
 .alias('h', 'help')
@@ -25,17 +25,17 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 var AWSCLIUserProfile = "default";
-if (!awscommon.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 } else {
   console.log("using \"default\" AWSCLIUserProfile");
 }
 
-awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
+awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var deleteRequests = [];
-var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo).forEach(function (identityPoolName) {
-  var poolDef = baseDefinitions.cognitoIdentityPoolInfo[identityPoolName];
+var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolName) {
+  var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName];
   var verifyError = awscommon.verifyPath(poolDef, ['identityPoolId'], 's', "definitions file \""+argv.baseDefinitionsFile+"\"").callbackOnError(function(verifyError) {
     console.log(verifyError.toString());
     console.log("Skipping delete request for \"" + identityPoolName + "\".")
@@ -68,7 +68,7 @@ function requestsDoneFunction(requestBatch){
     if (request.response.error) {
       console.log(request.response.error);
     } else {
-      delete baseDefinitions.cognitoIdentityPoolInfo[request.context.poolName].identityPoolId;
+      delete baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName].identityPoolId;
       successCount++;
     }
   });
@@ -80,7 +80,7 @@ function requestsDoneFunction(requestBatch){
   }
   // write out the result file
   awscommon.updateFile(argv.baseDefinitionsFile, function () {
-    return YAML.stringify(baseDefinitions, 6);
+    return YAML.stringify(baseDefinitions, 15);
   }, function (backupErr, writeErr) {
     if (backupErr) {
       console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". pool id was not updated.");

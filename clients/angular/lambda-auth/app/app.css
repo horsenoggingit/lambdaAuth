@@ -1,0 +1,71 @@
+/* app css stylesheet */
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li + li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.flashable {
+  background:white;
+  animation: flashBackground 0.3s linear;
+}
+
+@keyframes flashBackground {
+  0% {background: white;}
+  50% {background: red;}
+  100% {background: white;}
+}
+
+.shakable {
+  animation: shakeLocation 0.3s linear;
+}
+
+@keyframes shakeLocation {
+  10% {
+     transform: translate(20px, 0px);
+  }
+  20% {
+     transform: translate(-20px, 0px);
+  }
+  30% {
+     transform: translate(20px, 0px);
+  }
+  40% {
+     transform: translate(-20px, 0px);
+  }
+  50% {
+     transform: translate(20px, 0px);
+  }
+  60% {
+     transform: translate(-20px, 0px);
+  }
+  70% {
+     transform: translate(20px, 0px);
+  }
+  80% {
+     transform: translate(-20px, 0px);
+  }
+  90% {
+     transform: translate(20px, 0px);
+  }
+
+}

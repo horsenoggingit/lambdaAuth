@@ -3,6 +3,7 @@
 # create roles and attach policies
 AWSTools/createRole.js --roleType lambda
 AWSTools/createRole.js --roleType api
+AWSTools/createRole.js --roleType cognito
 
 # create storage (db and identity pool)
 AWSTools/createDynamodb.js
@@ -28,3 +29,12 @@ AWSTools/createRestAPI.js
 
 # deploy API
 AWSTools/deployAPI.js
+
+# get the SDK's for the clients
+AWSTools/getClientSDK.js
+
+# create s3 bucket for Angular app distribution
+AWSTools/createAngularClientBucket.js
+
+# now that we have a bucket we can sync the static angular substitue
+AWSTools/syncAngularClientBucket.js

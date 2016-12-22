@@ -9,7 +9,7 @@ const YAML = require('yamljs');
 var yargs = require('yargs')
 .usage('Create a new API\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('a','apiDefinitionFile')
 .describe('a','yaml swagger API file to upload to AWS')
@@ -46,8 +46,8 @@ if (typeof baseDefinitions.apiInfo == 'object') {
 }
 
 var AWSCLIUserProfile = "default";
-if (!awsc.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 } else {
   console.log("using \"default\" AWSCLIUserProfile");
 }
@@ -71,7 +71,7 @@ AwsRequest.createRequest({
   }
   awsc.updateFile(argv.baseDefinitionsFile, function () {
     baseDefinitions.apiInfo["awsId"] = request.response.parsedJSON.id;
-    return YAML.stringify(baseDefinitions, 6);
+    return YAML.stringify(baseDefinitions, 15);
   }, function (backupErr, writeErr) {
     if (backupErr) {
       console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". API Id was not updated.");

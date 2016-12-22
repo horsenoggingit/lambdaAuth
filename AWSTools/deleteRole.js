@@ -9,11 +9,11 @@ const exec = require('child_process').exec;
 var argv = require('yargs')
 .usage('Delete a role, detaching policies first.\nNote: at the moment this script only detaches policies specified\nin config files.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('t', 'roleType')
 .describe('t', 'which roles to delete')
-.choices('t', ['api', 'lambda'])
+.choices('t', ['api', 'lambda', 'cognito'])
 .demand(['t'])
 .help('h')
 .alias('h', 'help')
@@ -32,6 +32,9 @@ switch (argv.roleType) {
   case 'lambda':
     roleBase = 'lambdaInfo';
   break;
+  case 'cognito':
+    roleBase = 'cognitoIdentityPoolInfo';
+  break;
   default:
 }
 
@@ -40,8 +43,8 @@ var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 awscommon.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var AWSCLIUserProfile = "default";
-if (!awscommon.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 }
 
 var numRoles = Object.keys(baseDefinitions[roleBase].roleDefinitions).length;
@@ -109,7 +112,7 @@ function deletePolicies(policyArray, roleName, userProfile) {
           numRoles --;
           if (numRoles == 0) {
             awscommon.updateFile(argv.baseDefinitionsFile, function () {
-              return YAML.stringify(baseDefinitions, 6);
+              return YAML.stringify(baseDefinitions, 15);
             }, function (backupErr, writeErr) {
               if (backupErr) {
                 console.log(backupErr);

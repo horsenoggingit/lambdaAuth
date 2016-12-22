@@ -1,0 +1,35 @@
+apiInfo:
+    clientSDK:
+        downloadPath: angular/lambda-auth/app/aws
+        sdkType: javascript
+s3Info:
+    bucketInfo:
+        namePrefix: lambdaauth
+        websiteConfiguration:
+            IndexDocument:
+                Suffix: index.html
+        policy:
+            Version: '2012-10-17'
+            Statement:
+                -
+                    Sid: PublicReadGetObject
+                    Effect: Allow
+                    Principal: '*'
+                    Action: 's3:GetObject'
+                    Resource: 'arn:aws:s3:::$name/*'
+        region: us-east-1
+    fileSyncInfo:
+        syncPath: angular/lambda-auth/app
+        acl: public-read
+        syncExclusions:
+            - '*/.*'
+            - .DS_Store
+            - '*.md'
+            - '*.zip'
+            - '*_test.js'
+            - '*-test.js'
+lambdaInfo:
+    awsResources:
+        -
+            type: cognitoIdentityPoolInfo
+            resourceName: testPool

@@ -31,6 +31,8 @@ const EventEmitter = require('events').EventEmitter;
  *        type: ["none","string","fileNameBinary", "fileName","jsonString","jsonObject"]
  *        value: ?
  *      ...
+ * customParamString: string - a string that will be appended to the command.
+ * outFile: string - a path to a file that will store the output of a request.
  * context: ? -- this is a user defined object to pass context throught the request
  * returnSchema:['none'|'json']
  * returnValidation:
@@ -40,9 +42,14 @@ const EventEmitter = require('events').EventEmitter;
  *        type: ['s','o','b','a',{oneOfs:[...]}...]
 
  *      - ...
- *
+ * retryCount: number -- number of retries that should be attempted
+ * retryErrorIds: string array -- ids that trigger a retry (all if not set)
+ * retryDelay: number -- ms of delay between retries (none if not set)
  *
  * Response Object
+ *
+ * Latest response object can be accessed by "this.response". I case of retry attempts
+ * previous responses can be found in "this.retryResponses".
  *
  * stdout: ?
  * stderr: ?
@@ -85,9 +92,15 @@ class AWSRequest extends EventEmitter {
     apply(this,requestObject,{'serviceName':{type:'s',required:true},
                              'functionName':{type:'s',required:true},
                              'parameters':{type:'o',required:true},
+                             'customParamString':{type:'s',required:false},
+                             'outFile':{type:'s', required:false},
                              'context':{type:'o',required:false},
                              'returnSchema':{type:{oneOfs:['none','json']},required:true},
-                             'returnValidation':{type:'a',required:false}});
+                             'returnValidation':{type:'a',required:false},
+                             'retryCount':{type:'n', required:false},
+                             'retryErrorIds':{type:'a', required:false},
+                             'retryDelay':{type:'n', required:false}
+                           });
     var errorContext = "aws request validation object";
     awsu.verifyPath(this,['parameters','*','type'],'s',errorContext).exitOnError();
     if (this.returnValidation) {
@@ -98,7 +111,8 @@ class AWSRequest extends EventEmitter {
     this.requestInFlight = false;
     this.requestComplete = false;
     this.resonse = null;
-    this.retryCount = 0;
+    this.retryAttempt = 0;
+    this.retryResponses = [];
   }
 
   startRequest() {
@@ -142,6 +156,14 @@ class AWSRequest extends EventEmitter {
       paramStringArray.push(paramString);
     }
     var command = "aws " + [this.serviceName, this.functionName].concat(paramStringArray).join(' ');
+
+    if (this.customParamString) {
+      command += " " + this.customParamString;
+    }
+
+    if (this.outFile) {
+      command += " '" + this.outFile + "'"
+    }
     this.awsCommand = command;
     this.executeRequest();
   }
@@ -150,13 +172,21 @@ class AWSRequest extends EventEmitter {
     if (!this.requestComplete) {
       throw new Error("Attenpting to retry a request that has not been started");
     }
+    this.retryResponses.push(this.response);
+    this.resonse = null;
     this.requestInFlight = false;
     this.requestComplete = false;
-    this.resonse = null;
-    this.retryCount++;
-    this.startRequest();
+    this.retryAttempt++;
+    this.emit("AwsRequestRetry");
+    var thisRequest = this;
+    if (this.retryDelay) {
+      setTimeout(function () {
+        thisRequest.startRequest();
+      }, this.retryDelay);
+    } else {
+      this.startRequest();
+    }
   }
-
 
   shouldStartRequest() {
     if (this.requestInFlight) {
@@ -192,18 +222,36 @@ class AWSRequest extends EventEmitter {
     this.response.errorId = "That String";
     var regExp = /\(([^)]+)\)/;
     var matches = regExp.exec(this.response.stderr);
-    if (matches.length > 1) {
+    if (matches && matches.length > 1) {
       this.response.errorId = matches[1];
     } else {
       this.response.errorId = "unknown"
     }
-    this.finisRequest();
+    this.finishRequest();
   }
 
-  finisRequest() {
+  finishRequest() {
     if (this.response.error) {
       if (!this.response.errorId) {
         this.response.errorId = "InternalAwsRequestError"
+      }
+
+      if ((this.retryCount) && (this.retryAttempt < this.retryCount)) {
+        var shouldRetry = true;
+        if ((this.parameters.retryErrorIds) && (this.parameters.retryErrorIds.length > 0)) {
+          var hasErrorId = false;
+          for (var eIndex = 0; eIndex < this.retryErrorIds.length; eIndex ++) {
+            if (request.response.errorId === this.retryErrorIds[eIndex]) {
+              hasErrorId = true;
+              break;
+            }
+          }
+          shouldRetry = hasErrorId;
+        }
+        if (shouldRetry) {
+          this.retry();
+          return;
+        }
       }
       this.emit("AwsRequestEndError");
     } else {
@@ -226,20 +274,20 @@ class AWSRequest extends EventEmitter {
           parsedJSON = JSON.parse(this.response.stdout);
         } catch (e) {
           this.response.error = e;
-          this.finisRequest();
+          this.finishRequest();
           return;
         } finally {
           this.response.parsedJSON = parsedJSON;
           this.response.error = this.validateJSON();
           if (this.response.error) {
-            this.finisRequest();
+            this.finishRequest();
             return;
           }
         }
       break;
     }
 
-    this.finisRequest();
+    this.finishRequest();
   }
 
   validateJSON() {

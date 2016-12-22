@@ -10,7 +10,7 @@ var argv = require('yargs')
 .describe('l','directory containing lambda definition yaml files')
 .default('l','./lambdas')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your dynamodb (dynamodbInfo)')
+.describe('s','yaml file that contains information about your dynamodb (dynamodbInfo)')
 .default('s','./base.definitions.yaml')
 .alias('o','outputFilename')
 .describe('o','name of file that will be added to each lambda directory')
@@ -48,24 +48,27 @@ forEachLambdaDefinition(function (fileName) {
   awsc.verifyPath(definitions,['lambdaInfo', 'awsResources', 'resourceName'], 's', "definition file \"" + fileName + "\"").callbackOnError(logfunction);
   definitions.lambdaInfo.awsResources.forEach(function (resource) {
     console.log("... adding resouce " + resource.type + ": " + resource.resourceName)
-    awsc.verifyPath(baseDefinitions,[resource.type, resource.resourceName, 'lambdaAliases', 'resource'], 's', "definition file \"" + argv.baseDefinitionsFile + "\"").callbackOnError(logfunction)
 
     var resourceRoot;
+    var source;
     switch (resource.type) {
       case 'dynamodbInfo':
         if (typeof constantsJson['DYNAMO_DB'] != 'object') {
           constantsJson['DYNAMO_DB'] = {}
         }
         resourceRoot = constantsJson['DYNAMO_DB'];
+        awsc.verifyPath(baseDefinitions,[resource.type, resource.resourceName, 'lambdaAliases', 'resource'], 's', "definition file \"" + argv.baseDefinitionsFile + "\"").callbackOnError(logfunction)
+        source = baseDefinitions[resource.type][resource.resourceName].lambdaAliases;
       break;
       case 'cognitoIdentityPoolInfo':
         if (typeof constantsJson['COGNITO'] != 'object') {
           constantsJson['COGNITO'] = {}
         }
         resourceRoot = constantsJson['COGNITO'];
+        awsc.verifyPath(baseDefinitions,[resource.type, 'identityPools', resource.resourceName, 'lambdaAliases', 'resource'], 's', "definition file \"" + argv.baseDefinitionsFile + "\"").callbackOnError(logfunction)
+        source = baseDefinitions[resource.type].identityPools[resource.resourceName].lambdaAliases;
       break;
     }
-    var source = baseDefinitions[resource.type][resource.resourceName].lambdaAliases;
 
     // attach any attributes here
     if (typeof source.attributes == 'object') {
@@ -80,8 +83,8 @@ forEachLambdaDefinition(function (fileName) {
       case 'dynamodbInfo':
       break;
       case 'cognitoIdentityPoolInfo':
-        resourceRoot[source.resource]['authProviders'] = baseDefinitions[resource.type][resource.resourceName].authProviders;
-        resourceRoot[source.resource]['identityPoolId'] = baseDefinitions[resource.type][resource.resourceName].identityPoolId;
+        resourceRoot[source.resource]['authProviders'] = baseDefinitions[resource.type].identityPools[resource.resourceName].authProviders;
+        resourceRoot[source.resource]['identityPoolId'] = baseDefinitions[resource.type].identityPools[resource.resourceName].identityPoolId;
       break;
     }
     var outFname = path.join(argv.lambdaDefinitionsDir,definitions.lambdaInfo.functionName,argv.outputFilename);

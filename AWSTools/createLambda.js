@@ -10,10 +10,10 @@ const AWSRequest = require(path.join(__dirname, 'AWSRequest'));
 var yargs = require('yargs')
 .usage('Create the lambdas for the project.\nIf a lambda with the same name already exists the operation will fail.\nUse "deleteLambda" first to remove the exisiting function.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your API')
+.describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
 .alias('l','lambdaDefinitionsDir')
-.describe('l','directory that containes lambda definition files and implementations. <lambdaName>.zip archives will be placed here.')
+.describe('l','directory that contains lambda definition files and implementations. <lambdaName>.zip archives will be placed here.')
 .default('l','./lambdas')
 .alias('n','lambdaName')
 .describe('n','a specific lambda to process. If not specified all lambdas found will be uploaded')
@@ -26,25 +26,22 @@ var yargs = require('yargs')
 var argv = yargs.argv;
 
 if (!fs.existsSync(argv.baseDefinitionsFile)) {
-  console.log("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.")
   yargs.showHelp("log");
-  process.exit(1);
+  throw new Error("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.");
 }
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
-  console.log("Lambda's path \"" + argv.lambdasPath + "\" not found.")
   yargs.showHelp("log");
-  process.exit(1);
+  throw new Error("Lambda's path \"" + argv.lambdaDefinitionsDir + "\" not found.");
 }
 
-var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
-
 var AWSCLIUserProfile = "default"
-if (typeof baseDefinitions.enviroment != 'object') {
+if (typeof baseDefinitions.environment != 'object') {
 } else {
-  if (typeof baseDefinitions.enviroment.AWSCLIUserProfile == 'string') {
-    AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+  if (typeof baseDefinitions.environment.AWSCLIUserProfile == 'string') {
+    AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
   }
 }
 
@@ -150,7 +147,7 @@ function zipAndUpload(zipCommand, reqParams, defaultsFileName) {
         var localDefinitions = YAML.load(defaultsFileName);
         vp.updateFile(defaultsFileName, function () {
           localDefinitions.lambdaInfo["arnLambda"] = request.response.parsedJSON.FunctionArn;
-          return YAML.stringify(localDefinitions, 6);
+          return YAML.stringify(localDefinitions, 15);
         }, function (backupErr, writeErr) {
           if (backupErr) {
             console.log("Could not create backup of \"" + defaultsFileName + "\". arnLambda was not updated.");

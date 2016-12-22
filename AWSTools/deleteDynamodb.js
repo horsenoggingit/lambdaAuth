@@ -9,7 +9,7 @@ const YAML = require('yamljs');
 var yargs = require('yargs')
 .usage('Delete project dynamodb.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
-.describe('s','yaml file that containes information about your dynamodb (dynamodbInfo)')
+.describe('s','yaml file that contains information about your dynamodb (dynamodbInfo)')
 .default('s','./base.definitions.yaml')
 .alias('n','dynamoTableName')
 .describe('n','a specific dynamo table name to process. If not specified all lambdas found will be created')
@@ -25,8 +25,8 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 var AWSCLIUserProfile = "default";
-if (!awsc.verifyPath(baseDefinitions,['enviroment', 'AWSCLIUserProfile'],'s').isVerifyError) {
-  AWSCLIUserProfile = baseDefinitions.enviroment.AWSCLIUserProfile;
+if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+  AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 } else {
   console.log("using \"default\" AWSCLIUserProfile");
 }
@@ -93,7 +93,7 @@ function getTableCreationRequest (tableName, callback) {
 function writeout() {
   // now delete role
   awsc.updateFile(argv.baseDefinitionsFile, function () {
-    return YAML.stringify(baseDefinitions, 6);
+    return YAML.stringify(baseDefinitions, 15);
   }, function (backupErr, writeErr) {
     if (backupErr) {
       console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". configuration was not updated.");

@@ -32,7 +32,113 @@ exports.handler = (event, context, callback) => {
     return;
   }
 
-  // check if the email has already been used
+  var errorObject = {
+    requestId: context.awsRequestId,
+    errorType : "BadRequest",
+    httpStatus : 400,
+  };
+  // want either email & password or provider-name & id
+  if (event.email) {
+    if (!event.password) {
+      errorObject['message'] = "Validation error: missing required parameter \"password\".";
+      callback(JSON.stringify(errorObject));
+      return;
+    }
+  }
+  if (event.password) {
+    if (!event.email) {
+      errorObject['message'] = "Validation error: missing required parameter \"email\".";
+      callback(JSON.stringify(errorObject));
+      return;
+    }
+  }
+  if (event['provider-name']) {
+    if (!event.id) {
+      errorObject['message'] = "Validation error: missing required parameter \"id\".";
+      callback(JSON.stringify(errorObject));
+      return;
+    }
+  }
+  if (event.id) {
+    if (!event['provider-name']) {
+      errorObject['message'] = "Validation error: missing required parameter \"provider-name\".";
+      callback(JSON.stringify(errorObject));
+      return;
+    }
+  }
+
+  var getIdentityIDAndToken = function(id, event, awsRequestId, callback) {
+    UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, id, function (err,OpenIDToken) {
+      if (err) {
+        console.log(err);
+        console.log("Could not get user identity from cognito for request: " + context.awsRequestId);
+        var errorObject = {
+          requestId: awsRequestId,
+          errorType : "InternalServerError",
+          httpStatus : 500,
+          message : "Could not get user identity."
+        };
+        callback(JSON.stringify(errorObject));
+      } else {
+        // if we are just refreshing the credentials just return the IdentityId and Token
+        if (event.id) {
+          callback(null,OpenIDToken);
+          return;
+        }
+        // now lookup in the user table
+        params = {
+          TableName: AWSConstants.DYNAMO_DB.USERS.name,
+          Key:{}
+        }
+        params.Key[AWSConstants.DYNAMO_DB.USERS.ID] = OpenIDToken.IdentityId;
+
+        docClient.get(params,function(err, userData) {
+          if (err) {
+            console.log(err);
+            console.log("Could not get user info from db for request: " + context.awsRequestId);
+            var errorObject = {
+              requestId: awsRequestId,
+              errorType : "InternalServerError",
+              httpStatus : 500,
+              message : "Could not get user info."
+            };
+            callback(errorObject)
+          } else {
+            if (typeof userData.Item.password == 'string') {
+              if (PH.passwordHash(event.password) === userData.Item.password) {
+                callback(null,OpenIDToken);
+              } else {
+                console.log("Password missmatch for request: " + context.awsRequestId);
+                var errorObject = {
+                  requestId: awsRequestId,
+                  errorType : "Unauthorized",
+                  httpStatus : 401,
+                  message : "No matching login informaiton."
+                };
+                callback(JSON.stringify(errorObject));
+              }
+            } else {
+              console.log("user does not have a valid password data for request: " + context.awsRequestId);
+              var errorObject = {
+                requestId: awsRequestId,
+                errorType : "InternalServerError",
+                httpStatus : 500,
+                message : "Could not get user info."
+              };
+              callback(JSON.stringify(errorObject));
+            }
+          }
+        });
+      }
+    });
+  }
+
+  if (event.id && event['provider-name']) {
+    getIdentityIDAndToken(event.id, event,context.awsRequestId, callback);
+    return;
+  }
+
+  // check if the email exists
   var params = {
     TableName: AWSConstants.DYNAMO_DB.EMAILS.name,
     Key:{}
@@ -40,43 +146,66 @@ exports.handler = (event, context, callback) => {
   params.Key[AWSConstants.DYNAMO_DB.EMAILS.EMAIL] = event.email;
   docClient.get(params, function (err, data) {
     if (err) {
-      callback(err);
+      console.log(err);
+      console.log("Could not get user identity from email db for request: " + context.awsRequestId);
+      var errorObject = {
+        requestId: context.awsRequestId,
+        errorType : "Unauthorized",
+        httpStatus : 401,
+        message : "No matching login informaiton."
+      };
+      callback(JSON.stringify(errorObject));
     } else {
       // it we get some objects back from the email table then the users has already signed up
       if (typeof data.Item == "object") {
-        console.log(data)
-        // now lookup in the user table
-        params = {
-          TableName: AWSConstants.DYNAMO_DB.USERS.name,
-          Key:{}
-        }
-        params.Key[AWSConstants.DYNAMO_DB.USERS.ID] = data.Item.id;
-
-        docClient.get(params,function(err, userData) {
-          if (err) {
-            callback(err);
+        // go to cognito and pull up the identity
+        getIdentityIDAndToken(data.Item.id, event, context.awsRequestId, function (err, data) {
+          if (err || !data || !data.IdentityId || !data.Token) {
+            console.log("Could not get user identity from cognito for request: " + context.awsRequestId);
+            var errorObject = {
+              requestId: context.awsRequestId,
+              errorType : "Unauthorized",
+              httpStatus : 401,
+              message : "No matching login informaiton."
+            };
+            callback(JSON.stringify(errorObject));
           } else {
-            if (typeof userData.Item.password == 'string') {
-              if (PH.passwordHash(event.password) === userData.Item.password) {
-                UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, data.Item.id, function (err,OpenIDToken) {
-                  if (err) {
-                    callback(err);
-                  } else {
-                    callback(null,OpenIDToken);
-                  }
-                });
-              } else {
-                // should be vague about this
-                callback(new Error("Incorrect password"));
-              }
-            } else {
-              callback(new Error("Invalid record: " + data.Item.id));
+            // have user data
+            // update login timestamp
+            var paramsUser = {
+              TableName: AWSConstants.DYNAMO_DB.USERS.name,
+              Key : {},
+              UpdateExpression: "set " + AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP + " = :t",
+              ExpressionAttributeValues: {
+                  ":t": Date.now()
+                }
             }
+            paramsUser.Key[AWSConstants.DYNAMO_DB.USERS.ID] = data.IdentityId;
+            docClient.update(paramsUser, function (err, updateData) {
+              if (err) {
+                console.log("unable to update login timestamp for request: " + context.awsRequestId);
+                var errorObject = {
+                  requestId: context.awsRequestId,
+                  errorType : "InternalServerError",
+                  httpStatus : 500,
+                  message : "Could not set user info."
+                };
+                callback(JSON.stringify(errorObject));
+              } else {
+                callback(null, data);
+              }
+            });
           }
         });
-
       } else {
-        callback(new Error("Account not found"));
+        console.log("Could not get user info from db for request: " + context.awsRequestId);
+        var errorObject = {
+          requestId: context.awsRequestId,
+          errorType : "Unauthorized",
+          httpStatus : 401,
+          message : "No matching login informaiton."
+        };
+        callback(JSON.stringify(errorObject));
       }
     }
   });

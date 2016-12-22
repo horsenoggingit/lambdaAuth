@@ -1,20 +1,55 @@
-enviroment:
+environment:
     AWSCLIUserProfile: adminuser
 cognitoIdentityPoolInfo:
-    testPool:
-        lambdaAliases:
-            resource: IDENTITY_POOL
-        authProviders:
-            custom:
-                developerProvider: testProvider
-        allowUnauthedIdentities: false
+    roleDefinitions:
+        apiAccessRole:
+            policyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    -
+                        Effect: Allow
+                        Principal:
+                            Federated: cognito-identity.amazonaws.com
+                        Action: 'sts:AssumeRoleWithWebIdentity'
+                        Condition:
+                            StringEquals:
+                                'cognito-identity.amazonaws.com:aud': 'us-east-1:a312d3e3-c45b-49eb-8d72-5b7acd73edc0'
+                            'ForAnyValue:StringLike':
+                                'cognito-identity.amazonaws.com:amr': authenticated
+            policies:
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
+                    name: AmazonAPIGatewayInvokeFullAccess
+    identityPools:
+        testPool:
+            lambdaAliases:
+                resource: IDENTITY_POOL
+            authProviders:
+                custom:
+                    developerProvider: testProvider
+            allowUnauthedIdentities: false
+            roles:
+                authenticated: apiAccessRole
+            rolePolicyDocumentStatementConditions:
+                apiAccessRole:
+                    -
+                        Action: 'sts:AssumeRoleWithWebIdentity'
+                        Condition:
+                            StringEquals:
+                                'cognito-identity.amazonaws.com:aud': $identityPoolId
+                            'ForAnyValue:StringLike':
+                                'cognito-identity.amazonaws.com:amr': authenticated
 lambdaInfo:
     roleDefinitions:
         userConsumer:
             policyDocument:
                 Version: '2012-10-17'
                 Statement:
-                    - {Effect: Allow, Principal: {Service: lambda.amazonaws.com}, Action: 'sts:AssumeRole'}
+                    -
+                        Effect: Allow
+                        Principal:
+                            Service: lambda.amazonaws.com
+                        Action: 'sts:AssumeRole'
             policies:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
@@ -29,7 +64,11 @@ lambdaInfo:
             policyDocument:
                 Version: '2012-10-17'
                 Statement:
-                    - {Effect: Allow, Principal: {Service: lambda.amazonaws.com}, Action: 'sts:AssumeRole'}
+                    -
+                        Effect: Allow
+                        Principal:
+                            Service: lambda.amazonaws.com
+                        Action: 'sts:AssumeRole'
             policies:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
@@ -46,7 +85,11 @@ apiInfo:
             policyDocument:
                 Version: '2012-10-17'
                 Statement:
-                    - {Effect: Allow, Principal: {Service: apigateway.amazonaws.com}, Action: 'sts:AssumeRole'}
+                    -
+                        Effect: Allow
+                        Principal:
+                            Service: apigateway.amazonaws.com
+                        Action: 'sts:AssumeRole'
             policies:
                 -
                     arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
@@ -73,6 +116,80 @@ apiInfo:
             - application/json
         produces:
             - application/json
+    sharedDefinitions:
+        user:
+            type: object
+            required:
+                - email
+            properties:
+                email:
+                    type: string
+                name:
+                    type: string
+                dob:
+                    type: number
+                last-login-timestamp:
+                    type: number
+                signup-timestamp:
+                    type: number
+                logins:
+                    type: object
+                provider-name:
+                    type: string
+        signupRequest:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+                name:
+                    type: string
+                dob:
+                    type: number
+        loginRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+                provider-name:
+                    type: string
+                id:
+                    type: number
+        credentials:
+            type: object
+            required:
+                - IdentityId
+                - Token
+            properties:
+                IdentityId:
+                    type: string
+                Token:
+                    type: string
+        Error:
+            type: object
+            required:
+                - message
+                - type
+                - request-id
+            properties:
+                message:
+                    type: string
+                type:
+                    type: string
+                request-id:
+                    type: string
+    sharedSecurityDefinitions:
+        sigv4:
+            type: apiKey
+            name: Authorization
+            in: header
+            x-amazon-apigateway-authtype: awsSigv4
 dynamodbInfo:
     users:
         lambdaAliases:
@@ -80,6 +197,8 @@ dynamodbInfo:
             attributes:
                 ID: id
                 EMAIL: email
+                NAME: name
+                DOB: dob
                 LAST_LOGIN_TIMESTAMP: lastLoginTimestamp
                 PASSWORD: password
                 SIGNUP_TIMESTAMP: signupTimestamp
