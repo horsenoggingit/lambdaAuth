@@ -105,6 +105,60 @@ forEachLambdaDefinition(function (fileName) {
 
 });
 
+function createLambda(reqParams, defaultsFileName) {
+  // lets upload!
+
+  AWSRequest.createRequest({
+    serviceName: "lambda",
+    functionName: "create-function",
+    context: {reqParams:reqParams, defaultsFileName:defaultsFileName},
+    parameters:reqParams,
+    returnSchema:'json',
+    returnValidation:[{path:['FunctionArn'], type:'s'},
+    {path:['FunctionName'], type:'s'}]
+  },
+  function (request) {
+    if (request.response.error) {
+      if (request.response.errorId === 'ResourceConflictException') {
+        // delete and recreate the lambda
+        console.log("Lambda \"" + request.context.reqParams['function-name'].value + "\" already exists. Use deleting and re-creating.")
+        deleteLambda(request.context.reqParams, request.context.defaultsFileName);
+        return;
+      } else if (request.response.errorId === 'InvalidParameterValueException') {
+        // retry
+        if (request.retryCount < 3) {
+          console.log("retrying \"" + request.parameters['function-name'].value + "\"...");
+          setTimeout(function(){
+            request.retry();
+          }, 3000);
+          return;
+        } else {
+          throw request.response.console.error;
+        }
+      } else {
+        throw request.response.error;
+      }
+    }
+    console.log("Updating defaults file: \"" + defaultsFileName + "\"");
+    var localDefinitions = YAML.load(defaultsFileName);
+    vp.updateFile(defaultsFileName, function () {
+      localDefinitions.lambdaInfo["arnLambda"] = request.response.parsedJSON.FunctionArn;
+      return YAML.stringify(localDefinitions, 15);
+    }, function (backupErr, writeErr) {
+      if (backupErr) {
+        console.log("Could not create backup of \"" + defaultsFileName + "\". arnLambda was not updated.");
+        throw backupErr;
+      }
+      if (writeErr) {
+        console.log("Unable to write updated definitions file.");
+        throw writeErr;
+      }
+      console.log("Done.");
+    });
+
+  }).startRequest();
+}
+
 function zipAndUpload(zipCommand, reqParams, defaultsFileName) {
   exec(zipCommand, function (err, stdout, stderr) {
     if (err) {
@@ -114,53 +168,7 @@ function zipAndUpload(zipCommand, reqParams, defaultsFileName) {
     }
     console.log(stdout);
     if (!argv.archiveOnly) {
-      // lets upload!
-
-      AWSRequest.createRequest({
-        serviceName: "lambda",
-        functionName: "create-function",
-        parameters:reqParams,
-        returnSchema:'json',
-        returnValidation:[{path:['FunctionArn'], type:'s'},
-        {path:['FunctionName'], type:'s'}]
-      },
-      function (request) {
-        if (request.response.error) {
-          if (request.response.errorId === 'ResourceConflictException') {
-            throw new Error("Lambda \"" + request.parameters['function-name'].value + "\" already exists. Use deleteLambda first")
-          } else if (request.response.errorId === 'InvalidParameterValueException') {
-            // retry
-            if (request.retryCount < 3) {
-              console.log("retrying \"" + request.parameters['function-name'].value + "\"...");
-              setTimeout(function(){
-                request.retry();
-              }, 3000);
-              return;
-            } else {
-              throw request.response.console.error;
-            }
-          } else {
-            throw request.response.error;
-          }
-        }
-        console.log("Updating defaults file: \"" + defaultsFileName + "\"");
-        var localDefinitions = YAML.load(defaultsFileName);
-        vp.updateFile(defaultsFileName, function () {
-          localDefinitions.lambdaInfo["arnLambda"] = request.response.parsedJSON.FunctionArn;
-          return YAML.stringify(localDefinitions, 15);
-        }, function (backupErr, writeErr) {
-          if (backupErr) {
-            console.log("Could not create backup of \"" + defaultsFileName + "\". arnLambda was not updated.");
-            throw backupErr;
-          }
-          if (writeErr) {
-            console.log("Unable to write updated definitions file.");
-            throw writeErr;
-          }
-          console.log("Done.");
-        });
-
-      }).startRequest();
+      createLambda(reqParams, defaultsFileName);
     }
   });
 }
@@ -188,4 +196,38 @@ function forEachLambdaDefinition (callback) {
       }
     }
   });
+}
+
+function deleteLambda(createParams, defaultsFileName) {
+  var params = {
+    'function-name': {type: 'string', value: createParams['function-name'].value},
+    'profile' : {type: 'string', value:AWSCLIUserProfile}
+  };
+  var deleteRequest = AWSRequest.createRequest({
+    serviceName: "lambda",
+    functionName: "delete-function",
+    context:{createParams: createParams, defaultsFileName: defaultsFileName},
+    parameters: params,
+    retryCount: 3,
+    retryErrorIds: ['ServiceException'],
+    retryDelay: 2000,
+    returnSchema:'none'
+  },
+  function (request) {
+    if (request.response.error) {
+      if (request.response.errorId === 'ResourceNotFoundException') {
+        console.log("Warning: lambda \"" + request.parameters["function-name"].value + "\" not found.")
+      } else {
+        throw request.response.error;
+      }
+    }
+    console.log("Deleted lambda \"" + request.parameters["function-name"].value + "\"");
+    createLambda(request.context.createParams, request.context.defaultsFileName);
+  });
+
+  deleteRequest.on('AwsRequestRetry', function () {
+    console.log("Warning: unable to delete lambda \"" + this.parameters["function-name"].value + "\" due to \"ServiceException\". This happens occasionally when deleting a number of lambdas at once. Trying again...");
+  });
+
+  deleteRequest.startRequest();
 }
