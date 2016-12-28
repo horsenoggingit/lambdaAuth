@@ -27,4 +27,4 @@ The default configuration of this project creates a series of APIs (/signup, /lo
 7. Build the backend
   * go back to the "root project folder” (“cd ..; cd ..; cd ..”)
   * run "npm start”
-    * This will build the server configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://lambdaauth2972.s3-website-us-east-1.amazonaws.com
+    * This will build the backend configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://lambdaauth2972.s3-website-us-east-1.amazonaws.com
