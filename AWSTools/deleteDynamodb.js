@@ -11,8 +11,8 @@ var yargs = require('yargs')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your dynamodb (dynamodbInfo)')
 .default('s','./base.definitions.yaml')
-.alias('n','dynamoTableName')
-.describe('n','a specific dynamo table name to process. If not specified all lambdas found will be created')
+.alias('k','dynamoTableKey')
+.describe('n','a specific dynamo table key to process. If not specified all tables found will be deleted')
 .help('h')
 .alias('h', 'help')
 var argv = yargs.argv;
@@ -32,22 +32,28 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
 }
 
 
-var localNames = Object.keys(baseDefinitions.dynamodbInfo);
-if (argv.dynamoTableName) {
-  awsc.verifyPath(baseDefinitions,['dynamodbInfo', argv.dynamoTableName], 'a', "definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
-  localNames = [argv.dynamoTableName];
+var localDbKeys = Object.keys(baseDefinitions.dynamodbInfo);
+if (argv.dynamoTableKey) {
+  awsc.verifyPath(baseDefinitions,['dynamodbInfo', argv.dynamoTableKey], 'a', "definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
+  localDbKeys = [argv.dynamoTableKey];
 }
 
 var requests = [];
 
-for (var keyIndex = 0; keyIndex < localNames.length; keyIndex++) {
-  var tableName = localNames[keyIndex];
+for (var keyIndex = 0; keyIndex < localDbKeys.length; keyIndex++) {
+  var tableKey = localDbKeys[keyIndex];
+  var tableName;
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    tableName = baseDefinitions.environment.AWSResourceNamePrefix + tableKey;
+  } else {
+    tableName = tableKey;
+  }
 
   // send out a request to delete a new table.
   console.log("Deleting table \"" + tableName + "\"");
-  requests.push(getTableCreationRequest(tableName, function (tblName, description) {
+  requests.push(getTableDeletionRequest(tableKey, tableName, function (tblKey, tblName, description) {
     console.log("Deleted table \"" + tblName + "\" description. Updating local definition");
-    delete baseDefinitions.dynamodbInfo[tblName].Table;
+    delete baseDefinitions.dynamodbInfo[tblKey].Table;
   }));
 };
 
@@ -69,7 +75,7 @@ AwsRequest.createBatch(requests, function (batch) {
 }).startRequest();
 
 
-function getTableCreationRequest (tableName, callback) {
+function getTableDeletionRequest (tableKey, tableName, callback) {
   return AwsRequest.createRequest({
     serviceName: "dynamodb",
     functionName: "delete-table",
@@ -77,7 +83,7 @@ function getTableCreationRequest (tableName, callback) {
       'table-name': {type: 'string', value:tableName},
       'profile' : {type: 'string', value:AWSCLIUserProfile}
     },
-    context:{tableName:tableName},
+    context:{tableName: tableName, tableKey: tableKey},
     returnSchema:'json',
     returnValidation:[{path:['TableDescription'], type:'o'},
     {path:['TableDescription', 'TableArn'], type:'s'}]
@@ -86,7 +92,7 @@ function getTableCreationRequest (tableName, callback) {
     if (request.response.error) {
       throw request.response.error;
     }
-    callback(tableName, request.response.parsedJSON.Table);
+    callback(request.context.tableKey, request.context.tableName, request.response.parsedJSON.Table);
   });
 }
 

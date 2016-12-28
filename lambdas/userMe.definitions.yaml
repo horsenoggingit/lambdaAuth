@@ -9,7 +9,7 @@ lambdaInfo:
     awsResources:
         -
             type: dynamodbInfo
-            resourceName: users
+            resourceName: Users
     roleName: userConsumer
     functionName: userMe
     region: us-east-1

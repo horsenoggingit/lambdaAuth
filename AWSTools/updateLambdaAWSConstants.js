@@ -76,7 +76,15 @@ forEachLambdaDefinition(function (fileName) {
     } else {
       resourceRoot[source.resource] = {};
     }
-    resourceRoot[source.resource]['name'] = resource.resourceName;
+
+    var resourceName;
+    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+      resourceName = baseDefinitions.environment.AWSResourceNamePrefix + resource.resourceName;
+    } else {
+      resourceName = resource.resourceName;
+    }
+
+    resourceRoot[source.resource]['name'] = resourceName;
 
     // custom required stuff here
     switch (resource.type) {

@@ -37,17 +37,24 @@ var successDecCount = numIdentityPools;
 
 // first lets get the identity pools to see if one with our name exists already
 getIdentityPools(function (serverIdentityPools) {
-  // now see which ones are valid and which ones need to be createed
+  // now see which ones are valid and which ones need to be created
   var poolCreateRequests = [];
-  var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolName) {
-    var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName];
+  var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolKey) {
+    var identityPoolName;
+    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+      identityPoolName =  baseDefinitions.environment.AWSResourceNamePrefix + identityPoolKey;
+    } else {
+      identityPoolName = identityPoolKey;
+    }
+
+    var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey];
     if (serverIdentityPools) {
       for (var index = 0; index < serverIdentityPools.IdentityPools.length; index ++) {
         if (identityPoolName === serverIdentityPools.IdentityPools[index].IdentityPoolName) {
-          baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].identityPoolId = serverIdentityPools.IdentityPools[index].IdentityPoolId;
+          baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey].identityPoolId = serverIdentityPools.IdentityPools[index].IdentityPoolId;
           console.log("Found identity pool \"" + identityPoolName + "\" on aws.");
-          setRoles(identityPoolName);
-          updateRolePolicyDocumentStatementConditions(identityPoolName);
+          setRoles(identityPoolKey);
+          updateRolePolicyDocumentStatementConditions(identityPoolKey);
           numIdentityPools --;
           successDecCount --;
           if (numIdentityPools == 0) {
@@ -60,8 +67,8 @@ getIdentityPools(function (serverIdentityPools) {
       }
     }
     // validate to make sure we have everything
-    awscommon.verifyPath(poolDef, ['allowUnauthedIdentities'], 'b', "identity pool definition \"" + identityPoolName + "\"").exitOnError();
-    awscommon.verifyPath(poolDef, ['authProviders'], 'o', "identity pool definition \"" + identityPoolName + "\"").exitOnError();
+    awscommon.verifyPath(poolDef, ['allowUnauthedIdentities'], 'b', "identity pool definition \"" + identityPoolKey + "\"").exitOnError();
+    awscommon.verifyPath(poolDef, ['authProviders'], 'o', "identity pool definition \"" + identityPoolKey + "\"").exitOnError();
 
     var params={
         'identity-pool-name': {type: 'string', value: identityPoolName},
@@ -71,7 +78,7 @@ getIdentityPools(function (serverIdentityPools) {
     Object.keys(poolDef.authProviders).forEach(function(authProvider) {
       switch (authProvider) {
         case 'custom':
-          awscommon.verifyPath(poolDef.authProviders,['custom', 'developerProvider'],'s','custom developer provider for pool "' + identityPoolName + '""').exitOnError();
+          awscommon.verifyPath(poolDef.authProviders,['custom', 'developerProvider'],'s','custom developer provider for pool "' + identityPoolKey + '""').exitOnError();
           params['developer-provider-name'] = {type: 'string', value:poolDef.authProviders.custom.developerProvider};
           break;
         default:
@@ -82,7 +89,7 @@ getIdentityPools(function (serverIdentityPools) {
       AwsRequest.createRequest({
         serviceName:'cognito-identity',
         functionName:'create-identity-pool',
-        context: {poolName: identityPoolName},
+        context: {poolName: identityPoolName, poolKey: identityPoolKey},
         returnSchema:'json',
         returnValidation:[{path:['IdentityPoolId'], type:'s'}],
         parameters:params
@@ -95,11 +102,11 @@ getIdentityPools(function (serverIdentityPools) {
         console.log(request.response.error);
         console.log("Failed to create pool " + request.context.poolName + ".");
       } else {
-        console.log("Successfully createed pool " + request.context.poolName + ".");
+        console.log("Successfully created pool " + request.context.poolName + ".");
         successDecCount --;
-        baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName]['identityPoolId'] = request.response.parsedJSON.IdentityPoolId;
-        setRoles(request.context.poolName);
-        updateRolePolicyDocumentStatementConditions(request.context.poolName);
+        baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolKey]['identityPoolId'] = request.response.parsedJSON.IdentityPoolId;
+        setRoles(request.context.poolKey);
+        updateRolePolicyDocumentStatementConditions(request.context.poolKey);
       }
     })
     writeout();
@@ -148,11 +155,11 @@ function getIdentityPools (doneCallback) {
   }).startRequest();
 }
 
-function setRoles(identityPoolName){
-  if (!awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools', identityPoolName, 'roles'], 'o',"").isVerifyError) {
+function setRoles(identityPoolKey){
+  if (!awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools', identityPoolKey, 'roles'], 'o',"").isVerifyError) {
     var roles = {};
     // TODO GET ROLE ARN!!!
-    roles = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].roles;
+    roles = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey].roles;
     var identityPoolRoles = {};
     Object.keys(roles).forEach(function (roleType) {
       identityPoolRoles[roleType] = baseDefinitions.cognitoIdentityPoolInfo.roleDefinitions[roles[roleType]].arnRole;
@@ -161,10 +168,10 @@ function setRoles(identityPoolName){
     AwsRequest.createRequest({
       serviceName: 'cognito-identity',
       functionName: 'set-identity-pool-roles',
-      context: {poolName: identityPoolName},
+      context: {poolKey: identityPoolKey},
       returnSchema:'none',
       parameters: {
-        'identity-pool-id' : {type:'string', value:baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].identityPoolId},
+        'identity-pool-id' : {type:'string', value:baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey].identityPoolId},
         'roles' : {type: 'JSONObject', value:identityPoolRoles},
         'profile': {type: 'string', value:AWSCLIUserProfile}
       }
@@ -173,38 +180,44 @@ function setRoles(identityPoolName){
       if (roleReq.response.error) {
         throw roleReq.response.error;
       } else {
-        console.log("Set Roles for \"" + roleReq.context.poolName + "\"");
+        console.log("Set Roles for \"" + roleReq.context.poolKey + "\"");
       }
     }).startRequest();
   }
 }
 
-function updateRolePolicyDocumentStatementConditions(identityPoolName) {
+function updateRolePolicyDocumentStatementConditions(identityPoolKey) {
   // first get the role
-  var roles = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName].roles;
+  var roles = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey].roles;
   Object.keys(roles).forEach(function (roleType) {
     var role = roles[roleType];
-    if (!awscommon.verifyPath(baseDefinitions,['cognitoIdentityPoolInfo','identityPools',identityPoolName,'rolePolicyDocumentStatementConditions',role],'a').isVerifyError) {
+    if (!awscommon.verifyPath(baseDefinitions,['cognitoIdentityPoolInfo','identityPools',identityPoolKey,'rolePolicyDocumentStatementConditions',role],'a').isVerifyError) {
       // get the role
+      var roleName;
+      if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        roleName = baseDefinitions.environment.AWSResourceNamePrefix + role;
+      } else {
+        roleName = role;
+      }
       AwsRequest.createRequest({
         serviceName: 'iam',
         functionName: 'get-role',
-        context: {poolName: identityPoolName, roleName:role},
+        context: {poolKey: identityPoolKey, roleKey:role, roleName: roleName},
         returnSchema:'json',
         parameters: {
-          'role-name' : {type:'string', value:role},
+          'role-name' : {type:'string', value:roleName},
           'profile': {type: 'string', value:AWSCLIUserProfile}
         }
       },
       function (roleReq) {
         if (roleReq.response.error) {
-          console.log("no policy document statemets for role \"" + roleReq.context.roleName + "to update. Is the role created?");
+          console.log("no policy document statemets for role \"" + roleReq.context.roleKey + "to update. Is the role created?");
           console.log(roleReq.response.error);
         } else {
           if (!awscommon.verifyPath(roleReq.response.parsedJSON,['Role','AssumeRolePolicyDocument','Statement'],'a').isVerifyError) {
             // for each matching policy action add the conditions
             var statementArray = roleReq.response.parsedJSON.Role.AssumeRolePolicyDocument.Statement;
-            var conditionArray = baseDefinitions.cognitoIdentityPoolInfo.identityPools[roleReq.context.poolName].rolePolicyDocumentStatementConditions[role];
+            var conditionArray = baseDefinitions.cognitoIdentityPoolInfo.identityPools[roleReq.context.poolKey].rolePolicyDocumentStatementConditions[role];
             for (var conditionIndex = 0; conditionIndex < conditionArray.length; conditionIndex ++) {
               for (var statementIndex = 0; statementIndex < statementArray.length; statementIndex ++) {
                 if (statementArray[statementIndex].Action === conditionArray[conditionIndex].Action) {
@@ -215,7 +228,7 @@ function updateRolePolicyDocumentStatementConditions(identityPoolName) {
                     Object.keys(theCondition).forEach(function(conditionTypeParam) {
                       var val = theCondition[conditionTypeParam];
                       if (val === '$identityPoolId') {
-                        theCondition[conditionTypeParam] = baseDefinitions.cognitoIdentityPoolInfo.identityPools[roleReq.context.poolName].identityPoolId;
+                        theCondition[conditionTypeParam] = baseDefinitions.cognitoIdentityPoolInfo.identityPools[roleReq.context.poolKey].identityPoolId;
                       }
                     });
                   });
@@ -226,7 +239,7 @@ function updateRolePolicyDocumentStatementConditions(identityPoolName) {
             AwsRequest.createRequest({
               serviceName: 'iam',
               functionName: 'update-assume-role-policy',
-              context: {poolName: roleReq.context.poolName, roleName:roleReq.context.roleName},
+              context: {poolKey: roleReq.context.poolKey, roleName:roleReq.context.roleName},
               returnSchema:'none',
               parameters: {
                 'role-name': {type:'string', value:roleReq.context.roleName},
@@ -246,8 +259,5 @@ function updateRolePolicyDocumentStatementConditions(identityPoolName) {
         }
       }).startRequest();
     }
-
   });
-
-
 }

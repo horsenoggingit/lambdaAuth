@@ -14,13 +14,13 @@ lambdaInfo:
     awsResources:
         -
             type: dynamodbInfo
-            resourceName: users
+            resourceName: Users
         -
             type: dynamodbInfo
-            resourceName: userEmail
+            resourceName: UserEmail
         -
             type: cognitoIdentityPoolInfo
-            resourceName: testPool
+            resourceName: Pool
     roleName: userCreator
     functionName: signup
     region: us-east-1
