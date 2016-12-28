@@ -34,7 +34,6 @@ lambdaInfo:
                     provider-name:
                         type: string
                     id: 'type:string'
-    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testlogin'
 apiInfo:
     paths:
         /login:
