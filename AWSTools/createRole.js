@@ -167,7 +167,7 @@ function createRoleAndUploadPolicies(createCommand, policyArray, roleKey, profil
             callback(null,null);
             return;
           }
-          processRoleResult(stdout, roleName, policyArray, callback);
+          processRoleResult(stdout, roleKey, policyArray, callback);
         });
       }
       return;
