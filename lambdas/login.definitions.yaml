@@ -11,13 +11,13 @@ lambdaInfo:
     awsResources:
         -
             type: dynamodbInfo
-            resourceName: users
+            resourceName: Users
         -
             type: dynamodbInfo
-            resourceName: userEmail
+            resourceName: UserEmail
         -
             type: cognitoIdentityPoolInfo
-            resourceName: testPool
+            resourceName: Pool
     roleName: userConsumer
     functionName: login
     region: us-east-1
@@ -34,6 +34,7 @@ lambdaInfo:
                     provider-name:
                         type: string
                     id: 'type:string'
+    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testlogin'
 apiInfo:
     paths:
         /login:

@@ -50,22 +50,29 @@ if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'
 var numRoles = Object.keys(baseDefinitions[roleBase].roleDefinitions).length;
 var successDecCount = numRoles;
 
-var roleNames = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleName) {
-  var roleDef = baseDefinitions[roleBase].roleDefinitions[roleName];
+var roleKeys = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey) {
+  var roleDef = baseDefinitions[roleBase].roleDefinitions[roleKey];
   // need a name, policyDocument and perhaps some policies
-  awscommon.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleName).exitOnError();
+  awscommon.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleKey).exitOnError();
 
-  awscommon.verifyPath(roleDef, ['policies'], 'a', "role definition " + roleName).exitOnError();
+  awscommon.verifyPath(roleDef, ['policies'], 'a', "role definition " + roleKey).exitOnError();
   var policyArray = [];
   roleDef.policies.forEach(function (policy) {
-    awscommon.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleName).exitOnError();
+    awscommon.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleKey).exitOnError();
     policyArray.push(policy.arnPolicy);
   })
   // all done verifying now lets have some fun
-  deletePolicies(policyArray, roleName, AWSCLIUserProfile);
+  deletePolicies(policyArray, roleKey, AWSCLIUserProfile);
 });
 
-function deletePolicies(policyArray, roleName, userProfile) {
+function deletePolicies(policyArray, roleKey, userProfile) {
+  var roleName;
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
+  } else {
+    roleName = roleKey;
+  }
+
   var policyArrayLength = policyArray.length;
   policyArray.forEach(function (policy){
 
@@ -95,18 +102,18 @@ function deletePolicies(policyArray, roleName, userProfile) {
         'delete-role',
         '--role-name ' + roleName,
         '--profile ' + AWSCLIUserProfile];
-        function execRoleDelete (params, rlName, doneCallback) {
+        function execRoleDelete(params, rlKey, doneCallback) {
           exec('aws ' + params.join(" "), (err, stdout, stderr) => {
-            doneCallback(rlName, err);
+            doneCallback(rlKey, err);
           });
         }
-        execRoleDelete(params, roleName, function (pol, err) {
+        execRoleDelete(params, roleKey, function (rKey, err) {
           if (err) {
             console.log(err);
-            console.log("Failed to delete role " + pol + ".");
+            console.log("Failed to delete role " + rKey + ".");
           } else {
-            console.log("Successfully deleted role " + pol + ".");
-            delete baseDefinitions[roleBase].roleDefinitions[roleName].arnRole;
+            console.log("Successfully deleted role " + rKey + ".");
+            delete baseDefinitions[roleBase].roleDefinitions[rKey].arnRole;
             successDecCount --;
           }
           numRoles --;

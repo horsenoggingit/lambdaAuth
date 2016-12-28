@@ -34,11 +34,11 @@ if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'
 awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var deleteRequests = [];
-var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolName) {
-  var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolName];
+var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolKey) {
+  var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey];
   var verifyError = awscommon.verifyPath(poolDef, ['identityPoolId'], 's', "definitions file \""+argv.baseDefinitionsFile+"\"").callbackOnError(function(verifyError) {
     console.log(verifyError.toString());
-    console.log("Skipping delete request for \"" + identityPoolName + "\".")
+    console.log("Skipping delete request for \"" + identityPoolKey + "\".")
   });
 
   if (!verifyError.isVerifyError) {
@@ -46,7 +46,7 @@ var roleNames = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPool
       serviceName:'cognito-identity',
       functionName:'delete-identity-pool',
       returnSchema:'none',
-      context:{poolName: identityPoolName},
+      context:{poolKey: identityPoolKey},
       parameters:{
         'identity-pool-id': {type: 'string', value:poolDef.identityPoolId},
         'profile': {type: 'string', value:AWSCLIUserProfile}
@@ -68,7 +68,7 @@ function requestsDoneFunction(requestBatch){
     if (request.response.error) {
       console.log(request.response.error);
     } else {
-      delete baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolName].identityPoolId;
+      delete baseDefinitions.cognitoIdentityPoolInfo.identityPools[request.context.poolKey].identityPoolId;
       successCount++;
     }
   });

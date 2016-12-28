@@ -62,7 +62,6 @@ forEachLambdaDefinition(function (fileName) {
 
   vp.verifyPath(definitions,['lambdaInfo','functionName'],'s', "definitions file \"" + fileName + "\"", "This should be the name of the lambda function.").exitOnError();
 
-
   // remove older archives
   if (fs.existsSync(path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName + ".zip"))) {
     fs.unlinkSync(path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName + ".zip"))
@@ -89,29 +88,35 @@ forEachLambdaDefinition(function (fileName) {
 
   functionHandler = path.basename(functionHandler, path.extname(functionHandler)) + ".handler";
 
+  var lambdaName;
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    lambdaName = baseDefinitions.environment.AWSResourceNamePrefix + definitions.lambdaInfo.functionName;
+  } else {
+    lambdaName = definitions.lambdaInfo.functionName;
+  }
 
   var params = {
     'role': {type: 'string', value: arnRole},
     'region': {type: 'string', value: definitions.lambdaInfo.region},
     'handler': {type: 'string', value: functionHandler},
-    'function-name': {type: 'string', value: definitions.lambdaInfo.functionName},
+    'function-name': {type: 'string', value: lambdaName},
     'runtime' : {type: 'string', value: definitions.lambdaInfo.language},
     'zip-file' : {type: 'fileNameBinary', value: path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName) + ".zip"},
     'profile' : {type: 'string', value:AWSCLIUserProfile}
   };
 
   // capture values here by creating a function
-  zipAndUpload(zipCommandString, params, path.join(argv.lambdaDefinitionsDir,fileName));
+  zipAndUpload(definitions.lambdaInfo.functionName, zipCommandString, params, path.join(argv.lambdaDefinitionsDir,fileName));
 
 });
 
-function createLambda(reqParams, defaultsFileName) {
+function createLambda(functionName, reqParams, defaultsFileName) {
   // lets upload!
 
   AWSRequest.createRequest({
     serviceName: "lambda",
     functionName: "create-function",
-    context: {reqParams:reqParams, defaultsFileName:defaultsFileName},
+    context: {reqParams:reqParams, defaultsFileName:defaultsFileName, functionName: functionName},
     parameters:reqParams,
     returnSchema:'json',
     returnValidation:[{path:['FunctionArn'], type:'s'},
@@ -122,7 +127,7 @@ function createLambda(reqParams, defaultsFileName) {
       if (request.response.errorId === 'ResourceConflictException') {
         // delete and recreate the lambda
         console.log("Lambda \"" + request.context.reqParams['function-name'].value + "\" already exists. Use deleting and re-creating.")
-        deleteLambda(request.context.reqParams, request.context.defaultsFileName);
+        deleteLambda(request.context.functionName, request.context.reqParams, request.context.defaultsFileName);
         return;
       } else if (request.response.errorId === 'InvalidParameterValueException') {
         // retry
@@ -159,7 +164,7 @@ function createLambda(reqParams, defaultsFileName) {
   }).startRequest();
 }
 
-function zipAndUpload(zipCommand, reqParams, defaultsFileName) {
+function zipAndUpload(functionName, zipCommand, reqParams, defaultsFileName) {
   exec(zipCommand, function (err, stdout, stderr) {
     if (err) {
       console.log(stdout);
@@ -168,7 +173,7 @@ function zipAndUpload(zipCommand, reqParams, defaultsFileName) {
     }
     console.log(stdout);
     if (!argv.archiveOnly) {
-      createLambda(reqParams, defaultsFileName);
+      createLambda(functionName, reqParams, defaultsFileName);
     }
   });
 }
@@ -198,7 +203,7 @@ function forEachLambdaDefinition (callback) {
   });
 }
 
-function deleteLambda(createParams, defaultsFileName) {
+function deleteLambda(functionName, createParams, defaultsFileName) {
   var params = {
     'function-name': {type: 'string', value: createParams['function-name'].value},
     'profile' : {type: 'string', value:AWSCLIUserProfile}
@@ -206,7 +211,7 @@ function deleteLambda(createParams, defaultsFileName) {
   var deleteRequest = AWSRequest.createRequest({
     serviceName: "lambda",
     functionName: "delete-function",
-    context:{createParams: createParams, defaultsFileName: defaultsFileName},
+    context:{createParams: createParams, defaultsFileName: defaultsFileName, functionName: functionName},
     parameters: params,
     retryCount: 3,
     retryErrorIds: ['ServiceException'],
@@ -222,7 +227,7 @@ function deleteLambda(createParams, defaultsFileName) {
       }
     }
     console.log("Deleted lambda \"" + request.parameters["function-name"].value + "\"");
-    createLambda(request.context.createParams, request.context.defaultsFileName);
+    createLambda(request.context.functionName, request.context.createParams, request.context.defaultsFileName);
   });
 
   deleteRequest.on('AwsRequestRetry', function () {

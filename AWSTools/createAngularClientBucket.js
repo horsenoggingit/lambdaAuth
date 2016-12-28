@@ -85,10 +85,14 @@ forEachLambdaDefinition(function (fileName) {
 
 function createBucket(fileName, definitions, callback, attemptNo) {
   var bucketName = definitions.s3Info.bucketInfo.namePrefix;
-  awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'region'], 's', 'in angular client definition file').exitOnError();
 
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    bucketName = baseDefinitions.environment.AWSResourceNamePrefix + bucketName;
+  }
+
+  awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'region'], 's', 'in angular client definition file').exitOnError();
   if (typeof attemptNo != 'undefined') {
-    bucketName = bucketName + zeroPadInteger(4,Math.floor(Math.random() * 10000));
+    bucketName = bucketName + zeroPadInteger(6, Math.floor(Math.random() * 100000));
   } else {
     attemptNo = 0;
   }
@@ -143,8 +147,8 @@ function enableWeb(definitions, callback) {
         serviceName: "s3api",
         functionName: "put-bucket-website",
         parameters: {
-          'bucket' : {type:'string', value:definitions.s3Info.bucketInfo.name},
-          'website-configuration' : {type:'JSONObject', value:definitions.s3Info.bucketInfo.websiteConfiguration},
+          'bucket' : {type:'string', value: definitions.s3Info.bucketInfo.name},
+          'website-configuration' : {type:'JSONObject', value: definitions.s3Info.bucketInfo.websiteConfiguration},
           'profile' : {type:'string', value:AWSCLIUserProfile}
         },
         returnSchema: 'none',
@@ -176,8 +180,8 @@ function addBucketPolicy(definitions, callback) {
         serviceName: "s3api",
         functionName: "put-bucket-policy",
         parameters: {
-          'bucket' : {type:'string', value:definitions.s3Info.bucketInfo.name},
-          'policy' : {type:'JSONObject', value:definitions.s3Info.bucketInfo.policy},
+          'bucket' : {type:'string', value: definitions.s3Info.bucketInfo.name},
+          'policy' : {type:'JSONObject', value: definitions.s3Info.bucketInfo.policy},
           'profile' : {type:'string', value:AWSCLIUserProfile}
         },
         returnSchema: 'none',

@@ -61,8 +61,15 @@ forEachLambdaDefinition(function (fileName) {
 
   vp.verifyPath(definitions,['lambdaInfo', 'functionName'], 's', "definitions file \"" + fileName + "\"").exitOnError();
 
+  var lambdaName;
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    lambdaName = baseDefinitions.environment.AWSResourceNamePrefix + definitions.lambdaInfo.functionName;
+  } else {
+    lambdaName = definitions.lambdaInfo.functionName;
+  }
+
   var params = {
-    'function-name': {type: 'string', value: definitions.lambdaInfo.functionName},
+    'function-name': {type: 'string', value: lambdaName},
     'profile' : {type: 'string', value:AWSCLIUserProfile}
   };
 
@@ -76,9 +83,9 @@ function deleteLambda(reqParams, defaultsFileName) {
     serviceName: "lambda",
     functionName: "delete-function",
     parameters:reqParams,
-    retryCount: 3,
+    retryCount: 6,
     retryErrorIds: ['ServiceException'],
-    retryDelay: 2000,
+    retryDelay: 3000,
     returnSchema:'none'
   },
   function (request) {

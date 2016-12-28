@@ -11,8 +11,8 @@ var yargs = require('yargs')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your dynamodb (dynamodbInfo)')
 .default('s','./base.definitions.yaml')
-.alias('n','dynamoTableName')
-.describe('n','a specific dynamo table name to process. If not specified all lambdas found will be created')
+.alias('n','dynamoTableKey')
+.describe('k','a specific dynamo table key to process (the name of the db is environment.AWSResourceNamePrefix + key). If not specified all db found will be created')
 .help('h')
 .alias('h', 'help')
 var argv = yargs.argv;
@@ -41,29 +41,36 @@ getTableNameArray(function(tableNames) {
   awsc.verifyPath(baseDefinitions,['dynamodbInfo', '*', 'provisionedThroughput','ReadCapacityUnits'],'n', "definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
   awsc.verifyPath(baseDefinitions,['dynamodbInfo', '*', 'provisionedThroughput','WriteCapacityUnits'],'n', "definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
 
-  var localNames = Object.keys(baseDefinitions.dynamodbInfo);
-  if (argv.dynamoTableName) {
-    awsc.verifyPath(baseDefinitions,['dynamodbInfo', argv.dynamoTableName], 'a', "definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
-    localNames = [argv.dynamoTableName];
+  var localDbKeys = Object.keys(baseDefinitions.dynamodbInfo);
+  if (argv.dynamoTableKey) {
+    awsc.verifyPath(baseDefinitions,['dynamodbInfo', argv.dynamoTableKey], 'a', "definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
+    localDbKeys = [argv.dynamoTableKey];
   }
 
   var requests = [];
 
-  for (var keyIndex = 0; keyIndex < localNames.length; keyIndex++) {
-    var tableName = localNames[keyIndex];
+  for (var keyIndex = 0; keyIndex < localDbKeys.length; keyIndex++) {
+    var tableKey = localDbKeys[keyIndex];
+    var tableName;
+    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+      tableName = baseDefinitions.environment.AWSResourceNamePrefix + tableKey;
+    } else {
+      tableName = tableKey;
+    }
+
     // does the name exist in the name server name list
-    if (tableNames.indexOf(tableName) >=0) {
+    if (tableNames.indexOf(tableName) >= 0) {
       console.log("Getting description of existing table \"" + tableName + "\"");
-      requests.push(getTableDescriptionRequest(tableName, function (tblName, description) {
+      requests.push(getTableDescriptionRequest(tableKey, tableName, function (tblKey, tblName, description) {
         console.log("Received existing table \"" + tblName + "\" description. Updating local definition");
-        baseDefinitions.dynamodbInfo[tblName]['Table'] = description;
+        baseDefinitions.dynamodbInfo[tblKey]['Table'] = description;
       }));
     } else {
       // send out a request to create a new table.
       console.log("Creating new table \"" + tableName + "\"");
-    requests.push(getTableCreationRequest(tableName, function (tblName, description) {
+      requests.push(getTableCreationRequest(tableKey, tableName, function (tblKey, tblName, description) {
         console.log("Created table \"" + tblName + "\" description. Updating local definition");
-        baseDefinitions.dynamodbInfo[tblName]['Table'] = description;
+        baseDefinitions.dynamodbInfo[tblKey]['Table'] = description;
       }));
     }
   }
@@ -86,18 +93,18 @@ getTableNameArray(function(tableNames) {
   }).startRequest();
 });
 
-function getTableCreationRequest (tableName, callback) {
+function getTableCreationRequest (tableKey, tableName, callback) {
   return AwsRequest.createRequest({
     serviceName: "dynamodb",
     functionName: "create-table",
     parameters:{
-      'attribute-definitions': {type: 'JSONObject', value:baseDefinitions.dynamodbInfo[tableName].attributeDefinitions},
+      'attribute-definitions': {type: 'JSONObject', value:baseDefinitions.dynamodbInfo[tableKey].attributeDefinitions},
       'table-name': {type: 'string', value:tableName},
-      'key-schema': {type: 'JSONObject', value:baseDefinitions.dynamodbInfo[tableName].keySchema},
-      'provisioned-throughput': {type: 'JSONObject', value:baseDefinitions.dynamodbInfo[tableName].provisionedThroughput},
+      'key-schema': {type: 'JSONObject', value:baseDefinitions.dynamodbInfo[tableKey].keySchema},
+      'provisioned-throughput': {type: 'JSONObject', value:baseDefinitions.dynamodbInfo[tableKey].provisionedThroughput},
       'profile' : {type: 'string', value:AWSCLIUserProfile}
     },
-    context:{tableName:tableName},
+    context:{tableName: tableName, tableKey: tableKey},
     returnSchema:'json',
     returnValidation:[{path:['TableDescription'], type:'o'},
     {path:['TableDescription', 'TableArn'], type:'s'}]
@@ -106,11 +113,11 @@ function getTableCreationRequest (tableName, callback) {
     if (request.response.error) {
       throw request.response.error;
     }
-    callback(tableName, request.response.parsedJSON.TableDescription);
+    callback(request.context.tableKey, request.context.tableName, request.response.parsedJSON.TableDescription);
   });
 }
 
-function getTableDescriptionRequest (tableName, callback) {
+function getTableDescriptionRequest (tableKey, tableName, callback) {
   return AwsRequest.createRequest({
     serviceName: "dynamodb",
     functionName: "describe-table",
@@ -118,7 +125,7 @@ function getTableDescriptionRequest (tableName, callback) {
       'table-name': {type: 'string', value:tableName},
       'profile' : {type: 'string', value:AWSCLIUserProfile}
     },
-    context:{tableName:tableName},
+    context:{tableName:tableName, tableKey: tableKey},
     returnSchema:'json',
     returnValidation:[{path:['Table'], type:'o'},
     {path:['Table', 'TableArn'], type:'s'}]
@@ -127,7 +134,7 @@ function getTableDescriptionRequest (tableName, callback) {
     if (request.response.error) {
       throw request.response.error;
     }
-    callback(tableName, request.response.parsedJSON.Table);
+    callback(request.context.tableKey, request.context.tableName, request.response.parsedJSON.Table);
   });
 }
 

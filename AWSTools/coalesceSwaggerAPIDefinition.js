@@ -32,6 +32,14 @@ if (typeof baseDefinitions.apiInfo.AWSSwaggerHeader != 'object') {
 }
 
 var swaggerBaseFile = baseDefinitions.apiInfo.AWSSwaggerHeader;
+// update the title to include the resource.
+awsc.verifyPath(baseDefinitions,['apiInfo', 'title'], 's', "in base definitions file", "This is needed to identify the API").exitOnError();
+
+if (baseDefinitions.environment.AWSResourceNamePrefix) {
+  baseDefinitions.apiInfo.AWSSwaggerHeader.info['title'] = baseDefinitions.environment.AWSResourceNamePrefix + baseDefinitions.apiInfo.title;
+} else {
+  lambdaName = baseDefinitions.apiInfo.title;
+}
 
 if (fs.existsSync(argv.outputFilename)) {
   fs.unlinkSync(argv.outputFilename);

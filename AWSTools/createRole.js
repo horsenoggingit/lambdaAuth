@@ -50,8 +50,8 @@ if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'
 var createRoleComplete = 0;
 var createRoleSuccess = 0;
 
-var roleNames = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleName) {
-  var roleDef = baseDefinitions[roleBase].roleDefinitions[roleName];
+var roleKeys = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey) {
+  var roleDef = baseDefinitions[roleBase].roleDefinitions[roleKey];
   // need a name, policyDocument and perhaps some policies
   awscommon.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleName).exitOnError();
 
@@ -61,6 +61,13 @@ var roleNames = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(f
     awscommon.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleName).exitOnError();
     policyArray.push(policy.arnPolicy);
   })
+
+  var roleName;
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
+  } else {
+    roleName = roleKey;
+  }
   // all done verifying now lets have some fun
   var params = ['iam',
   'create-role',
@@ -68,14 +75,20 @@ var roleNames = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(f
   "--assume-role-policy-document '" + JSON.stringify(roleDef.policyDocument) + "'",
   '--profile ' + AWSCLIUserProfile];
 
-  createRoleAndUploadPolicies('aws ' + params.join(" "), policyArray, roleName, AWSCLIUserProfile, function (rlName, rlARN, policyArr) {
+  createRoleAndUploadPolicies('aws ' + params.join(" "), policyArray, roleKey, AWSCLIUserProfile, function (rlKey, rlARN, policyArr) {
     createRoleComplete++;
-    if (rlName && rlARN) {
-      baseDefinitions[roleBase].roleDefinitions[rlName]["arnRole"] = rlARN;
+    if (rlKey && rlARN) {
+      baseDefinitions[roleBase].roleDefinitions[rlKey]["arnRole"] = rlARN;
       createRoleSuccess++;
 
       // start uploading policies
-      //
+      var rlName;
+      if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        rlName = baseDefinitions.environment.AWSResourceNamePrefix + rlKey;
+      } else {
+        rlName = rlKey;
+      }
+
       policyArr.forEach(function (policyArn) {
         var params = ['iam',
         'attach-role-policy',
@@ -124,7 +137,14 @@ var roleNames = Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(f
 });
 
 
-function createRoleAndUploadPolicies(createCommand, policyArray, roleName, profileName, callback) {
+function createRoleAndUploadPolicies(createCommand, policyArray, roleKey, profileName, callback) {
+  var roleName;
+  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
+  } else {
+    roleName = roleKey;
+  }
+
   console.log("Creating role \"" + roleName + "\"");
 
   exec(createCommand, (err, stdout, stderr) => {
@@ -152,12 +172,12 @@ function createRoleAndUploadPolicies(createCommand, policyArray, roleName, profi
       }
       return;
     }
-    processRoleResult(stdout, roleName, policyArray, callback);
+    processRoleResult(stdout, roleKey, policyArray, callback);
   });
 
 }
 
-function processRoleResult(stdout, roleName, policyArray, callback) {
+function processRoleResult(stdout, roleKey, policyArray, callback) {
   console.log(stdout);
   var result = JSON.parse(stdout);
   if (typeof result != 'object') {
@@ -173,6 +193,6 @@ function processRoleResult(stdout, roleName, policyArray, callback) {
     callback(null,null);
     return;
   }
-  callback(roleName, result.Role.Arn, policyArray);
+  callback(roleKey, result.Role.Arn, policyArray);
 
 }

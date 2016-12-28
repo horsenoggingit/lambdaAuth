@@ -1,5 +1,6 @@
 environment:
     AWSCLIUserProfile: adminuser
+    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -20,8 +21,9 @@ cognitoIdentityPoolInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
                     name: AmazonAPIGatewayInvokeFullAccess
+            arnRole: 'arn:aws:iam::940223146162:role/testapiAccessRole'
     identityPools:
-        testPool:
+        Pool:
             lambdaAliases:
                 resource: IDENTITY_POOL
             authProviders:
@@ -39,6 +41,7 @@ cognitoIdentityPoolInfo:
                                 'cognito-identity.amazonaws.com:aud': $identityPoolId
                             'ForAnyValue:StringLike':
                                 'cognito-identity.amazonaws.com:amr': authenticated
+            identityPoolId: 'us-east-1:52ddf32a-1519-4df6-b60d-cb16cfe8cefa'
 lambdaInfo:
     roleDefinitions:
         userConsumer:
@@ -60,6 +63,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/testuserConsumer'
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -79,6 +83,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/testuserCreator'
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
@@ -94,13 +99,14 @@ apiInfo:
                 -
                     arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
                     name: LambdaInvocation
+            arnRole: 'arn:aws:iam::940223146162:role/testlambdaExecuteRole'
     defaultDeployStage: dev
     region: us-east-1
+    title: SwaggerAuth
     AWSSwaggerHeader:
         swagger: '2.0'
         info:
             version: 1.0.0
-            title: 'Swagger Auth'
             description: 'Developer Provider Auth'
             termsOfService: 'http://noneyet.com/'
             contact:
@@ -190,8 +196,15 @@ apiInfo:
             name: Authorization
             in: header
             x-amazon-apigateway-authtype: awsSigv4
+    awsId: hg0hrg17wl
+    lastDeploy:
+        uploadResult:
+            description: 'Yet another deploy...'
+            id: lqhh5n
+            createdDate: 1482926055
+        invokeURL: 'https://hg0hrg17wl.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
-    users:
+    Users:
         lambdaAliases:
             resource: USERS
             attributes:
@@ -213,7 +226,26 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
-    userEmail:
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testUsers'
+            AttributeDefinitions:
+                -
+                    AttributeName: id
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: testUsers
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: id
+            ItemCount: 0
+            CreationDateTime: 1482926039.796
+    UserEmail:
         lambdaAliases:
             resource: EMAILS
             attributes:
@@ -230,3 +262,22 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testUserEmail'
+            AttributeDefinitions:
+                -
+                    AttributeName: email
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: testUserEmail
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: email
+            ItemCount: 0
+            CreationDateTime: 1482926039.811

@@ -235,13 +235,12 @@ class AWSRequest extends EventEmitter {
       if (!this.response.errorId) {
         this.response.errorId = "InternalAwsRequestError"
       }
-
       if ((this.retryCount) && (this.retryAttempt < this.retryCount)) {
         var shouldRetry = true;
-        if ((this.parameters.retryErrorIds) && (this.parameters.retryErrorIds.length > 0)) {
+        if ((this.retryErrorIds) && (this.retryErrorIds.length > 0)) {
           var hasErrorId = false;
           for (var eIndex = 0; eIndex < this.retryErrorIds.length; eIndex ++) {
-            if (request.response.errorId === this.retryErrorIds[eIndex]) {
+            if (this.response.errorId === this.retryErrorIds[eIndex]) {
               hasErrorId = true;
               break;
             }
