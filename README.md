@@ -1,11 +1,11 @@
 # lambdaAuth
 A Framework for native and web applications on AWS using Lambda, Api Gateway, DynamoDB and Cognito Auth.
 
-This project was started out of a desire to learn about creating apps using AWS as a backend leveraging the API code generator for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. I also wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
+This project started from of a desire to learn about creating apps using AWS lambda as a backend for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. I also wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
 
-The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a projects deployment can be easily recreated and torn down. This framework also supports multiple deployments of a project on a single aws account.
+The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a projects deployment can be easily recreated and torn down. This framework also supports multiple deployments of a project on a single AWS account.
 
-The default configuration of this project creates a series of APIs (/signup, /login, /user/me/get), lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience  angular and (coming soon) iOs clients have been provided. The angular project can run locally, but is automatically hosted on S3 for convenience.
+The default configuration of this project creates a series of APIs (/signup, /login, /user/me/get), lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience  angular and (coming soon) iOs clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience.
 
 # Installation
 
@@ -28,10 +28,20 @@ The default configuration of this project creates a series of APIs (/signup, /lo
   * go back to the "root project folder” (“cd ..; cd ..; cd ..”)
   * run "npm start”
     * This will build the backend configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://lambdaauth2972.s3-website-us-east-1.amazonaws.com
+  * run "npm stop" to remove everything that was built with "npm start".
     
 # Documentation #
+This project started as my Hello World app for javascript and node.js. As such there is an evident evolution of coding patterns as I became familiar with the language. I will be improving the situation.
+
 ##Framework Overview##
-TODO
+When working with the AWS web gui to build services and configure how services should work together it became quickly apparent that managing and re-creating an infrastucture (collection of services) would become very complex. Also, managing how services are accessed by the business logic in lambdas did not see well defined (e.g. which lambdas have access to which services).
+
+To tackle this issue I've taken the some common AWS services for building an application (dynamoDB, cognito, API Gateway, lambda) and manage their configuration with easy to read and edit yaml files.
+
+In the **root** directory of the project you will find **base.definitions.yaml**. This configuration file holds all the information to create the supporting application infrastructure. Here you configure your dynamo tables, identity pools, API Gateway top level information as well as roles and policies for accessing these services from lambda.
+
+**Next introduce the definitions.yaml files in the lambda and client directories**
+
 
 ##AWS Utilities##
 TODO
