@@ -5,7 +5,7 @@ This project started from of a desire to learn about creating apps using AWS lam
 
 The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a projects deployment can be easily recreated and torn down. This framework also supports multiple deployments of a project on a single AWS account.
 
-The default configuration of this project creates a series of APIs (/signup, /login, /user/me/get), lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience  angular and (coming soon) iOs clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience.
+The default configuration of this project creates a series of APIs (/signup, /login, /user/me/get), lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience  angular and (coming soon) iOS clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience.
 
 # Installation
 
