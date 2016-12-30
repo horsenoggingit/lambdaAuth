@@ -1,5 +1,5 @@
 # lambdaAuth
-A Framework for native and web applications on AWS using Lambda, Api Gateway, DynamoDB and Cognito Auth.
+A framework for native and web applications on AWS using Lambda, Api Gateway, DynamoDB and Cognito Auth.
 
 This project started from a desire to learn about creating apps using AWS lambda as a backend for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. Additionally I wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
 
