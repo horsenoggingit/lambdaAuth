@@ -1,7 +1,7 @@
 # lambdaAuth
 A Framework for native and web applications on AWS using Lambda, Api Gateway, DynamoDB and Cognito Auth.
 
-This project started from of a desire to learn about creating apps using AWS lambda as a backend for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. I also wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
+This project started from of a desire to learn about creating apps using AWS lambda as a backend for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. Additionally I wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
 
 The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a projects deployment can be easily recreated and torn down. This framework also supports multiple deployments of a project on a single AWS account.
 
@@ -9,7 +9,7 @@ The default configuration of this project creates a series of APIs (/signup, /lo
 
 # Installation
 
-1. Install node (node is used for local AWS tools as well as lambdas).
+1. If it isn't installed on your machine install node.js from https://nodejs.org (node is used for local AWS tools as well as lambdas - npm rules!).
 2. Create an AWS free account.
 3. Add an IAM user to act as proxy (it isn’t good to use your master user day to day)
   * http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html 
@@ -31,7 +31,7 @@ The default configuration of this project creates a series of APIs (/signup, /lo
   * run "npm stop" to remove everything that was built with "npm start".
     
 # Documentation #
-This project started as my Hello World app for javascript and node.js. As such there is an evident evolution of coding patterns as I became familiar with the language. I will be improving the situation.
+This project started as my Hello World app for javascript and node.js. As such there is an evident evolution of coding patterns as I became familiar with the language. I will be improving the situation. By and large you will likely see that this project is written by a long time client developer, so please be forgiving.
 
 ##Framework Overview##
 When working with the AWS web gui to build services and configure how services should work together it became quickly apparent that managing and re-creating an infrastucture (collection of services) would become very complex. Also, managing how services are accessed by the business logic in lambdas did not see well defined (e.g. which lambdas have access to which services).
