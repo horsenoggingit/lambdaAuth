@@ -3,9 +3,9 @@ A Framework for native and web applications on AWS using Lambda, Api Gateway, Dy
 
 This project started from a desire to learn about creating apps using AWS lambda as a backend for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. Additionally I wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
 
-The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a projects deployment can be easily recreated and torn down. This framework also supports multiple deployments of a project on a single AWS account.
+The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a project's deployment can be easily recreated, torn down and shared between developers. This framework also supports multiple deployments of a project on a single AWS account.
 
-The default configuration of this project creates a series of APIs (/signup, /login, /user/me/get), lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience  angular and (coming soon) iOS clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience.
+The default configuration of this project creates a series of API endpoints (/signup, /login, /user/me/get), lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience  angular and (coming soon) iOS clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience (see the last installation step) - if you want to be fancy you can easly configure cloudfront to serve the site using https and other fancy features. I will discuss this further in the web client section.
 
 # Installation
 
