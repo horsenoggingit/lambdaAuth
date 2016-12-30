@@ -27,7 +27,7 @@ The default configuration of this project creates a series of API endpoints (/si
 7. Build the backend
   * go back to the "root project folder” (“cd ..; cd ..; cd ..”)
   * run "npm start”
-    * This will build the backend configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://lambdaauth2972.s3-website-us-east-1.amazonaws.com
+    * This will build the backend configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://testlambdaauth.s3-website-us-east-1.amazonaws.com
   * run "npm stop" to remove everything that was built with "npm start".
     
 # Documentation #
