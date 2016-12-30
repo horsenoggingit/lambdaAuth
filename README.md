@@ -36,7 +36,7 @@ This project started as my Hello World app for javascript and node.js. As such t
 ##Framework Overview##
 When working with the AWS web gui to build services and configure how services should work together it became quickly apparent that managing and re-creating an infrastucture (collection of services) would become very complex. Also, managing how services are accessed by the business logic in lambdas did not see well defined (e.g. which lambdas have access to which services).
 
-To tackle this issue I've taken the some common AWS services for building an application (dynamoDB, cognito, API Gateway, lambda) and manage their configuration with easy to read and edit yaml files.
+To tackle this issue I've taken the some common AWS services for building an application (dynamoDB, cognito, API Gateway, lambda) and managed their configuration with easy to read and edit yaml definitions files. All the AWS Utilities described in the section below use these definitions files as their primary configuration source.
 
 In the **root** directory of the project you will find **base.definitions.yaml**. This configuration file holds all the information to create the supporting application infrastructure. Here you configure your dynamo tables, identity pools, API Gateway top level information as well as roles and policies for accessing these services from lambda.
 
