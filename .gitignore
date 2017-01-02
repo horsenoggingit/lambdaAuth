@@ -94,3 +94,4 @@ clients/iOS/lambdaAuth/lambdaAuth.xcodeproj/xcuserdata
 clients/angular.definitions.yaml.old
 
 clients/iOS.definitions.yaml.old
+*.xcuserstate
