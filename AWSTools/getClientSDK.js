@@ -62,6 +62,24 @@ forEachLambdaDefinition(function (fileName) {
     });
     params['parameters'] = {type: 'string', value:paramstrings.join(',')};
   }
+  // make sure the download path exists. If not create it.
+  var downloadPath;
+  if (!path.isAbsolute(definitions.apiInfo.clientSDK.downloadPath)) {
+    downloadPath = path.join(path.resolve(), argv.clientDefinitionsDir, definitions.apiInfo.clientSDK.downloadPath);
+  } else {
+    downloadPath = definitions.apiInfo.clientSDK.downloadPath;
+  }
+  downloadPath = path.normalize(downloadPath);
+
+  var downloadPathComponents = downloadPath.split(path.sep);
+  var mkPath = path.sep;
+  downloadPathComponents.forEach(function (pathComponent) {
+    mkPath = path.join(mkPath, pathComponent);
+    if (!fs.existsSync(mkPath)){
+      fs.mkdirSync(mkPath);
+    }
+  });
+
   awsRequests.push(
     AWSRequest.createRequest(
       {

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1A86D3D51E1A0C63008F6A0B"
+               BlueprintIdentifier = "1A043D971E1AE09F00019A33"
                BuildableName = "lambdaAuth.app"
                BlueprintName = "lambdaAuth"
                ReferencedContainer = "container:lambdaAuth.xcodeproj">
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1A86D3EE1E1A0C64008F6A0B"
+               BlueprintIdentifier = "1A043DB01E1AE0A000019A33"
                BuildableName = "lambdaAuthTests.xctest"
                BlueprintName = "lambdaAuthTests"
                ReferencedContainer = "container:lambdaAuth.xcodeproj">
@@ -42,7 +42,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1A86D3F91E1A0C64008F6A0B"
+               BlueprintIdentifier = "1A043DBB1E1AE0A000019A33"
                BuildableName = "lambdaAuthUITests.xctest"
                BlueprintName = "lambdaAuthUITests"
                ReferencedContainer = "container:lambdaAuth.xcodeproj">
@@ -52,7 +52,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1A86D3D51E1A0C63008F6A0B"
+            BlueprintIdentifier = "1A043D971E1AE09F00019A33"
             BuildableName = "lambdaAuth.app"
             BlueprintName = "lambdaAuth"
             ReferencedContainer = "container:lambdaAuth.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1A86D3D51E1A0C63008F6A0B"
+            BlueprintIdentifier = "1A043D971E1AE09F00019A33"
             BuildableName = "lambdaAuth.app"
             BlueprintName = "lambdaAuth"
             ReferencedContainer = "container:lambdaAuth.xcodeproj">
@@ -94,7 +94,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1A86D3D51E1A0C63008F6A0B"
+            BlueprintIdentifier = "1A043D971E1AE09F00019A33"
             BuildableName = "lambdaAuth.app"
             BlueprintName = "lambdaAuth"
             ReferencedContainer = "container:lambdaAuth.xcodeproj">

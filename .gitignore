@@ -61,8 +61,6 @@ clients/angular/lambda-auth/app/bower_components
 
 clients/angular/lambda-auth/node_modules
 
-clients/iOS/lambdaAuth/aws/aws-apigateway-ios
-
 lambdas/userMe.definitions.yaml.yaml
 
 lambdas/signup.definitions.yaml.yaml
@@ -81,3 +79,10 @@ clients/angular.definitions.yaml.old
 
 clients/iOS/lambdaAuth/lambdaAuth.xcodeproj/project.xcworkspace/xcuserdata
 
+clients/iOS/lambdaAuth/Vendor/aws-apigateway-ios
+
+clients/iOS/lambdaAuth/Vendor/aws-apigateway-ios/generated-src
+
+clients/iOS/lambdaAuth/Pods
+
+clients/iOS/lambdaAuth/Vendor/api.zip

@@ -7,68 +7,75 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A86D3DB1E1A0C63008F6A0B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3DA1E1A0C63008F6A0B /* main.m */; };
-		1A86D3DE1E1A0C63008F6A0B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3DD1E1A0C63008F6A0B /* AppDelegate.m */; };
-		1A86D3E11E1A0C63008F6A0B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3E01E1A0C63008F6A0B /* ViewController.m */; };
-		1A86D3E41E1A0C63008F6A0B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D3E21E1A0C63008F6A0B /* Main.storyboard */; };
-		1A86D3E61E1A0C63008F6A0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D3E51E1A0C63008F6A0B /* Assets.xcassets */; };
-		1A86D3E91E1A0C64008F6A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D3E71E1A0C63008F6A0B /* LaunchScreen.storyboard */; };
-		1A86D3F41E1A0C64008F6A0B /* lambdaAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3F31E1A0C64008F6A0B /* lambdaAuthTests.m */; };
-		1A86D3FF1E1A0C64008F6A0B /* lambdaAuthUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3FE1E1A0C64008F6A0B /* lambdaAuthUITests.m */; };
+		1A043D9D1E1AE0A000019A33 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043D9C1E1AE0A000019A33 /* main.m */; };
+		1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043D9F1E1AE0A000019A33 /* AppDelegate.m */; };
+		1A043DA31E1AE0A000019A33 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DA21E1AE0A000019A33 /* ViewController.m */; };
+		1A043DA61E1AE0A000019A33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA41E1AE0A000019A33 /* Main.storyboard */; };
+		1A043DA81E1AE0A000019A33 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA71E1AE0A000019A33 /* Assets.xcassets */; };
+		1A043DAB1E1AE0A000019A33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */; };
+		1A043DB61E1AE0A000019A33 /* lambdaAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DB51E1AE0A000019A33 /* lambdaAuthTests.m */; };
+		1A043DC11E1AE0A000019A33 /* lambdaAuthUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */; };
+		1A4170A71E1AE82400D53EF2 /* generated-src in Resources */ = {isa = PBXBuildFile; fileRef = 1A4170A61E1AE82400D53EF2 /* generated-src */; };
+		F53BD0AA0E4382C704D69D6C /* Pods_lambdaAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1A86D3F01E1A0C64008F6A0B /* PBXContainerItemProxy */ = {
+		1A043DB21E1AE0A000019A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A86D3CE1E1A0C63008F6A0B /* Project object */;
+			containerPortal = 1A043D901E1AE09F00019A33 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A86D3D51E1A0C63008F6A0B;
+			remoteGlobalIDString = 1A043D971E1AE09F00019A33;
 			remoteInfo = lambdaAuth;
 		};
-		1A86D3FB1E1A0C64008F6A0B /* PBXContainerItemProxy */ = {
+		1A043DBD1E1AE0A000019A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A86D3CE1E1A0C63008F6A0B /* Project object */;
+			containerPortal = 1A043D901E1AE09F00019A33 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A86D3D51E1A0C63008F6A0B;
+			remoteGlobalIDString = 1A043D971E1AE09F00019A33;
 			remoteInfo = lambdaAuth;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1A86D3D61E1A0C63008F6A0B /* lambdaAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lambdaAuth.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A86D3DA1E1A0C63008F6A0B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		1A86D3DC1E1A0C63008F6A0B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		1A86D3DD1E1A0C63008F6A0B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1A86D3DF1E1A0C63008F6A0B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1A86D3E01E1A0C63008F6A0B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		1A86D3E31E1A0C63008F6A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		1A86D3E51E1A0C63008F6A0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1A86D3E81E1A0C63008F6A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		1A86D3EA1E1A0C64008F6A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1A86D3EF1E1A0C64008F6A0B /* lambdaAuthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A86D3F31E1A0C64008F6A0B /* lambdaAuthTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthTests.m; sourceTree = "<group>"; };
-		1A86D3F51E1A0C64008F6A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1A86D3FA1E1A0C64008F6A0B /* lambdaAuthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A86D3FE1E1A0C64008F6A0B /* lambdaAuthUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthUITests.m; sourceTree = "<group>"; };
-		1A86D4001E1A0C64008F6A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A043D981E1AE0A000019A33 /* lambdaAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lambdaAuth.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A043D9C1E1AE0A000019A33 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1A043D9E1E1AE0A000019A33 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1A043D9F1E1AE0A000019A33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1A043DA11E1AE0A000019A33 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1A043DA21E1AE0A000019A33 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1A043DA51E1AE0A000019A33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1A043DA71E1AE0A000019A33 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1A043DAA1E1AE0A000019A33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1A043DAC1E1AE0A000019A33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A043DB11E1AE0A000019A33 /* lambdaAuthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A043DB51E1AE0A000019A33 /* lambdaAuthTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthTests.m; sourceTree = "<group>"; };
+		1A043DB71E1AE0A000019A33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A043DBC1E1AE0A000019A33 /* lambdaAuthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthUITests.m; sourceTree = "<group>"; };
+		1A043DC21E1AE0A000019A33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A4170A61E1AE82400D53EF2 /* generated-src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "generated-src"; path = "Vendor/aws-apigateway-ios/generated-src"; sourceTree = "<group>"; };
+		41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_lambdaAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.release.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.release.xcconfig"; sourceTree = "<group>"; };
+		AFF7EF6CD6D7201AEE160EDD /* Pods-lambdaAuth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.debug.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1A86D3D31E1A0C63008F6A0B /* Frameworks */ = {
+		1A043D951E1AE09F00019A33 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F53BD0AA0E4382C704D69D6C /* Pods_lambdaAuth.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A043DAE1E1AE0A000019A33 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1A86D3EC1E1A0C64008F6A0B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1A86D3F71E1A0C64008F6A0B /* Frameworks */ = {
+		1A043DB91E1AE0A000019A33 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -78,78 +85,109 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1A86D3CD1E1A0C63008F6A0B = {
+		10D164369A9DFBAD408322F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1A86D3D81E1A0C63008F6A0B /* lambdaAuth */,
-				1A86D3F21E1A0C64008F6A0B /* lambdaAuthTests */,
-				1A86D3FD1E1A0C64008F6A0B /* lambdaAuthUITests */,
-				1A86D3D71E1A0C63008F6A0B /* Products */,
+				41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1A043D8F1E1AE09F00019A33 = {
+			isa = PBXGroup;
+			children = (
+				1A4170A51E1AE7FD00D53EF2 /* AWSAPI */,
+				1A043D9A1E1AE0A000019A33 /* lambdaAuth */,
+				1A043DB41E1AE0A000019A33 /* lambdaAuthTests */,
+				1A043DBF1E1AE0A000019A33 /* lambdaAuthUITests */,
+				1A043D991E1AE0A000019A33 /* Products */,
+				E0155B4B253C4CD7863B55C8 /* Pods */,
+				10D164369A9DFBAD408322F8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		1A86D3D71E1A0C63008F6A0B /* Products */ = {
+		1A043D991E1AE0A000019A33 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A86D3D61E1A0C63008F6A0B /* lambdaAuth.app */,
-				1A86D3EF1E1A0C64008F6A0B /* lambdaAuthTests.xctest */,
-				1A86D3FA1E1A0C64008F6A0B /* lambdaAuthUITests.xctest */,
+				1A043D981E1AE0A000019A33 /* lambdaAuth.app */,
+				1A043DB11E1AE0A000019A33 /* lambdaAuthTests.xctest */,
+				1A043DBC1E1AE0A000019A33 /* lambdaAuthUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A86D3D81E1A0C63008F6A0B /* lambdaAuth */ = {
+		1A043D9A1E1AE0A000019A33 /* lambdaAuth */ = {
 			isa = PBXGroup;
 			children = (
-				1A86D3DC1E1A0C63008F6A0B /* AppDelegate.h */,
-				1A86D3DD1E1A0C63008F6A0B /* AppDelegate.m */,
-				1A86D3DF1E1A0C63008F6A0B /* ViewController.h */,
-				1A86D3E01E1A0C63008F6A0B /* ViewController.m */,
-				1A86D3E21E1A0C63008F6A0B /* Main.storyboard */,
-				1A86D3E51E1A0C63008F6A0B /* Assets.xcassets */,
-				1A86D3E71E1A0C63008F6A0B /* LaunchScreen.storyboard */,
-				1A86D3EA1E1A0C64008F6A0B /* Info.plist */,
-				1A86D3D91E1A0C63008F6A0B /* Supporting Files */,
+				1A043D9E1E1AE0A000019A33 /* AppDelegate.h */,
+				1A043D9F1E1AE0A000019A33 /* AppDelegate.m */,
+				1A043DA11E1AE0A000019A33 /* ViewController.h */,
+				1A043DA21E1AE0A000019A33 /* ViewController.m */,
+				1A043DA41E1AE0A000019A33 /* Main.storyboard */,
+				1A043DA71E1AE0A000019A33 /* Assets.xcassets */,
+				1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */,
+				1A043DAC1E1AE0A000019A33 /* Info.plist */,
+				1A043D9B1E1AE0A000019A33 /* Supporting Files */,
 			);
 			path = lambdaAuth;
 			sourceTree = "<group>";
 		};
-		1A86D3D91E1A0C63008F6A0B /* Supporting Files */ = {
+		1A043D9B1E1AE0A000019A33 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1A86D3DA1E1A0C63008F6A0B /* main.m */,
+				1A043D9C1E1AE0A000019A33 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1A86D3F21E1A0C64008F6A0B /* lambdaAuthTests */ = {
+		1A043DB41E1AE0A000019A33 /* lambdaAuthTests */ = {
 			isa = PBXGroup;
 			children = (
-				1A86D3F31E1A0C64008F6A0B /* lambdaAuthTests.m */,
-				1A86D3F51E1A0C64008F6A0B /* Info.plist */,
+				1A043DB51E1AE0A000019A33 /* lambdaAuthTests.m */,
+				1A043DB71E1AE0A000019A33 /* Info.plist */,
 			);
 			path = lambdaAuthTests;
 			sourceTree = "<group>";
 		};
-		1A86D3FD1E1A0C64008F6A0B /* lambdaAuthUITests */ = {
+		1A043DBF1E1AE0A000019A33 /* lambdaAuthUITests */ = {
 			isa = PBXGroup;
 			children = (
-				1A86D3FE1E1A0C64008F6A0B /* lambdaAuthUITests.m */,
-				1A86D4001E1A0C64008F6A0B /* Info.plist */,
+				1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */,
+				1A043DC21E1AE0A000019A33 /* Info.plist */,
 			);
 			path = lambdaAuthUITests;
+			sourceTree = "<group>";
+		};
+		1A4170A51E1AE7FD00D53EF2 /* AWSAPI */ = {
+			isa = PBXGroup;
+			children = (
+				1A4170A61E1AE82400D53EF2 /* generated-src */,
+			);
+			name = AWSAPI;
+			sourceTree = "<group>";
+		};
+		E0155B4B253C4CD7863B55C8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AFF7EF6CD6D7201AEE160EDD /* Pods-lambdaAuth.debug.xcconfig */,
+				66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1A86D3D51E1A0C63008F6A0B /* lambdaAuth */ = {
+		1A043D971E1AE09F00019A33 /* lambdaAuth */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A86D4031E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuth" */;
+			buildConfigurationList = 1A043DC51E1AE0A000019A33 /* Build configuration list for PBXNativeTarget "lambdaAuth" */;
 			buildPhases = (
-				1A86D3D21E1A0C63008F6A0B /* Sources */,
-				1A86D3D31E1A0C63008F6A0B /* Frameworks */,
-				1A86D3D41E1A0C63008F6A0B /* Resources */,
+				940F6FF453DFEADC038EB623 /* [CP] Check Pods Manifest.lock */,
+				1A043D941E1AE09F00019A33 /* Sources */,
+				1A043D951E1AE09F00019A33 /* Frameworks */,
+				1A043D961E1AE09F00019A33 /* Resources */,
+				BD07D882AE96E3ED9BB15C67 /* [CP] Embed Pods Frameworks */,
+				58098B75F0EA16EAEF9ABCF3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -157,71 +195,71 @@
 			);
 			name = lambdaAuth;
 			productName = lambdaAuth;
-			productReference = 1A86D3D61E1A0C63008F6A0B /* lambdaAuth.app */;
+			productReference = 1A043D981E1AE0A000019A33 /* lambdaAuth.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1A86D3EE1E1A0C64008F6A0B /* lambdaAuthTests */ = {
+		1A043DB01E1AE0A000019A33 /* lambdaAuthTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A86D4061E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthTests" */;
+			buildConfigurationList = 1A043DC81E1AE0A000019A33 /* Build configuration list for PBXNativeTarget "lambdaAuthTests" */;
 			buildPhases = (
-				1A86D3EB1E1A0C64008F6A0B /* Sources */,
-				1A86D3EC1E1A0C64008F6A0B /* Frameworks */,
-				1A86D3ED1E1A0C64008F6A0B /* Resources */,
+				1A043DAD1E1AE0A000019A33 /* Sources */,
+				1A043DAE1E1AE0A000019A33 /* Frameworks */,
+				1A043DAF1E1AE0A000019A33 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				1A86D3F11E1A0C64008F6A0B /* PBXTargetDependency */,
+				1A043DB31E1AE0A000019A33 /* PBXTargetDependency */,
 			);
 			name = lambdaAuthTests;
 			productName = lambdaAuthTests;
-			productReference = 1A86D3EF1E1A0C64008F6A0B /* lambdaAuthTests.xctest */;
+			productReference = 1A043DB11E1AE0A000019A33 /* lambdaAuthTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1A86D3F91E1A0C64008F6A0B /* lambdaAuthUITests */ = {
+		1A043DBB1E1AE0A000019A33 /* lambdaAuthUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A86D4091E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthUITests" */;
+			buildConfigurationList = 1A043DCB1E1AE0A000019A33 /* Build configuration list for PBXNativeTarget "lambdaAuthUITests" */;
 			buildPhases = (
-				1A86D3F61E1A0C64008F6A0B /* Sources */,
-				1A86D3F71E1A0C64008F6A0B /* Frameworks */,
-				1A86D3F81E1A0C64008F6A0B /* Resources */,
+				1A043DB81E1AE0A000019A33 /* Sources */,
+				1A043DB91E1AE0A000019A33 /* Frameworks */,
+				1A043DBA1E1AE0A000019A33 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				1A86D3FC1E1A0C64008F6A0B /* PBXTargetDependency */,
+				1A043DBE1E1AE0A000019A33 /* PBXTargetDependency */,
 			);
 			name = lambdaAuthUITests;
 			productName = lambdaAuthUITests;
-			productReference = 1A86D3FA1E1A0C64008F6A0B /* lambdaAuthUITests.xctest */;
+			productReference = 1A043DBC1E1AE0A000019A33 /* lambdaAuthUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		1A86D3CE1E1A0C63008F6A0B /* Project object */ = {
+		1A043D901E1AE09F00019A33 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = horsenoggin;
 				TargetAttributes = {
-					1A86D3D51E1A0C63008F6A0B = {
+					1A043D971E1AE09F00019A33 = {
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
 					};
-					1A86D3EE1E1A0C64008F6A0B = {
+					1A043DB01E1AE0A000019A33 = {
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
-						TestTargetID = 1A86D3D51E1A0C63008F6A0B;
+						TestTargetID = 1A043D971E1AE09F00019A33;
 					};
-					1A86D3F91E1A0C64008F6A0B = {
+					1A043DBB1E1AE0A000019A33 = {
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
-						TestTargetID = 1A86D3D51E1A0C63008F6A0B;
+						TestTargetID = 1A043D971E1AE09F00019A33;
 					};
 				};
 			};
-			buildConfigurationList = 1A86D3D11E1A0C63008F6A0B /* Build configuration list for PBXProject "lambdaAuth" */;
+			buildConfigurationList = 1A043D931E1AE09F00019A33 /* Build configuration list for PBXProject "lambdaAuth" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -229,37 +267,38 @@
 				en,
 				Base,
 			);
-			mainGroup = 1A86D3CD1E1A0C63008F6A0B;
-			productRefGroup = 1A86D3D71E1A0C63008F6A0B /* Products */;
+			mainGroup = 1A043D8F1E1AE09F00019A33;
+			productRefGroup = 1A043D991E1AE0A000019A33 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1A86D3D51E1A0C63008F6A0B /* lambdaAuth */,
-				1A86D3EE1E1A0C64008F6A0B /* lambdaAuthTests */,
-				1A86D3F91E1A0C64008F6A0B /* lambdaAuthUITests */,
+				1A043D971E1AE09F00019A33 /* lambdaAuth */,
+				1A043DB01E1AE0A000019A33 /* lambdaAuthTests */,
+				1A043DBB1E1AE0A000019A33 /* lambdaAuthUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1A86D3D41E1A0C63008F6A0B /* Resources */ = {
+		1A043D961E1AE09F00019A33 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A86D3E91E1A0C64008F6A0B /* LaunchScreen.storyboard in Resources */,
-				1A86D3E61E1A0C63008F6A0B /* Assets.xcassets in Resources */,
-				1A86D3E41E1A0C63008F6A0B /* Main.storyboard in Resources */,
+				1A043DAB1E1AE0A000019A33 /* LaunchScreen.storyboard in Resources */,
+				1A4170A71E1AE82400D53EF2 /* generated-src in Resources */,
+				1A043DA81E1AE0A000019A33 /* Assets.xcassets in Resources */,
+				1A043DA61E1AE0A000019A33 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1A86D3ED1E1A0C64008F6A0B /* Resources */ = {
+		1A043DAF1E1AE0A000019A33 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1A86D3F81E1A0C64008F6A0B /* Resources */ = {
+		1A043DBA1E1AE0A000019A33 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -268,61 +307,109 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		58098B75F0EA16EAEF9ABCF3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		940F6FF453DFEADC038EB623 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		BD07D882AE96E3ED9BB15C67 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		1A86D3D21E1A0C63008F6A0B /* Sources */ = {
+		1A043D941E1AE09F00019A33 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A86D3E11E1A0C63008F6A0B /* ViewController.m in Sources */,
-				1A86D3DE1E1A0C63008F6A0B /* AppDelegate.m in Sources */,
-				1A86D3DB1E1A0C63008F6A0B /* main.m in Sources */,
+				1A043DA31E1AE0A000019A33 /* ViewController.m in Sources */,
+				1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */,
+				1A043D9D1E1AE0A000019A33 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1A86D3EB1E1A0C64008F6A0B /* Sources */ = {
+		1A043DAD1E1AE0A000019A33 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A86D3F41E1A0C64008F6A0B /* lambdaAuthTests.m in Sources */,
+				1A043DB61E1AE0A000019A33 /* lambdaAuthTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1A86D3F61E1A0C64008F6A0B /* Sources */ = {
+		1A043DB81E1AE0A000019A33 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A86D3FF1E1A0C64008F6A0B /* lambdaAuthUITests.m in Sources */,
+				1A043DC11E1AE0A000019A33 /* lambdaAuthUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1A86D3F11E1A0C64008F6A0B /* PBXTargetDependency */ = {
+		1A043DB31E1AE0A000019A33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A86D3D51E1A0C63008F6A0B /* lambdaAuth */;
-			targetProxy = 1A86D3F01E1A0C64008F6A0B /* PBXContainerItemProxy */;
+			target = 1A043D971E1AE09F00019A33 /* lambdaAuth */;
+			targetProxy = 1A043DB21E1AE0A000019A33 /* PBXContainerItemProxy */;
 		};
-		1A86D3FC1E1A0C64008F6A0B /* PBXTargetDependency */ = {
+		1A043DBE1E1AE0A000019A33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A86D3D51E1A0C63008F6A0B /* lambdaAuth */;
-			targetProxy = 1A86D3FB1E1A0C64008F6A0B /* PBXContainerItemProxy */;
+			target = 1A043D971E1AE09F00019A33 /* lambdaAuth */;
+			targetProxy = 1A043DBD1E1AE0A000019A33 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		1A86D3E21E1A0C63008F6A0B /* Main.storyboard */ = {
+		1A043DA41E1AE0A000019A33 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1A86D3E31E1A0C63008F6A0B /* Base */,
+				1A043DA51E1AE0A000019A33 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		1A86D3E71E1A0C63008F6A0B /* LaunchScreen.storyboard */ = {
+		1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1A86D3E81E1A0C63008F6A0B /* Base */,
+				1A043DAA1E1AE0A000019A33 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -330,7 +417,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1A86D4011E1A0C64008F6A0B /* Debug */ = {
+		1A043DC31E1AE0A000019A33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -378,7 +465,7 @@
 			};
 			name = Debug;
 		};
-		1A86D4021E1A0C64008F6A0B /* Release */ = {
+		1A043DC41E1AE0A000019A33 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -420,8 +507,9 @@
 			};
 			name = Release;
 		};
-		1A86D4041E1A0C64008F6A0B /* Debug */ = {
+		1A043DC61E1AE0A000019A33 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AFF7EF6CD6D7201AEE160EDD /* Pods-lambdaAuth.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = lambdaAuth/Info.plist;
@@ -431,8 +519,9 @@
 			};
 			name = Debug;
 		};
-		1A86D4051E1A0C64008F6A0B /* Release */ = {
+		1A043DC71E1AE0A000019A33 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = lambdaAuth/Info.plist;
@@ -442,7 +531,7 @@
 			};
 			name = Release;
 		};
-		1A86D4071E1A0C64008F6A0B /* Debug */ = {
+		1A043DC91E1AE0A000019A33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -454,7 +543,7 @@
 			};
 			name = Debug;
 		};
-		1A86D4081E1A0C64008F6A0B /* Release */ = {
+		1A043DCA1E1AE0A000019A33 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -466,7 +555,7 @@
 			};
 			name = Release;
 		};
-		1A86D40A1E1A0C64008F6A0B /* Debug */ = {
+		1A043DCC1E1AE0A000019A33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = lambdaAuthUITests/Info.plist;
@@ -477,7 +566,7 @@
 			};
 			name = Debug;
 		};
-		1A86D40B1E1A0C64008F6A0B /* Release */ = {
+		1A043DCD1E1AE0A000019A33 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = lambdaAuthUITests/Info.plist;
@@ -491,40 +580,43 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1A86D3D11E1A0C63008F6A0B /* Build configuration list for PBXProject "lambdaAuth" */ = {
+		1A043D931E1AE09F00019A33 /* Build configuration list for PBXProject "lambdaAuth" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1A86D4011E1A0C64008F6A0B /* Debug */,
-				1A86D4021E1A0C64008F6A0B /* Release */,
+				1A043DC31E1AE0A000019A33 /* Debug */,
+				1A043DC41E1AE0A000019A33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A86D4031E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuth" */ = {
+		1A043DC51E1AE0A000019A33 /* Build configuration list for PBXNativeTarget "lambdaAuth" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1A86D4041E1A0C64008F6A0B /* Debug */,
-				1A86D4051E1A0C64008F6A0B /* Release */,
+				1A043DC61E1AE0A000019A33 /* Debug */,
+				1A043DC71E1AE0A000019A33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		1A86D4061E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthTests" */ = {
+		1A043DC81E1AE0A000019A33 /* Build configuration list for PBXNativeTarget "lambdaAuthTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1A86D4071E1A0C64008F6A0B /* Debug */,
-				1A86D4081E1A0C64008F6A0B /* Release */,
+				1A043DC91E1AE0A000019A33 /* Debug */,
+				1A043DCA1E1AE0A000019A33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		1A86D4091E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthUITests" */ = {
+		1A043DCB1E1AE0A000019A33 /* Build configuration list for PBXNativeTarget "lambdaAuthUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1A86D40A1E1A0C64008F6A0B /* Debug */,
-				1A86D40B1E1A0C64008F6A0B /* Release */,
+				1A043DCC1E1AE0A000019A33 /* Debug */,
+				1A043DCD1E1AE0A000019A33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 1A86D3CE1E1A0C63008F6A0B /* Project object */;
+	rootObject = 1A043D901E1AE09F00019A33 /* Project object */;
 }

@@ -1,6 +1,6 @@
 apiInfo:
   clientSDK:
-    downloadPath: "iOS/lambdaAuth/aws"
+    downloadPath: "iOS/lambdaAuth/Vendor"
     sdkType: objectivec
     parameters:
        classPrefix: 'myprefix'
