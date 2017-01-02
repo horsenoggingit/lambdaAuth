@@ -1,23 +1,18 @@
 //
-//  ViewController.m
+//  NavigationController.m
 //  lambdaAuth
 //
 //  Created by James Infusino on 1/2/17.
 //  Copyright © 2017 horsenoggin. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "NavigationController.h"
 
-@interface ViewController ()
+@interface NavigationController ()
 
 @end
 
-@implementation ViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-}
+@implementation NavigationController
 
 
 - (void)didReceiveMemoryWarning {

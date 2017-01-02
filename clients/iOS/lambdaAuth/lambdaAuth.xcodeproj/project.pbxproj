@@ -9,12 +9,16 @@
 /* Begin PBXBuildFile section */
 		1A043D9D1E1AE0A000019A33 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043D9C1E1AE0A000019A33 /* main.m */; };
 		1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043D9F1E1AE0A000019A33 /* AppDelegate.m */; };
-		1A043DA31E1AE0A000019A33 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DA21E1AE0A000019A33 /* ViewController.m */; };
+		1A043DA31E1AE0A000019A33 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DA21E1AE0A000019A33 /* NavigationController.m */; };
 		1A043DA61E1AE0A000019A33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA41E1AE0A000019A33 /* Main.storyboard */; };
 		1A043DA81E1AE0A000019A33 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA71E1AE0A000019A33 /* Assets.xcassets */; };
 		1A043DAB1E1AE0A000019A33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */; };
 		1A043DB61E1AE0A000019A33 /* lambdaAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DB51E1AE0A000019A33 /* lambdaAuthTests.m */; };
 		1A043DC11E1AE0A000019A33 /* lambdaAuthUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */; };
+		1A2937DB1E1B079E00AD957E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937DA1E1B079E00AD957E /* LoginViewController.m */; };
+		1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937DD1E1B07BA00AD957E /* SignupViewController.m */; };
+		1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E01E1B07DA00AD957E /* LogoutViewController.m */; };
+		1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E31E1B07F900AD957E /* FrontPageViewController.m */; };
 		1A4170A71E1AE82400D53EF2 /* generated-src in Resources */ = {isa = PBXBuildFile; fileRef = 1A4170A61E1AE82400D53EF2 /* generated-src */; };
 		F53BD0AA0E4382C704D69D6C /* Pods_lambdaAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */; };
 /* End PBXBuildFile section */
@@ -41,8 +45,8 @@
 		1A043D9C1E1AE0A000019A33 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1A043D9E1E1AE0A000019A33 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1A043D9F1E1AE0A000019A33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1A043DA11E1AE0A000019A33 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1A043DA21E1AE0A000019A33 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1A043DA11E1AE0A000019A33 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		1A043DA21E1AE0A000019A33 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		1A043DA51E1AE0A000019A33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1A043DA71E1AE0A000019A33 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A043DAA1E1AE0A000019A33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -53,6 +57,14 @@
 		1A043DBC1E1AE0A000019A33 /* lambdaAuthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthUITests.m; sourceTree = "<group>"; };
 		1A043DC21E1AE0A000019A33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A2937D91E1B079E00AD957E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ViewControllers/LoginViewController.h; sourceTree = "<group>"; };
+		1A2937DA1E1B079E00AD957E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ViewControllers/LoginViewController.m; sourceTree = "<group>"; };
+		1A2937DC1E1B07BA00AD957E /* SignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SignupViewController.h; path = ViewControllers/SignupViewController.h; sourceTree = "<group>"; };
+		1A2937DD1E1B07BA00AD957E /* SignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SignupViewController.m; path = ViewControllers/SignupViewController.m; sourceTree = "<group>"; };
+		1A2937DF1E1B07DA00AD957E /* LogoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LogoutViewController.h; path = ViewControllers/LogoutViewController.h; sourceTree = "<group>"; };
+		1A2937E01E1B07DA00AD957E /* LogoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LogoutViewController.m; path = ViewControllers/LogoutViewController.m; sourceTree = "<group>"; };
+		1A2937E21E1B07F900AD957E /* FrontPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrontPageViewController.h; path = ViewControllers/FrontPageViewController.h; sourceTree = "<group>"; };
+		1A2937E31E1B07F900AD957E /* FrontPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FrontPageViewController.m; path = ViewControllers/FrontPageViewController.m; sourceTree = "<group>"; };
 		1A4170A61E1AE82400D53EF2 /* generated-src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "generated-src"; path = "Vendor/aws-apigateway-ios/generated-src"; sourceTree = "<group>"; };
 		41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_lambdaAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.release.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.release.xcconfig"; sourceTree = "<group>"; };
@@ -119,10 +131,11 @@
 		1A043D9A1E1AE0A000019A33 /* lambdaAuth */ = {
 			isa = PBXGroup;
 			children = (
+				1A2937D81E1B073D00AD957E /* ViewControllers */,
 				1A043D9E1E1AE0A000019A33 /* AppDelegate.h */,
 				1A043D9F1E1AE0A000019A33 /* AppDelegate.m */,
-				1A043DA11E1AE0A000019A33 /* ViewController.h */,
-				1A043DA21E1AE0A000019A33 /* ViewController.m */,
+				1A043DA11E1AE0A000019A33 /* NavigationController.h */,
+				1A043DA21E1AE0A000019A33 /* NavigationController.m */,
 				1A043DA41E1AE0A000019A33 /* Main.storyboard */,
 				1A043DA71E1AE0A000019A33 /* Assets.xcassets */,
 				1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */,
@@ -156,6 +169,21 @@
 				1A043DC21E1AE0A000019A33 /* Info.plist */,
 			);
 			path = lambdaAuthUITests;
+			sourceTree = "<group>";
+		};
+		1A2937D81E1B073D00AD957E /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				1A2937D91E1B079E00AD957E /* LoginViewController.h */,
+				1A2937DA1E1B079E00AD957E /* LoginViewController.m */,
+				1A2937DC1E1B07BA00AD957E /* SignupViewController.h */,
+				1A2937DD1E1B07BA00AD957E /* SignupViewController.m */,
+				1A2937DF1E1B07DA00AD957E /* LogoutViewController.h */,
+				1A2937E01E1B07DA00AD957E /* LogoutViewController.m */,
+				1A2937E21E1B07F900AD957E /* FrontPageViewController.h */,
+				1A2937E31E1B07F900AD957E /* FrontPageViewController.m */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 		1A4170A51E1AE7FD00D53EF2 /* AWSAPI */ = {
@@ -360,9 +388,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A043DA31E1AE0A000019A33 /* ViewController.m in Sources */,
+				1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */,
+				1A2937DB1E1B079E00AD957E /* LoginViewController.m in Sources */,
+				1A043DA31E1AE0A000019A33 /* NavigationController.m in Sources */,
 				1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */,
 				1A043D9D1E1AE0A000019A33 /* main.m in Sources */,
+				1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */,
+				1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +467,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -483,6 +516,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
