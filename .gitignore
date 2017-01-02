@@ -86,3 +86,7 @@ clients/iOS/lambdaAuth/Vendor/aws-apigateway-ios/generated-src
 clients/iOS/lambdaAuth/Pods
 
 clients/iOS/lambdaAuth/Vendor/api.zip
+
+clients/iOS/lambdaAuth/lambdaAuth.xcworkspace/xcuserdata
+
+clients/iOS/lambdaAuth/lambdaAuth.xcodeproj/xcuserdata
