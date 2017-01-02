@@ -1,0 +1,530 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A86D3DB1E1A0C63008F6A0B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3DA1E1A0C63008F6A0B /* main.m */; };
+		1A86D3DE1E1A0C63008F6A0B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3DD1E1A0C63008F6A0B /* AppDelegate.m */; };
+		1A86D3E11E1A0C63008F6A0B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3E01E1A0C63008F6A0B /* ViewController.m */; };
+		1A86D3E41E1A0C63008F6A0B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D3E21E1A0C63008F6A0B /* Main.storyboard */; };
+		1A86D3E61E1A0C63008F6A0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D3E51E1A0C63008F6A0B /* Assets.xcassets */; };
+		1A86D3E91E1A0C64008F6A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A86D3E71E1A0C63008F6A0B /* LaunchScreen.storyboard */; };
+		1A86D3F41E1A0C64008F6A0B /* lambdaAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3F31E1A0C64008F6A0B /* lambdaAuthTests.m */; };
+		1A86D3FF1E1A0C64008F6A0B /* lambdaAuthUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A86D3FE1E1A0C64008F6A0B /* lambdaAuthUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1A86D3F01E1A0C64008F6A0B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A86D3CE1E1A0C63008F6A0B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A86D3D51E1A0C63008F6A0B;
+			remoteInfo = lambdaAuth;
+		};
+		1A86D3FB1E1A0C64008F6A0B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A86D3CE1E1A0C63008F6A0B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A86D3D51E1A0C63008F6A0B;
+			remoteInfo = lambdaAuth;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1A86D3D61E1A0C63008F6A0B /* lambdaAuth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lambdaAuth.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A86D3DA1E1A0C63008F6A0B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1A86D3DC1E1A0C63008F6A0B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1A86D3DD1E1A0C63008F6A0B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1A86D3DF1E1A0C63008F6A0B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1A86D3E01E1A0C63008F6A0B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1A86D3E31E1A0C63008F6A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1A86D3E51E1A0C63008F6A0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1A86D3E81E1A0C63008F6A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1A86D3EA1E1A0C64008F6A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A86D3EF1E1A0C64008F6A0B /* lambdaAuthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A86D3F31E1A0C64008F6A0B /* lambdaAuthTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthTests.m; sourceTree = "<group>"; };
+		1A86D3F51E1A0C64008F6A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A86D3FA1E1A0C64008F6A0B /* lambdaAuthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A86D3FE1E1A0C64008F6A0B /* lambdaAuthUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthUITests.m; sourceTree = "<group>"; };
+		1A86D4001E1A0C64008F6A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A86D3D31E1A0C63008F6A0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A86D3EC1E1A0C64008F6A0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A86D3F71E1A0C64008F6A0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A86D3CD1E1A0C63008F6A0B = {
+			isa = PBXGroup;
+			children = (
+				1A86D3D81E1A0C63008F6A0B /* lambdaAuth */,
+				1A86D3F21E1A0C64008F6A0B /* lambdaAuthTests */,
+				1A86D3FD1E1A0C64008F6A0B /* lambdaAuthUITests */,
+				1A86D3D71E1A0C63008F6A0B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1A86D3D71E1A0C63008F6A0B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A86D3D61E1A0C63008F6A0B /* lambdaAuth.app */,
+				1A86D3EF1E1A0C64008F6A0B /* lambdaAuthTests.xctest */,
+				1A86D3FA1E1A0C64008F6A0B /* lambdaAuthUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A86D3D81E1A0C63008F6A0B /* lambdaAuth */ = {
+			isa = PBXGroup;
+			children = (
+				1A86D3DC1E1A0C63008F6A0B /* AppDelegate.h */,
+				1A86D3DD1E1A0C63008F6A0B /* AppDelegate.m */,
+				1A86D3DF1E1A0C63008F6A0B /* ViewController.h */,
+				1A86D3E01E1A0C63008F6A0B /* ViewController.m */,
+				1A86D3E21E1A0C63008F6A0B /* Main.storyboard */,
+				1A86D3E51E1A0C63008F6A0B /* Assets.xcassets */,
+				1A86D3E71E1A0C63008F6A0B /* LaunchScreen.storyboard */,
+				1A86D3EA1E1A0C64008F6A0B /* Info.plist */,
+				1A86D3D91E1A0C63008F6A0B /* Supporting Files */,
+			);
+			path = lambdaAuth;
+			sourceTree = "<group>";
+		};
+		1A86D3D91E1A0C63008F6A0B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1A86D3DA1E1A0C63008F6A0B /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1A86D3F21E1A0C64008F6A0B /* lambdaAuthTests */ = {
+			isa = PBXGroup;
+			children = (
+				1A86D3F31E1A0C64008F6A0B /* lambdaAuthTests.m */,
+				1A86D3F51E1A0C64008F6A0B /* Info.plist */,
+			);
+			path = lambdaAuthTests;
+			sourceTree = "<group>";
+		};
+		1A86D3FD1E1A0C64008F6A0B /* lambdaAuthUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1A86D3FE1E1A0C64008F6A0B /* lambdaAuthUITests.m */,
+				1A86D4001E1A0C64008F6A0B /* Info.plist */,
+			);
+			path = lambdaAuthUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A86D3D51E1A0C63008F6A0B /* lambdaAuth */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A86D4031E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuth" */;
+			buildPhases = (
+				1A86D3D21E1A0C63008F6A0B /* Sources */,
+				1A86D3D31E1A0C63008F6A0B /* Frameworks */,
+				1A86D3D41E1A0C63008F6A0B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = lambdaAuth;
+			productName = lambdaAuth;
+			productReference = 1A86D3D61E1A0C63008F6A0B /* lambdaAuth.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1A86D3EE1E1A0C64008F6A0B /* lambdaAuthTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A86D4061E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthTests" */;
+			buildPhases = (
+				1A86D3EB1E1A0C64008F6A0B /* Sources */,
+				1A86D3EC1E1A0C64008F6A0B /* Frameworks */,
+				1A86D3ED1E1A0C64008F6A0B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A86D3F11E1A0C64008F6A0B /* PBXTargetDependency */,
+			);
+			name = lambdaAuthTests;
+			productName = lambdaAuthTests;
+			productReference = 1A86D3EF1E1A0C64008F6A0B /* lambdaAuthTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1A86D3F91E1A0C64008F6A0B /* lambdaAuthUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A86D4091E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthUITests" */;
+			buildPhases = (
+				1A86D3F61E1A0C64008F6A0B /* Sources */,
+				1A86D3F71E1A0C64008F6A0B /* Frameworks */,
+				1A86D3F81E1A0C64008F6A0B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A86D3FC1E1A0C64008F6A0B /* PBXTargetDependency */,
+			);
+			name = lambdaAuthUITests;
+			productName = lambdaAuthUITests;
+			productReference = 1A86D3FA1E1A0C64008F6A0B /* lambdaAuthUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A86D3CE1E1A0C63008F6A0B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = horsenoggin;
+				TargetAttributes = {
+					1A86D3D51E1A0C63008F6A0B = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+					};
+					1A86D3EE1E1A0C64008F6A0B = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 1A86D3D51E1A0C63008F6A0B;
+					};
+					1A86D3F91E1A0C64008F6A0B = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 1A86D3D51E1A0C63008F6A0B;
+					};
+				};
+			};
+			buildConfigurationList = 1A86D3D11E1A0C63008F6A0B /* Build configuration list for PBXProject "lambdaAuth" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1A86D3CD1E1A0C63008F6A0B;
+			productRefGroup = 1A86D3D71E1A0C63008F6A0B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A86D3D51E1A0C63008F6A0B /* lambdaAuth */,
+				1A86D3EE1E1A0C64008F6A0B /* lambdaAuthTests */,
+				1A86D3F91E1A0C64008F6A0B /* lambdaAuthUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1A86D3D41E1A0C63008F6A0B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A86D3E91E1A0C64008F6A0B /* LaunchScreen.storyboard in Resources */,
+				1A86D3E61E1A0C63008F6A0B /* Assets.xcassets in Resources */,
+				1A86D3E41E1A0C63008F6A0B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A86D3ED1E1A0C64008F6A0B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A86D3F81E1A0C64008F6A0B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A86D3D21E1A0C63008F6A0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A86D3E11E1A0C63008F6A0B /* ViewController.m in Sources */,
+				1A86D3DE1E1A0C63008F6A0B /* AppDelegate.m in Sources */,
+				1A86D3DB1E1A0C63008F6A0B /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A86D3EB1E1A0C64008F6A0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A86D3F41E1A0C64008F6A0B /* lambdaAuthTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A86D3F61E1A0C64008F6A0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A86D3FF1E1A0C64008F6A0B /* lambdaAuthUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1A86D3F11E1A0C64008F6A0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A86D3D51E1A0C63008F6A0B /* lambdaAuth */;
+			targetProxy = 1A86D3F01E1A0C64008F6A0B /* PBXContainerItemProxy */;
+		};
+		1A86D3FC1E1A0C64008F6A0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A86D3D51E1A0C63008F6A0B /* lambdaAuth */;
+			targetProxy = 1A86D3FB1E1A0C64008F6A0B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1A86D3E21E1A0C63008F6A0B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A86D3E31E1A0C63008F6A0B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1A86D3E71E1A0C63008F6A0B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A86D3E81E1A0C63008F6A0B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1A86D4011E1A0C64008F6A0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1A86D4021E1A0C64008F6A0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1A86D4041E1A0C64008F6A0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = lambdaAuth/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuth;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1A86D4051E1A0C64008F6A0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = lambdaAuth/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuth;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1A86D4071E1A0C64008F6A0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = lambdaAuthTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuthTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lambdaAuth.app/lambdaAuth";
+			};
+			name = Debug;
+		};
+		1A86D4081E1A0C64008F6A0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = lambdaAuthTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuthTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lambdaAuth.app/lambdaAuth";
+			};
+			name = Release;
+		};
+		1A86D40A1E1A0C64008F6A0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = lambdaAuthUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuthUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = lambdaAuth;
+			};
+			name = Debug;
+		};
+		1A86D40B1E1A0C64008F6A0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = lambdaAuthUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuthUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = lambdaAuth;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A86D3D11E1A0C63008F6A0B /* Build configuration list for PBXProject "lambdaAuth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A86D4011E1A0C64008F6A0B /* Debug */,
+				1A86D4021E1A0C64008F6A0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A86D4031E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A86D4041E1A0C64008F6A0B /* Debug */,
+				1A86D4051E1A0C64008F6A0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1A86D4061E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A86D4071E1A0C64008F6A0B /* Debug */,
+				1A86D4081E1A0C64008F6A0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		1A86D4091E1A0C64008F6A0B /* Build configuration list for PBXNativeTarget "lambdaAuthUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A86D40A1E1A0C64008F6A0B /* Debug */,
+				1A86D40B1E1A0C64008F6A0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1A86D3CE1E1A0C63008F6A0B /* Project object */;
+}

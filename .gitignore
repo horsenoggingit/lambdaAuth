@@ -78,3 +78,6 @@ clients/iOS/lambdaAuth/aws/api.zip
 base.definitions 4.yaml
 
 clients/angular.definitions.yaml.old
+
+clients/iOS/lambdaAuth/lambdaAuth.xcodeproj/project.xcworkspace/xcuserdata
+
