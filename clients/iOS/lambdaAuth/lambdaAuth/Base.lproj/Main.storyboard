@@ -25,7 +25,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ud-ca-Y5o">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5sj-42-kZE">
+                                    <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5sj-42-kZE">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NsT-2T-xBN" userLabel="OuterContainer">
@@ -91,14 +91,11 @@
                                             </view>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="NsT-2T-xBN" secondAttribute="bottom" constant="50" id="KqK-oY-K9n"/>
                                             <constraint firstItem="NsT-2T-xBN" firstAttribute="top" secondItem="5sj-42-kZE" secondAttribute="top" constant="50" id="Kyu-4u-X5N"/>
+                                            <constraint firstAttribute="trailing" secondItem="NsT-2T-xBN" secondAttribute="trailing" constant="42.5" id="Nbo-P5-a6U"/>
                                             <constraint firstItem="NsT-2T-xBN" firstAttribute="centerX" secondItem="5sj-42-kZE" secondAttribute="centerX" id="Slt-LK-4Wa"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="size" keyPath="contentSize">
-                                                <size key="value" width="290" height="396"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                     </scrollView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -252,7 +249,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="igD-pD-Bkl">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Quh-e9-Z4x">
+                                    <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Quh-e9-Z4x">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LaP-kD-4ms" userLabel="OuterContainer">
@@ -352,14 +349,11 @@
                                             </view>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="LaP-kD-4ms" secondAttribute="trailing" constant="42.5" id="CRY-1r-gAt"/>
                                             <constraint firstItem="LaP-kD-4ms" firstAttribute="centerX" secondItem="Quh-e9-Z4x" secondAttribute="centerX" id="LyU-g3-8S7"/>
+                                            <constraint firstAttribute="bottom" secondItem="LaP-kD-4ms" secondAttribute="bottom" constant="50" id="YyP-3N-Tgk"/>
                                             <constraint firstItem="LaP-kD-4ms" firstAttribute="top" secondItem="Quh-e9-Z4x" secondAttribute="top" constant="50" id="uc3-Wn-G6u"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="size" keyPath="contentSize">
-                                                <size key="value" width="290" height="449"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                     </scrollView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -416,8 +410,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="cSJ-AG-2DV"/>
         <segue reference="gI8-uv-FVu"/>
         <segue reference="ROP-dK-jRh"/>
-        <segue reference="BNE-gj-XzU"/>
     </inferredMetricsTieBreakers>
 </document>
