@@ -37,6 +37,7 @@
 }
 */
 - (IBAction)loginAction:(id)sender {
+    [self performSegueWithIdentifier:@"LoginToFrontPageSegue" sender:self];
 }
 
 @end

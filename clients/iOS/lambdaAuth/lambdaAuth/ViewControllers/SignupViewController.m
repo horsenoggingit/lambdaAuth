@@ -38,6 +38,7 @@
 }
 */
 - (IBAction)signupAction:(id)sender {
+    [self performSegueWithIdentifier:@"SignupToFrontPageSegue" sender:self];
 }
 
 @end
