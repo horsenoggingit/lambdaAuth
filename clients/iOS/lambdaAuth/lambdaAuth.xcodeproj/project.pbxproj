@@ -19,6 +19,7 @@
 		1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937DD1E1B07BA00AD957E /* SignupViewController.m */; };
 		1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E01E1B07DA00AD957E /* LogoutViewController.m */; };
 		1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E31E1B07F900AD957E /* FrontPageViewController.m */; };
+		1A2937E81E1B2A5300AD957E /* NavigationReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */; };
 		1A4170A71E1AE82400D53EF2 /* generated-src in Resources */ = {isa = PBXBuildFile; fileRef = 1A4170A61E1AE82400D53EF2 /* generated-src */; };
 		F53BD0AA0E4382C704D69D6C /* Pods_lambdaAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */; };
 /* End PBXBuildFile section */
@@ -65,6 +66,8 @@
 		1A2937E01E1B07DA00AD957E /* LogoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LogoutViewController.m; path = ViewControllers/LogoutViewController.m; sourceTree = "<group>"; };
 		1A2937E21E1B07F900AD957E /* FrontPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrontPageViewController.h; path = ViewControllers/FrontPageViewController.h; sourceTree = "<group>"; };
 		1A2937E31E1B07F900AD957E /* FrontPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FrontPageViewController.m; path = ViewControllers/FrontPageViewController.m; sourceTree = "<group>"; };
+		1A2937E61E1B2A5300AD957E /* NavigationReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavigationReplaceSegue.h; path = Segues/NavigationReplaceSegue.h; sourceTree = "<group>"; };
+		1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NavigationReplaceSegue.m; path = Segues/NavigationReplaceSegue.m; sourceTree = "<group>"; };
 		1A4170A61E1AE82400D53EF2 /* generated-src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "generated-src"; path = "Vendor/aws-apigateway-ios/generated-src"; sourceTree = "<group>"; };
 		41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_lambdaAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.release.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.release.xcconfig"; sourceTree = "<group>"; };
@@ -131,6 +134,7 @@
 		1A043D9A1E1AE0A000019A33 /* lambdaAuth */ = {
 			isa = PBXGroup;
 			children = (
+				1A2937E51E1B2A1800AD957E /* Segues */,
 				1A2937D81E1B073D00AD957E /* ViewControllers */,
 				1A043D9E1E1AE0A000019A33 /* AppDelegate.h */,
 				1A043D9F1E1AE0A000019A33 /* AppDelegate.m */,
@@ -184,6 +188,15 @@
 				1A2937E31E1B07F900AD957E /* FrontPageViewController.m */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		1A2937E51E1B2A1800AD957E /* Segues */ = {
+			isa = PBXGroup;
+			children = (
+				1A2937E61E1B2A5300AD957E /* NavigationReplaceSegue.h */,
+				1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */,
+			);
+			name = Segues;
 			sourceTree = "<group>";
 		};
 		1A4170A51E1AE7FD00D53EF2 /* AWSAPI */ = {
@@ -388,6 +401,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A2937E81E1B2A5300AD957E /* NavigationReplaceSegue.m in Sources */,
 				1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */,
 				1A2937DB1E1B079E00AD957E /* LoginViewController.m in Sources */,
 				1A043DA31E1AE0A000019A33 /* NavigationController.m in Sources */,

@@ -10,6 +10,9 @@
 
 @interface LoginViewController ()
 
+@property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (strong, nonatomic) IBOutlet UITextField *emailTextField;
+
 @end
 
 @implementation LoginViewController
@@ -33,5 +36,7 @@
     // Pass the selected object to the new view controller.
 }
 */
+- (IBAction)loginAction:(id)sender {
+}
 
 @end
