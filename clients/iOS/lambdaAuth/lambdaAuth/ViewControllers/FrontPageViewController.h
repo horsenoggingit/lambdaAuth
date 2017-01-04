@@ -10,4 +10,6 @@
 
 @interface FrontPageViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UITextView *resultTextView;
+
 @end

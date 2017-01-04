@@ -20,7 +20,16 @@
 		1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E01E1B07DA00AD957E /* LogoutViewController.m */; };
 		1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E31E1B07F900AD957E /* FrontPageViewController.m */; };
 		1A2937E81E1B2A5300AD957E /* NavigationReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */; };
-		1A4170A71E1AE82400D53EF2 /* generated-src in Resources */ = {isa = PBXBuildFile; fileRef = 1A4170A61E1AE82400D53EF2 /* generated-src */; };
+		1A2937EC1E1C508200AD957E /* KeyboardHeightAutosizingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */; };
+		1A2937F01E1C722800AD957E /* KeyboardStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937EF1E1C722800AD957E /* KeyboardStateManager.m */; };
+		1A2937F41E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937F31E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m */; };
+		1A2937F71E1CBB0A00AD957E /* AWSAPIClientsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937F61E1CBB0A00AD957E /* AWSAPIClientsManager.m */; };
+		1AC938811E1CFBFB00EC872C /* MYPREFIXCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC938761E1CFBFB00EC872C /* MYPREFIXCredentials.m */; };
+		1AC938821E1CFBFB00EC872C /* MYPREFIXError.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC938781E1CFBFB00EC872C /* MYPREFIXError.m */; };
+		1AC938831E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9387A1E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.m */; };
+		1AC938841E1CFBFB00EC872C /* MYPREFIXLoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9387C1E1CFBFB00EC872C /* MYPREFIXLoginRequest.m */; };
+		1AC938851E1CFBFB00EC872C /* MYPREFIXSignupRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9387E1E1CFBFB00EC872C /* MYPREFIXSignupRequest.m */; };
+		1AC938861E1CFBFB00EC872C /* MYPREFIXUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC938801E1CFBFB00EC872C /* MYPREFIXUser.m */; };
 		F53BD0AA0E4382C704D69D6C /* Pods_lambdaAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,7 +77,26 @@
 		1A2937E31E1B07F900AD957E /* FrontPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FrontPageViewController.m; path = ViewControllers/FrontPageViewController.m; sourceTree = "<group>"; };
 		1A2937E61E1B2A5300AD957E /* NavigationReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavigationReplaceSegue.h; path = Segues/NavigationReplaceSegue.h; sourceTree = "<group>"; };
 		1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NavigationReplaceSegue.m; path = Segues/NavigationReplaceSegue.m; sourceTree = "<group>"; };
-		1A4170A61E1AE82400D53EF2 /* generated-src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "generated-src"; path = "Vendor/aws-apigateway-ios/generated-src"; sourceTree = "<group>"; };
+		1A2937EA1E1C508200AD957E /* KeyboardHeightAutosizingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardHeightAutosizingView.h; sourceTree = "<group>"; };
+		1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardHeightAutosizingView.m; sourceTree = "<group>"; };
+		1A2937EE1E1C722800AD957E /* KeyboardStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyboardStateManager.h; path = Managers/KeyboardStateManager.h; sourceTree = "<group>"; };
+		1A2937EF1E1C722800AD957E /* KeyboardStateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeyboardStateManager.m; path = Managers/KeyboardStateManager.m; sourceTree = "<group>"; };
+		1A2937F21E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeveloperAuthenticatedIdentityProvider.h; path = DeveloperIdentityProvider/DeveloperAuthenticatedIdentityProvider.h; sourceTree = "<group>"; };
+		1A2937F31E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeveloperAuthenticatedIdentityProvider.m; path = DeveloperIdentityProvider/DeveloperAuthenticatedIdentityProvider.m; sourceTree = "<group>"; };
+		1A2937F51E1CBB0A00AD957E /* AWSAPIClientsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AWSAPIClientsManager.h; path = DeveloperIdentityProvider/AWSAPIClientsManager.h; sourceTree = "<group>"; };
+		1A2937F61E1CBB0A00AD957E /* AWSAPIClientsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AWSAPIClientsManager.m; path = DeveloperIdentityProvider/AWSAPIClientsManager.m; sourceTree = "<group>"; };
+		1AC938751E1CFBFB00EC872C /* MYPREFIXCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXCredentials.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXCredentials.h"; sourceTree = "<group>"; };
+		1AC938761E1CFBFB00EC872C /* MYPREFIXCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXCredentials.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXCredentials.m"; sourceTree = "<group>"; };
+		1AC938771E1CFBFB00EC872C /* MYPREFIXError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXError.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXError.h"; sourceTree = "<group>"; };
+		1AC938781E1CFBFB00EC872C /* MYPREFIXError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXError.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXError.m"; sourceTree = "<group>"; };
+		1AC938791E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXIostestSwaggerAuthClient.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXIostestSwaggerAuthClient.h"; sourceTree = "<group>"; };
+		1AC9387A1E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXIostestSwaggerAuthClient.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXIostestSwaggerAuthClient.m"; sourceTree = "<group>"; };
+		1AC9387B1E1CFBFB00EC872C /* MYPREFIXLoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXLoginRequest.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXLoginRequest.h"; sourceTree = "<group>"; };
+		1AC9387C1E1CFBFB00EC872C /* MYPREFIXLoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXLoginRequest.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXLoginRequest.m"; sourceTree = "<group>"; };
+		1AC9387D1E1CFBFB00EC872C /* MYPREFIXSignupRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXSignupRequest.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXSignupRequest.h"; sourceTree = "<group>"; };
+		1AC9387E1E1CFBFB00EC872C /* MYPREFIXSignupRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXSignupRequest.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXSignupRequest.m"; sourceTree = "<group>"; };
+		1AC9387F1E1CFBFB00EC872C /* MYPREFIXUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXUser.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXUser.h"; sourceTree = "<group>"; };
+		1AC938801E1CFBFB00EC872C /* MYPREFIXUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXUser.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXUser.m"; sourceTree = "<group>"; };
 		41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_lambdaAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.release.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.release.xcconfig"; sourceTree = "<group>"; };
 		AFF7EF6CD6D7201AEE160EDD /* Pods-lambdaAuth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.debug.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.debug.xcconfig"; sourceTree = "<group>"; };
@@ -134,6 +162,8 @@
 		1A043D9A1E1AE0A000019A33 /* lambdaAuth */ = {
 			isa = PBXGroup;
 			children = (
+				1A2937ED1E1C71FB00AD957E /* Managers */,
+				1A2937E91E1C504300AD957E /* views */,
 				1A2937E51E1B2A1800AD957E /* Segues */,
 				1A2937D81E1B073D00AD957E /* ViewControllers */,
 				1A043D9E1E1AE0A000019A33 /* AppDelegate.h */,
@@ -199,12 +229,61 @@
 			name = Segues;
 			sourceTree = "<group>";
 		};
+		1A2937E91E1C504300AD957E /* views */ = {
+			isa = PBXGroup;
+			children = (
+				1A2937EA1E1C508200AD957E /* KeyboardHeightAutosizingView.h */,
+				1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */,
+			);
+			name = views;
+			sourceTree = "<group>";
+		};
+		1A2937ED1E1C71FB00AD957E /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				1A2937EE1E1C722800AD957E /* KeyboardStateManager.h */,
+				1A2937EF1E1C722800AD957E /* KeyboardStateManager.m */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
+		1A2937F11E1C795B00AD957E /* AWSSessionManagement */ = {
+			isa = PBXGroup;
+			children = (
+				1A2937F21E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.h */,
+				1A2937F31E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m */,
+				1A2937F51E1CBB0A00AD957E /* AWSAPIClientsManager.h */,
+				1A2937F61E1CBB0A00AD957E /* AWSAPIClientsManager.m */,
+			);
+			name = AWSSessionManagement;
+			sourceTree = "<group>";
+		};
 		1A4170A51E1AE7FD00D53EF2 /* AWSAPI */ = {
 			isa = PBXGroup;
 			children = (
-				1A4170A61E1AE82400D53EF2 /* generated-src */,
+				1A8E3E641E1CCA88007BCF04 /* generated-src */,
+				1A2937F11E1C795B00AD957E /* AWSSessionManagement */,
 			);
 			name = AWSAPI;
+			sourceTree = "<group>";
+		};
+		1A8E3E641E1CCA88007BCF04 /* generated-src */ = {
+			isa = PBXGroup;
+			children = (
+				1AC938751E1CFBFB00EC872C /* MYPREFIXCredentials.h */,
+				1AC938761E1CFBFB00EC872C /* MYPREFIXCredentials.m */,
+				1AC938771E1CFBFB00EC872C /* MYPREFIXError.h */,
+				1AC938781E1CFBFB00EC872C /* MYPREFIXError.m */,
+				1AC938791E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.h */,
+				1AC9387A1E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.m */,
+				1AC9387B1E1CFBFB00EC872C /* MYPREFIXLoginRequest.h */,
+				1AC9387C1E1CFBFB00EC872C /* MYPREFIXLoginRequest.m */,
+				1AC9387D1E1CFBFB00EC872C /* MYPREFIXSignupRequest.h */,
+				1AC9387E1E1CFBFB00EC872C /* MYPREFIXSignupRequest.m */,
+				1AC9387F1E1CFBFB00EC872C /* MYPREFIXUser.h */,
+				1AC938801E1CFBFB00EC872C /* MYPREFIXUser.m */,
+			);
+			name = "generated-src";
 			sourceTree = "<group>";
 		};
 		E0155B4B253C4CD7863B55C8 /* Pods */ = {
@@ -326,7 +405,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A043DAB1E1AE0A000019A33 /* LaunchScreen.storyboard in Resources */,
-				1A4170A71E1AE82400D53EF2 /* generated-src in Resources */,
 				1A043DA81E1AE0A000019A33 /* Assets.xcassets in Resources */,
 				1A043DA61E1AE0A000019A33 /* Main.storyboard in Resources */,
 			);
@@ -401,13 +479,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AC938831E1CFBFB00EC872C /* MYPREFIXIostestSwaggerAuthClient.m in Sources */,
+				1AC938821E1CFBFB00EC872C /* MYPREFIXError.m in Sources */,
+				1A2937F01E1C722800AD957E /* KeyboardStateManager.m in Sources */,
 				1A2937E81E1B2A5300AD957E /* NavigationReplaceSegue.m in Sources */,
+				1AC938861E1CFBFB00EC872C /* MYPREFIXUser.m in Sources */,
 				1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */,
 				1A2937DB1E1B079E00AD957E /* LoginViewController.m in Sources */,
 				1A043DA31E1AE0A000019A33 /* NavigationController.m in Sources */,
+				1AC938841E1CFBFB00EC872C /* MYPREFIXLoginRequest.m in Sources */,
 				1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */,
+				1A2937EC1E1C508200AD957E /* KeyboardHeightAutosizingView.m in Sources */,
+				1AC938811E1CFBFB00EC872C /* MYPREFIXCredentials.m in Sources */,
+				1A2937F71E1CBB0A00AD957E /* AWSAPIClientsManager.m in Sources */,
+				1AC938851E1CFBFB00EC872C /* MYPREFIXSignupRequest.m in Sources */,
 				1A043D9D1E1AE0A000019A33 /* main.m in Sources */,
 				1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */,
+				1A2937F41E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m in Sources */,
 				1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

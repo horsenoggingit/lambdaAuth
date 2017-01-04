@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ud-ca-Y5o">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ud-ca-Y5o" customClass="KeyboardHeightAutosizingView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5sj-42-kZE">
@@ -105,6 +105,9 @@
                                     <constraint firstAttribute="bottom" secondItem="5sj-42-kZE" secondAttribute="bottom" id="fMP-0V-hDR"/>
                                     <constraint firstAttribute="trailing" secondItem="5sj-42-kZE" secondAttribute="trailing" id="qgZ-H7-yPP"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="resizeViews" destination="5sj-42-kZE" id="PUg-Ka-XcN"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -219,6 +222,22 @@
                     <view key="view" contentMode="scaleToFill" id="JS3-so-lh3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" fixedFrame="YES" editable="NO" text="Wait for it..." translatesAutoresizingMaskIntoConstraints="NO" id="UZq-BF-Lc5">
+                                <rect key="frame" x="58" y="141" width="259" height="467"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You are:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLc-Sm-9LU">
+                                <rect key="frame" x="58" y="112" width="62" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Front Page" id="ICb-pI-m7J">
@@ -229,10 +248,13 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="resultTextView" destination="UZq-BF-Lc5" id="plc-4b-UHL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9uV-cy-YFY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1121" y="528"/>
+            <point key="canvasLocation" x="1120.8" y="527.58620689655174"/>
         </scene>
         <!--Signup-->
         <scene sceneID="NsK-2K-NdB">
@@ -246,7 +268,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="igD-pD-Bkl">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="igD-pD-Bkl" customClass="KeyboardHeightAutosizingView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Quh-e9-Z4x">
@@ -363,6 +385,9 @@
                                     <constraint firstAttribute="trailing" secondItem="Quh-e9-Z4x" secondAttribute="trailing" id="Wmb-GD-pGU"/>
                                     <constraint firstItem="Quh-e9-Z4x" firstAttribute="top" secondItem="igD-pD-Bkl" secondAttribute="top" id="iKj-hA-0ES"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="resizeViews" destination="Quh-e9-Z4x" id="6Xh-T6-9zn"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

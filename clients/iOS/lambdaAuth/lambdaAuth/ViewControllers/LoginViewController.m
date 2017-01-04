@@ -7,6 +7,7 @@
 //
 
 #import "LoginViewController.h"
+#import "AWSAPIClientsManager.h"
 
 @interface LoginViewController ()
 
@@ -37,7 +38,37 @@
 }
 */
 - (IBAction)loginAction:(id)sender {
-    [self performSegueWithIdentifier:@"LoginToFrontPageSegue" sender:self];
+    
+    MYPREFIXLoginRequest *loginRequest = [MYPREFIXLoginRequest new];
+    loginRequest.email = _emailTextField.text;
+    loginRequest.password = _passwordTextField.text;
+    AWSTask *loginTask = [[AWSAPIClientsManager unauthedClient] loginPost:loginRequest];
+    [loginTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"got something");
+            
+            if (task.error) {
+                if (task.error.userInfo[@"HTTPBody"]) {
+                    NSError *error;
+                    MYPREFIXError *myError = [MYPREFIXError modelWithDictionary:task.error.userInfo[@"HTTPBody"] error:&error];
+                    NSLog(@"%@", myError.description);
+                } else {
+                    NSLog(@"%@", task.error.description);
+                }
+                return;
+            }
+            MYPREFIXCredentials *credentials = task.result;
+            NSError *error;
+            [AWSAPIClientsManager setIdentityId:credentials.identityId token:credentials.token error:&error];
+            if (error) {
+                NSLog(@"%@", error.description);
+                return;
+            }
+            [self performSegueWithIdentifier:@"LoginToFrontPageSegue" sender:self];
+        });
+        
+      return nil;
+    }];
 }
 
 @end

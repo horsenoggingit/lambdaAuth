@@ -56,17 +56,17 @@ exports.handler = (event, context, callback) => {
         userParams['dob'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.DOB];
       }
       if (userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] && userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] > 0) {
-        userParams['last-login-timestamp'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP];
+        userParams['last_login_timestamp'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP];
       }
       if (userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP]) {
-        userParams['signup-timestamp'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP];
+        userParams['signup_timestamp'] = userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP];
       }
 
       userParams['logins'] = {};
       var providerSplit = event.auth_provider.split(',');
       if  (providerSplit.length>1) {
         var providerName = providerSplit[0];
-        userParams['provider-name'] = providerName;
+        userParams['provider_name'] = providerName;
         var providerIDSplit = providerSplit[1].split(':');
 
         if  (providerIDSplit.length>=4) {

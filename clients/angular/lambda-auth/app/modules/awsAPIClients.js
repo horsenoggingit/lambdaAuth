@@ -111,7 +111,8 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
       var splitIdentity = idendityIdTokenAuthedClient['IdentityId'].split(':');
       if (splitIdentity.length < 2) {
         console.log("invalid IdentityId")
-        return(null, new Error('invalid IdentityId'));
+        callback(null, new Error('invalid IdentityId'));
+        return;
       }
       AWS.config.region = splitIdentity[0];
 
@@ -141,7 +142,7 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         return;
       }
       console.log("trying to get Identity and Token with provider data")
-      apiUnauthedClientFactory.loginPost({},{'provider-name': providerData['providerName'], 'id': providerData['providerId']})
+      apiUnauthedClientFactory.loginPost({},{'provider_name': providerData['providerName'], 'id': providerData['providerId']})
       .then(function(result){
           console.log("received Identity and Token from provider data");
           ctrl.setIdentityAndToken(result.data.IdentityId, result.data.Token, callback);
@@ -189,7 +190,7 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
     console.log("getting provider data")
     client.userMeGet().then(function(result){
       console.log("received provier data")
-      ctrl.setProviderNameAndId(result.data['provider-name'], result.data.logins[result.data['provider-name']]);
+      ctrl.setProviderNameAndId(result.data['provider_name'], result.data.logins[result.data['provider_name']]);
       // this infromation is no longer needed
       ctrl.clearIdentityAndToken();
     }).catch(function(result) {

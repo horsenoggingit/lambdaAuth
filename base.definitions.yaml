@@ -134,13 +134,15 @@ apiInfo:
                     type: string
                 dob:
                     type: number
-                last-login-timestamp:
+                last_login_timestamp:
                     type: number
-                signup-timestamp:
+                signup_timestamp:
                     type: number
                 logins:
                     type: object
-                provider-name:
+                    additionalProperties:
+                        type: string
+                provider_name:
                     type: string
         signupRequest:
             type: object
@@ -163,7 +165,7 @@ apiInfo:
                     type: string
                 password:
                     type: string
-                provider-name:
+                provider_name:
                     type: string
                 id:
                     type: number
@@ -182,13 +184,13 @@ apiInfo:
             required:
                 - message
                 - type
-                - request-id
+                - requestId
             properties:
                 message:
                     type: string
                 type:
                     type: string
-                request-id:
+                requestId:
                     type: string
     sharedSecurityDefinitions:
         sigv4:
@@ -200,8 +202,8 @@ apiInfo:
     lastDeploy:
         uploadResult:
             description: 'Yet another deploy...'
-            id: t41pkv
-            createdDate: 1483330523
+            id: how6ww
+            createdDate: 1483523047
         invokeURL: 'https://l0zep1extl.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     Users:

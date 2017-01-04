@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "KeyboardStateManager.h"
 
 @interface AppDelegate ()
 
@@ -16,6 +17,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // access the KeyboardStateManager to set initial conditions
+    [KeyboardStateManager isKeyboardShown];
     // Override point for customization after application launch.
     return YES;
 }

@@ -37,7 +37,7 @@ exports.handler = (event, context, callback) => {
     errorType : "BadRequest",
     httpStatus : 400,
   };
-  // want either email & password or provider-name & id
+  // want either email & password or provider_name & id
   if (event.email) {
     if (!event.password) {
       errorObject['message'] = "Validation error: missing required parameter \"password\".";
@@ -52,7 +52,7 @@ exports.handler = (event, context, callback) => {
       return;
     }
   }
-  if (event['provider-name']) {
+  if (event['provider_name']) {
     if (!event.id) {
       errorObject['message'] = "Validation error: missing required parameter \"id\".";
       callback(JSON.stringify(errorObject));
@@ -60,8 +60,8 @@ exports.handler = (event, context, callback) => {
     }
   }
   if (event.id) {
-    if (!event['provider-name']) {
-      errorObject['message'] = "Validation error: missing required parameter \"provider-name\".";
+    if (!event['provider_name']) {
+      errorObject['message'] = "Validation error: missing required parameter \"provider_name\".";
       callback(JSON.stringify(errorObject));
       return;
     }
@@ -133,7 +133,7 @@ exports.handler = (event, context, callback) => {
     });
   }
 
-  if (event.id && event['provider-name']) {
+  if (event.id && event['provider_name']) {
     getIdentityIDAndToken(event.id, event,context.awsRequestId, callback);
     return;
   }
