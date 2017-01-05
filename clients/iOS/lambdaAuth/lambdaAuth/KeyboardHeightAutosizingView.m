@@ -17,6 +17,10 @@
 
 @implementation KeyboardHeightAutosizingView
 
+#pragma mark - initialization
+// TODO: I have not handled the case the keyboard is already present when this view is created.
+// Perhaps add a method to log a warning when this view is added to a view heigherarchy and the keyboard
+// is already visible.
 
 -(void)commonInitKeyboardHeightAutosizingView {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onKeyboardShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -47,11 +51,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#pragma mark - setters and getters
+
 -(void)setResizeViews:(NSArray *)resizeViews {
     _resizeViews = [resizeViews copy];
     _resizeData = [@{} mutableCopy];
 }
 
+#pragma mark - keyboard presence methods
 
 - (void)updateFramesWithNotification:(NSNotification *)notification updateResizeData:(BOOL)updateResizeData {
     if (notification && notification.userInfo) {
@@ -88,6 +95,8 @@
     }
 }
 
+#pragma mark - notification handlers
+
 -(void)onKeyboardShow:(NSNotification *)notification {
     [self updateFramesWithNotification:notification updateResizeData:YES];
 }
@@ -123,6 +132,5 @@
         [self updateFramesWithNotification:notification updateResizeData:NO];
     }
 }
-
 
 @end
