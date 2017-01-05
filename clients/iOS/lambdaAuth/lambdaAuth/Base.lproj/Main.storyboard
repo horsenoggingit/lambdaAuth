@@ -127,7 +127,9 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="contentScrollView" destination="5sj-42-kZE" id="7Lm-tY-ADN"/>
                         <outlet property="emailTextField" destination="wJn-1a-Jz7" id="0wA-X3-k6W"/>
+                        <outlet property="loginButton" destination="uwc-Ba-U7f" id="1AS-R3-Ys5"/>
                         <outlet property="passwordTextField" destination="us6-Nk-UrE" id="cxy-sT-jYy"/>
                         <segue destination="81w-nu-54q" kind="custom" identifier="LoginToFrontPageSegue" customClass="NavigationReplaceSegue" id="cSJ-AG-2DV"/>
                     </connections>

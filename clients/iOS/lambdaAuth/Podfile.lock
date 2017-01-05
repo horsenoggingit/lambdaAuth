@@ -23,16 +23,19 @@ PODS:
   - AWSAPIGateway (2.4.16):
     - AWSCore (= 2.4.16)
   - AWSCore (2.4.16)
+  - InputValidators (1.0.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.6)
   - AWSAPIGateway (~> 2.4.2)
+  - InputValidators (~> 1.0.0)
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   AWSAPIGateway: 49d48577724a9f53eda1e8c53411c1f1ebac3b7b
   AWSCore: 7c3c129991e6387bcbad7132bc3661e7135754db
+  InputValidators: b278d3042d23893533d688cfb1563370d4cb184e
 
-PODFILE CHECKSUM: 1ab4e5f99044a4a15276cbdd206e32ef3a41317b
+PODFILE CHECKSUM: a2c5fd92434ef87cf71bc6f8d5bc8b12479b7feb
 
 COCOAPODS: 1.1.1

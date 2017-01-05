@@ -163,7 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				1A2937ED1E1C71FB00AD957E /* Managers */,
-				1A2937E91E1C504300AD957E /* views */,
+				1A2937E91E1C504300AD957E /* Views */,
 				1A2937E51E1B2A1800AD957E /* Segues */,
 				1A2937D81E1B073D00AD957E /* ViewControllers */,
 				1A043D9E1E1AE0A000019A33 /* AppDelegate.h */,
@@ -229,13 +229,13 @@
 			name = Segues;
 			sourceTree = "<group>";
 		};
-		1A2937E91E1C504300AD957E /* views */ = {
+		1A2937E91E1C504300AD957E /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				1A2937EA1E1C508200AD957E /* KeyboardHeightAutosizingView.h */,
 				1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */,
 			);
-			name = views;
+			name = Views;
 			sourceTree = "<group>";
 		};
 		1A2937ED1E1C71FB00AD957E /* Managers */ = {

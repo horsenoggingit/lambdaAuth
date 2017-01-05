@@ -58,7 +58,6 @@
         NSValue *endFrameValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
         NSNumber *animationCurveNumber = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
         NSNumber *animationDurationNumber = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-        // can specify an entire animation
         if (endFrameValue) {
             CGRect endFrameLocal = [self convertRect:endFrameValue.CGRectValue fromView:nil];
             [_resizeViews enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -70,6 +69,7 @@
                     CGRect newFrame = origianlFrame;
                     newFrame.size.height = MAX(endFrameLocal.origin.y - origianlFrame.origin.y, _minViewHeight);
                     
+                    // can specify an entire animation
                     if (animationCurveNumber && animationDurationNumber) {
                         [UIView animateWithDuration:animationDurationNumber.doubleValue delay:0 options:(animationCurveNumber.integerValue << 16) animations:^{
                             obj.frame = newFrame;

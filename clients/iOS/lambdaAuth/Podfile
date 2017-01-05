@@ -4,4 +4,5 @@ use_frameworks!
 target 'lambdaAuth' do
   pod 'AFNetworking', '~> 2.6'
   pod 'AWSAPIGateway', '~> 2.4.2'
+  pod 'InputValidators', '~> 1.0.0'
 end
