@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FormViewController.h"
 
-@interface LoginViewController : UIViewController <UITextFieldDelegate>
+@interface LoginViewController : FormViewController <UITextFieldDelegate>
 
 @end

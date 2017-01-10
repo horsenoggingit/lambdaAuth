@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "KeyboardStateManager.h"
+#import "AWSAPIClientsManager.h"
 
 @interface AppDelegate ()
 

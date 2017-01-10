@@ -8,8 +8,13 @@
 
 #import "DeveloperAuthenticatedIdentityProvider.h"
 
+
+@implementation DeveloperAuthenticationResponse
+@end
+
 @interface DeveloperAuthenticatedIdentityProvider ()
 @property (nonatomic) NSString *developerToken;
+@property (nonatomic) AWSTask * (^devAuthenticationTaskBlock)();
 @end
 
 @implementation DeveloperAuthenticatedIdentityProvider
@@ -18,18 +23,26 @@
                    identityPoolId:(NSString *)identityPoolId
                   useEnhancedFlow:(BOOL)useEnhancedFlow
           identityProviderManager:(id<AWSIdentityProviderManager>)identityProviderManager
-                       identityID:(NSString *)identityID
-                            token:(NSString *)token {
+           devAuthenticationTaskBlock:(AWSTask * (^)())devAuthenticationTaskBlock {
     self = [super initWithRegionType:regionType identityPoolId:identityPoolId useEnhancedFlow:useEnhancedFlow identityProviderManager:identityProviderManager];
     if (self) {
-        self.identityId = identityID;
-        _developerToken = token;
+        _devAuthenticationTaskBlock = [devAuthenticationTaskBlock copy];
     }
     return self;
 }
 
 - (AWSTask <NSString*> *) token {
-    return [AWSTask taskWithResult:_developerToken];
+    AWSTask *devAuthenticationTask = _devAuthenticationTaskBlock();
+    return [devAuthenticationTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
+        if (task.error) {
+            // inform the client at we are unauthed.
+            return [AWSTask taskWithError:task.error];
+        }
+        DeveloperAuthenticationResponse *result = devAuthenticationTask.result;
+        self.identityId = result.identityId;
+        _developerToken = result.token;
+        return [AWSTask taskWithResult:result.token];
+    }];
 }
 
 @end

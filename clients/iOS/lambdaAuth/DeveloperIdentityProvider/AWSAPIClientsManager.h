@@ -14,6 +14,8 @@
 
 +(MYPREFIXIostestSwaggerAuthClient *)unauthedClient;
 +(MYPREFIXIostestSwaggerAuthClient *)authedClient;
-+(void)setIdentityId:(NSString *)identityID token:(NSString *)token error:(NSError **)error;
-
++(void)setAuthedClientWithIdentityId:(NSString *)identityID token:(NSString *)token error:(NSError **)error;
++(NSString *)deviceId;
++(void)invalidateAuth;
++(void)logout;
 @end

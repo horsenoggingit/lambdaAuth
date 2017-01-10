@@ -10,16 +10,38 @@
 #import "AWSAPIClientsManager.h"
 
 @interface FrontPageViewController ()
-
+@property (nonatomic) NSString *originalResultTextViewString;
 @end
 
 @implementation FrontPageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _originalResultTextViewString = _resultTextView.text;
+    [self fetchMe];
+}
+
+-(void)viewDidLayoutSubviews {
+    _resultTextView.contentOffset = CGPointZero;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+- (IBAction)refreshAction:(UIBarButtonItem *)sender {
+    [self fetchMe];
+}
+
+- (void)fetchMe {
+    _resultTextView.text = _originalResultTextViewString;
+    _resultTextView.contentOffset = CGPointZero;
+
     // Do any additional setup after loading the view.
-    AWSTask *loginTask = [[AWSAPIClientsManager authedClient] userMeGet];
-    [loginTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
+    AWSTask *meGetTask = [[AWSAPIClientsManager authedClient] userMeGet];
+    [meGetTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"got something");
             
@@ -40,16 +62,10 @@
         
         return nil;
     }];
-
 }
 
--(void)viewDidLayoutSubviews {
-    _resultTextView.contentOffset = CGPointZero;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)invalidateTokenAction:(id)sender {
+    [AWSAPIClientsManager invalidateAuth];
 }
 
 @end

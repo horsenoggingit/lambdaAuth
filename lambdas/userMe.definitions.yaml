@@ -6,10 +6,11 @@ linkFiles:
         - APIParamVerify.js
 AWSCLIProfile: adminuser
 lambdaInfo:
-    awsResources:
-        -
-            type: dynamodbInfo
-            resourceName: Users
+    awsResourceInfo:
+        awsResources:
+            -
+                type: dynamodbInfo
+                resourceName: Users
     roleName: userConsumer
     functionName: userMe
     region: us-east-1

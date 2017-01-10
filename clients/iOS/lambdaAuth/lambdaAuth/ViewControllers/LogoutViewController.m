@@ -7,6 +7,7 @@
 //
 
 #import "LogoutViewController.h"
+#import "AWSAPIClientsManager.h"
 
 @interface LogoutViewController ()
 
@@ -17,6 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [AWSAPIClientsManager logout];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -97,3 +97,9 @@ clients/iOS.definitions.yaml.old
 
 *.xcuserstate
 
+
+clients/iOS/lambdaAuth/DeveloperIdentityProvider/AWSConstants.json
+
+lambdas/token.definitions.yaml.old
+
+lambdas/token.zip

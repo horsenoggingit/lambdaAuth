@@ -30,8 +30,3 @@ s3Info:
             - '*.zip'
             - '*_test.js'
             - '*-test.js'
-lambdaInfo:
-    awsResources:
-        -
-            type: cognitoIdentityPoolInfo
-            resourceName: testPool

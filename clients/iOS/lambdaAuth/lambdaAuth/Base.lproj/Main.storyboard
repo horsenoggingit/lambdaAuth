@@ -90,12 +90,16 @@
                                                 </constraints>
                                             </view>
                                         </subviews>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="NsT-2T-xBN" secondAttribute="bottom" constant="50" id="KqK-oY-K9n"/>
                                             <constraint firstItem="NsT-2T-xBN" firstAttribute="top" secondItem="5sj-42-kZE" secondAttribute="top" constant="50" id="Kyu-4u-X5N"/>
                                             <constraint firstAttribute="trailing" secondItem="NsT-2T-xBN" secondAttribute="trailing" constant="42.5" id="Nbo-P5-a6U"/>
                                             <constraint firstItem="NsT-2T-xBN" firstAttribute="centerX" secondItem="5sj-42-kZE" secondAttribute="centerX" id="Slt-LK-4Wa"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="l7l-KO-2QK" appends="YES" id="MtG-5G-I6y"/>
+                                        </connections>
                                     </scrollView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -127,7 +131,7 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="contentScrollView" destination="5sj-42-kZE" id="7Lm-tY-ADN"/>
+                        <outlet property="contentScrollview" destination="5sj-42-kZE" id="LPd-2s-ozk"/>
                         <outlet property="emailTextField" destination="wJn-1a-Jz7" id="0wA-X3-k6W"/>
                         <outlet property="loginButton" destination="uwc-Ba-U7f" id="1AS-R3-Ys5"/>
                         <outlet property="passwordTextField" destination="us6-Nk-UrE" id="cxy-sT-jYy"/>
@@ -135,6 +139,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pCD-lS-sCk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="l7l-KO-2QK"/>
             </objects>
             <point key="canvasLocation" x="2624.8000000000002" y="-322.48875562218893"/>
         </scene>
@@ -239,10 +244,23 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3cD-ww-gEZ">
+                                <rect key="frame" x="132" y="617" width="111" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Invalidate Token"/>
+                                <connections>
+                                    <action selector="invalidateTokenAction:" destination="81w-nu-54q" eventType="touchUpInside" id="mQO-Ck-ipP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Front Page" id="ICb-pI-m7J">
+                        <barButtonItem key="leftBarButtonItem" title="Refresh" id="QbN-QS-w2d">
+                            <connections>
+                                <action selector="refreshAction:" destination="81w-nu-54q" id="6mI-77-GF6"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Logout" id="H8R-fJ-0Vs">
                             <connections>
                                 <segue destination="hgK-sa-pL8" kind="custom" identifier="FrontPageToLogoutSegue" customClass="NavigationReplaceSegue" id="bin-an-O6E"/>
@@ -372,12 +390,16 @@
                                                 </constraints>
                                             </view>
                                         </subviews>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="LaP-kD-4ms" secondAttribute="trailing" constant="42.5" id="CRY-1r-gAt"/>
                                             <constraint firstItem="LaP-kD-4ms" firstAttribute="centerX" secondItem="Quh-e9-Z4x" secondAttribute="centerX" id="LyU-g3-8S7"/>
                                             <constraint firstAttribute="bottom" secondItem="LaP-kD-4ms" secondAttribute="bottom" constant="50" id="YyP-3N-Tgk"/>
                                             <constraint firstItem="LaP-kD-4ms" firstAttribute="top" secondItem="Quh-e9-Z4x" secondAttribute="top" constant="50" id="uc3-Wn-G6u"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="DPo-mM-VaR" appends="YES" id="wbE-pV-Hcr"/>
+                                        </connections>
                                     </scrollView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -409,13 +431,21 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="contentScrollview" destination="Quh-e9-Z4x" id="Hd4-jh-RHg"/>
+                        <outlet property="dobDatePicker" destination="fpa-Hq-Y5B" id="WOs-K2-YDg"/>
                         <outlet property="emailTextField" destination="qxV-SR-vQS" id="Lnj-rw-FMV"/>
                         <outlet property="nameTextField" destination="Emg-o9-EeI" id="VUD-vO-8Px"/>
                         <outlet property="passwordTextField" destination="ltX-dH-OvB" id="Htj-wT-nPE"/>
+                        <outlet property="signupButton" destination="2uE-a3-5D8" id="GNg-Cd-2u4"/>
                         <segue destination="81w-nu-54q" kind="custom" identifier="SignupToFrontPageSegue" customClass="NavigationReplaceSegue" id="BNE-gj-XzU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kf4-0y-T5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="DPo-mM-VaR">
+                    <connections>
+                        <action selector="tapGestureRecognized:" destination="soN-Mb-dtt" id="kFw-7U-y8y"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1645.5999999999999" y="-321.58920539730138"/>
         </scene>
@@ -437,8 +467,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="cSJ-AG-2DV"/>
         <segue reference="gI8-uv-FVu"/>
         <segue reference="ROP-dK-jRh"/>
+        <segue reference="cSJ-AG-2DV"/>
     </inferredMetricsTieBreakers>
 </document>

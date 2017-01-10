@@ -1,3 +1,10 @@
+clientInfo:
+    awsResourceInfo:
+        resourceConstantPath: "iOS/lambdaAuth/DeveloperIdentityProvider"
+        awsResources:
+            -
+                type: cognitoIdentityPoolInfo
+                resourceName: Pool
 apiInfo:
   clientSDK:
     downloadPath: "iOS/lambdaAuth/Vendor"
