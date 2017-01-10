@@ -105,6 +105,9 @@ forEachLambdaDefinition(function (fileName) {
         'profile' : {type: 'string', value:AWSCLIUserProfile}
     };
 
+    // check to make sure everything compiles at least
+    vp.validatejs(definitions, path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName));
+
     // capture values here by creating a function
     zipAndUpload(definitions.lambdaInfo.functionName, zipCommandString, params, path.join(argv.lambdaDefinitionsDir,fileName));
 
@@ -126,7 +129,7 @@ function createLambda(functionName, reqParams, defaultsFileName) {
         if (request.response.error) {
             if (request.response.errorId === 'ResourceConflictException') {
                 // delete and recreate the lambda
-                console.log("Lambda \"" + request.context.reqParams['function-name'].value + "\" already exists. Use deleting and re-creating.");
+                console.log("Lambda \"" + request.context.reqParams['function-name'].value + "\" already exists. Deleting and re-creating.");
                 deleteLambda(request.context.functionName, request.context.reqParams, request.context.defaultsFileName);
                 return;
             } else if (request.response.errorId === 'InvalidParameterValueException') {
