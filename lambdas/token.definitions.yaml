@@ -38,7 +38,6 @@ lambdaInfo:
                     - id
                     - provider_name
                     - device_id
-    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:iostesttoken'
 apiInfo:
     paths:
         /token:

@@ -1,6 +1,6 @@
 environment:
     AWSCLIUserProfile: adminuser
-    AWSResourceNamePrefix: iostest
+    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -21,7 +21,6 @@ cognitoIdentityPoolInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
                     name: AmazonAPIGatewayInvokeFullAccess
-            arnRole: 'arn:aws:iam::940223146162:role/iostestapiAccessRole'
     identityPools:
         Pool:
             lambdaAliases:
@@ -41,7 +40,6 @@ cognitoIdentityPoolInfo:
                                 'cognito-identity.amazonaws.com:aud': $identityPoolId
                             'ForAnyValue:StringLike':
                                 'cognito-identity.amazonaws.com:amr': authenticated
-            identityPoolId: 'us-east-1:218ac90c-30ed-4215-a013-7143dc394ac3'
 lambdaInfo:
     roleDefinitions:
         userConsumer:
@@ -63,7 +61,6 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
-            arnRole: 'arn:aws:iam::940223146162:role/iostestuserConsumer'
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -83,7 +80,6 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
-            arnRole: 'arn:aws:iam::940223146162:role/iostestuserCreator'
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
@@ -99,7 +95,6 @@ apiInfo:
                 -
                     arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
                     name: LambdaInvocation
-            arnRole: 'arn:aws:iam::940223146162:role/iostestlambdaExecuteRole'
     defaultDeployStage: dev
     region: us-east-1
     title: SwaggerAuth
@@ -216,13 +211,6 @@ apiInfo:
             name: Authorization
             in: header
             x-amazon-apigateway-authtype: awsSigv4
-    awsId: l0zep1extl
-    lastDeploy:
-        uploadResult:
-            description: 'Yet another deploy...'
-            id: 6va3rw
-            createdDate: 1484014702
-        invokeURL: 'https://l0zep1extl.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     Users:
         lambdaAliases:
@@ -246,25 +234,6 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
-        Table:
-            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/iostestUsers'
-            AttributeDefinitions:
-                -
-                    AttributeName: id
-                    AttributeType: S
-            ProvisionedThroughput:
-                NumberOfDecreasesToday: 0
-                WriteCapacityUnits: 5
-                ReadCapacityUnits: 5
-            TableSizeBytes: 1744
-            TableName: iostestUsers
-            TableStatus: ACTIVE
-            KeySchema:
-                -
-                    KeyType: HASH
-                    AttributeName: id
-            ItemCount: 9
-            CreationDateTime: 1483330506.644
     UserEmail:
         lambdaAliases:
             resource: EMAILS
@@ -282,25 +251,6 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
-        Table:
-            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/iostestUserEmail'
-            AttributeDefinitions:
-                -
-                    AttributeName: email
-                    AttributeType: S
-            ProvisionedThroughput:
-                NumberOfDecreasesToday: 0
-                WriteCapacityUnits: 5
-                ReadCapacityUnits: 5
-            TableSizeBytes: 466
-            TableName: iostestUserEmail
-            TableStatus: ACTIVE
-            KeySchema:
-                -
-                    KeyType: HASH
-                    AttributeName: email
-            ItemCount: 9
-            CreationDateTime: 1483330506.626
     DeviceUsers:
         lambdaAliases:
             resource: DEVICES
@@ -318,22 +268,3 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
-        Table:
-            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/iostestDeviceUsers'
-            AttributeDefinitions:
-                -
-                    AttributeName: deviceId
-                    AttributeType: S
-            ProvisionedThroughput:
-                NumberOfDecreasesToday: 0
-                WriteCapacityUnits: 5
-                ReadCapacityUnits: 5
-            TableSizeBytes: 1493
-            TableName: iostestDeviceUsers
-            TableStatus: ACTIVE
-            KeySchema:
-                -
-                    KeyType: HASH
-                    AttributeName: deviceId
-            ItemCount: 12
-            CreationDateTime: 1483934887.162
