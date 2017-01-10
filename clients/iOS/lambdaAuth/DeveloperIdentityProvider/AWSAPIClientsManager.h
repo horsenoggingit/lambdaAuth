@@ -18,4 +18,6 @@
 +(NSString *)deviceId;
 +(void)invalidateAuth;
 +(void)logout;
++(BOOL)isAuthenticated;
++(void)setAuthedClient;
 @end

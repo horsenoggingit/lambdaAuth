@@ -8,16 +8,15 @@
 
 #import "AWSAPIClientsManager.h"
 #import "DeveloperAuthenticatedIdentityProvider.h"
+#import "UICKeyChainStore.h"
 
 
 #define AWSAPIClientsManagerDomanin @"AWSAPIClientsManagerDomanin"
 
 @implementation AWSAPIClientsManager
 
-NSString *__token, *__identityId, *__poolRegionString;
 AWSRegionType __AWSRegionType;
-NSDictionary *__AWSConstants;
-NSMutableDictionary  *__keychain;
+UICKeyChainStore  *__keychain;
 
 MYPREFIXIostestSwaggerAuthClient *__apiUnAuthInstance;
 MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
@@ -27,14 +26,9 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
         static dispatch_once_t onceToken;
         
         dispatch_once(&onceToken, ^{
-            NSString *filePath = [[NSBundle mainBundle] pathForResource:@"AWSConstants" ofType:@"json"];
-            NSString *jsonString = [[NSString alloc] initWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-            NSError *jsonError;
-            __AWSConstants = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&jsonError];
-            __keychain = [NSMutableDictionary new];
+            __keychain = [UICKeyChainStore keyChainStoreWithService:@"com.lambdaAuth.AWSAPIClientsManager"];
         });
     }
-
 }
 
 #pragma mark - client getters
@@ -55,26 +49,37 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
     return __apiAuthInstance;
 }
 
++(BOOL)isAuthenticated {
+    return  ([self loginsForProvider]);
+}
+
 #pragma mark - auth configuration
 
-+ (void)setAuthedClientWithIdentityId:(NSString *)identityID token:(NSString *)token error:(NSError **)error {
-    [__keychain removeObjectForKey:@"logins"];
-    NSArray *identityIDComponents = [identityID componentsSeparatedByString:@":"];
-    if (identityIDComponents.count < 2) {
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:AWSAPIClientsManagerDomanin code:0 userInfo:@{NSLocalizedDescriptionKey : @"invalid IdentityId"}];
++(void)setAuthedClient {
+    [self setAuthedClientWithIdentityId:nil token:nil error:nil];
+}
+
++(void)setAuthedClientWithIdentityId:(NSString *)identityID token:(NSString *)token error:(NSError **)error {
+    if (identityID && token) {
+        [self clearLogins];
+        NSArray *identityIDComponents = [identityID componentsSeparatedByString:@":"];
+        if (identityIDComponents.count < 2) {
+            if (error) {
+                *error = [[NSError alloc] initWithDomain:AWSAPIClientsManagerDomanin code:0 userInfo:@{NSLocalizedDescriptionKey : @"invalid IdentityId"}];
+            }
+            return;
         }
-        return;
+        __keychain[@"poolRegionString"] = identityIDComponents[0];
     }
-    __poolRegionString = identityIDComponents[0];
-    __AWSRegionType = [__poolRegionString aws_regionTypeValue];
+
+    __AWSRegionType = [__keychain[@"poolRegionString"] aws_regionTypeValue];
     
     DeveloperAuthenticatedIdentityProvider * devAuth = [[DeveloperAuthenticatedIdentityProvider alloc] initWithRegionType:__AWSRegionType
-                                                                                                           identityPoolId:__AWSConstants[@"COGNITO"][@"IDENTITY_POOL"][@"identityPoolId"]
+                                                                                                           identityPoolId:@""
                                                                                                           useEnhancedFlow:YES
                                                                                                   identityProviderManager:nil
                                                         devAuthenticationTaskBlock:^AWSTask *{
-                                                            if (!__keychain[@"logins"]) {
+                                                            if (![self isAuthenticated]) {
                                                                 DeveloperAuthenticationResponse *devAuthResponse = [DeveloperAuthenticationResponse new];
                                                                 devAuthResponse.identityId = identityID;
                                                                 devAuthResponse.token = token;
@@ -83,7 +88,7 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
                                                             
                                                             MYPREFIXTokenRequest *tokenRequest = [MYPREFIXTokenRequest new];
                                                             tokenRequest.providerName = __keychain[@"providerName"];
-                                                            tokenRequest._id = __keychain[@"logins"][__keychain[@"providerName"]];
+                                                            tokenRequest._id = [self loginForProviderName:__keychain[@"providerName"]];
                                                             tokenRequest.deviceId = [AWSAPIClientsManager deviceId];
                                                             AWSTask *tokenTask = [[AWSAPIClientsManager unauthedClient] tokenPost:tokenRequest];
                                                             [tokenTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
@@ -136,7 +141,7 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
             }
             MYPREFIXUser *user = task.result;
             __keychain[@"providerName"] = user.providerName;
-            __keychain[@"logins"] = user.logins;
+            [self setLogin:user.logins[user.providerName] forProviderName:__keychain[@"providerName"]];
         });
         
         return nil;
@@ -161,8 +166,39 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
 }
 
 +(void)logout {
-    [__keychain removeObjectForKey:@"logins"];
+    [self clearLogins];
+    [self invalidateAuth];
     __apiAuthInstance = nil;
     [MYPREFIXIostestSwaggerAuthClient removeClientForKey:@"authClient"];
+}
+
++(void)setLogin:(NSString *)login forProviderName:(NSString *)providerName {
+    __keychain[providerName] = login;
+}
+
++(NSString *)loginForProviderName:(NSString *)providerName {
+    return __keychain[providerName];
+}
+
++(void)setProviderName:(NSString *)providerName {
+    __keychain[@"providerName"] = providerName;
+}
+
++(NSString *)providerName {
+    return __keychain[@"providerName"];
+}
+
++(NSDictionary *)loginsForProvider {
+    if (__keychain[@"providerName"] && __keychain[__keychain[@"providerName"]]) {
+        return @{__keychain[@"providerName"] : __keychain[__keychain[@"providerName"]]};
+    }
+    return nil;
+}
+
++(void)clearLogins {
+    if (__keychain[@"providerName"]) {
+        __keychain[__keychain[@"providerName"]] = nil;
+        __keychain[@"providerName"] = nil;
+    }
 }
 @end

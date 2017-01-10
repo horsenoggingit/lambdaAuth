@@ -146,7 +146,7 @@
         <!--root VC-->
         <scene sceneID="vN4-5C-gOa">
             <objects>
-                <viewController id="Ie4-6M-sGS" userLabel="root VC" sceneMemberID="viewController">
+                <viewController id="Ie4-6M-sGS" userLabel="root VC" customClass="RootViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="sMY-SP-1HP"/>
                         <viewControllerLayoutGuide type="bottom" id="Z11-uc-efv"/>
@@ -171,14 +171,6 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N33-Vi-aZ8">
-                                <rect key="frame" x="163" y="429" width="48" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Signup"/>
-                                <connections>
-                                    <segue destination="soN-Mb-dtt" kind="custom" identifier="RootToSignupSegue" customClass="NavigationReplaceSegue" id="wCP-3h-s34"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -203,6 +195,15 @@
                     <view key="view" contentMode="scaleToFill" id="RP0-Cx-Wni">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You are logged out." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MDZ-wx-9Nt">
+                                <rect key="frame" x="91" y="167" width="192" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Logout" id="CEo-dm-Sf2">
@@ -216,7 +217,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tNh-cF-foA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1849" y="528"/>
+            <point key="canvasLocation" x="1848.8" y="527.58620689655174"/>
         </scene>
         <!--Front Page-->
         <scene sceneID="RpI-sf-eR8">
@@ -467,8 +468,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="Uaj-wz-2JI"/>
+        <segue reference="VpD-nz-YRH"/>
         <segue reference="gI8-uv-FVu"/>
-        <segue reference="ROP-dK-jRh"/>
-        <segue reference="cSJ-AG-2DV"/>
     </inferredMetricsTieBreakers>
 </document>

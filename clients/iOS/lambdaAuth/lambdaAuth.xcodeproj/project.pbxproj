@@ -26,7 +26,6 @@
 		1A2937F71E1CBB0A00AD957E /* AWSAPIClientsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937F61E1CBB0A00AD957E /* AWSAPIClientsManager.m */; };
 		1AC9B4631E1F345100962F77 /* UIView+ProjectFormBehaviors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9B4621E1F345100962F77 /* UIView+ProjectFormBehaviors.m */; };
 		1AC9B4661E1F625700962F77 /* FormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9B4651E1F625700962F77 /* FormViewController.m */; };
-		1AD0635D1E22C856008F0321 /* AWSConstants.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AD0635C1E22C856008F0321 /* AWSConstants.json */; };
 		1AD0636C1E2351EF008F0321 /* MYPREFIXCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD0635F1E2351EF008F0321 /* MYPREFIXCredentials.m */; };
 		1AD0636D1E2351EF008F0321 /* MYPREFIXError.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD063611E2351EF008F0321 /* MYPREFIXError.m */; };
 		1AD0636E1E2351EF008F0321 /* MYPREFIXIostestSwaggerAuthClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD063631E2351EF008F0321 /* MYPREFIXIostestSwaggerAuthClient.m */; };
@@ -34,6 +33,7 @@
 		1AD063701E2351EF008F0321 /* MYPREFIXSignupRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD063671E2351EF008F0321 /* MYPREFIXSignupRequest.m */; };
 		1AD063711E2351EF008F0321 /* MYPREFIXTokenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD063691E2351EF008F0321 /* MYPREFIXTokenRequest.m */; };
 		1AD063721E2351EF008F0321 /* MYPREFIXUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD0636B1E2351EF008F0321 /* MYPREFIXUser.m */; };
+		1AE9FA971E24DA1E004C1377 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE9FA961E24DA1E004C1377 /* RootViewController.m */; };
 		F53BD0AA0E4382C704D69D6C /* Pods_lambdaAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */; };
 /* End PBXBuildFile section */
 
@@ -93,7 +93,6 @@
 		1AC9B4621E1F345100962F77 /* UIView+ProjectFormBehaviors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+ProjectFormBehaviors.m"; path = "Categories/UIView+ProjectFormBehaviors.m"; sourceTree = "<group>"; };
 		1AC9B4641E1F625700962F77 /* FormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FormViewController.h; path = ViewControllers/FormViewController.h; sourceTree = "<group>"; };
 		1AC9B4651E1F625700962F77 /* FormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FormViewController.m; path = ViewControllers/FormViewController.m; sourceTree = "<group>"; };
-		1AD0635C1E22C856008F0321 /* AWSConstants.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = AWSConstants.json; path = DeveloperIdentityProvider/AWSConstants.json; sourceTree = "<group>"; };
 		1AD0635E1E2351EF008F0321 /* MYPREFIXCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXCredentials.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXCredentials.h"; sourceTree = "<group>"; };
 		1AD0635F1E2351EF008F0321 /* MYPREFIXCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXCredentials.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXCredentials.m"; sourceTree = "<group>"; };
 		1AD063601E2351EF008F0321 /* MYPREFIXError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXError.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXError.h"; sourceTree = "<group>"; };
@@ -108,6 +107,9 @@
 		1AD063691E2351EF008F0321 /* MYPREFIXTokenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXTokenRequest.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXTokenRequest.m"; sourceTree = "<group>"; };
 		1AD0636A1E2351EF008F0321 /* MYPREFIXUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYPREFIXUser.h; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXUser.h"; sourceTree = "<group>"; };
 		1AD0636B1E2351EF008F0321 /* MYPREFIXUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYPREFIXUser.m; path = "Vendor/aws-apigateway-ios/generated-src/MYPREFIXUser.m"; sourceTree = "<group>"; };
+		1AE9FA951E24DA1E004C1377 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootViewController.h; path = ViewControllers/RootViewController.h; sourceTree = "<group>"; };
+		1AE9FA961E24DA1E004C1377 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootViewController.m; path = ViewControllers/RootViewController.m; sourceTree = "<group>"; };
+		1AE9FA981E24E612004C1377 /* lambdaAuth.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lambdaAuth.entitlements; sourceTree = "<group>"; };
 		41933C120C06CCE612EB3E78 /* Pods_lambdaAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_lambdaAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.release.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.release.xcconfig"; sourceTree = "<group>"; };
 		AFF7EF6CD6D7201AEE160EDD /* Pods-lambdaAuth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lambdaAuth.debug.xcconfig"; path = "Pods/Target Support Files/Pods-lambdaAuth/Pods-lambdaAuth.debug.xcconfig"; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 		1A043D9A1E1AE0A000019A33 /* lambdaAuth */ = {
 			isa = PBXGroup;
 			children = (
+				1AE9FA981E24E612004C1377 /* lambdaAuth.entitlements */,
 				1AC9B4601E1F33E300962F77 /* Categories */,
 				1A2937ED1E1C71FB00AD957E /* Managers */,
 				1A2937E91E1C504300AD957E /* Views */,
@@ -230,6 +233,8 @@
 				1A2937E31E1B07F900AD957E /* FrontPageViewController.m */,
 				1AC9B4641E1F625700962F77 /* FormViewController.h */,
 				1AC9B4651E1F625700962F77 /* FormViewController.m */,
+				1AE9FA951E24DA1E004C1377 /* RootViewController.h */,
+				1AE9FA961E24DA1E004C1377 /* RootViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -264,7 +269,6 @@
 		1A2937F11E1C795B00AD957E /* AWSSessionManagement */ = {
 			isa = PBXGroup;
 			children = (
-				1AD0635C1E22C856008F0321 /* AWSConstants.json */,
 				1A2937F21E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.h */,
 				1A2937F31E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m */,
 				1A2937F51E1CBB0A00AD957E /* AWSAPIClientsManager.h */,
@@ -391,7 +395,13 @@
 				TargetAttributes = {
 					1A043D971E1AE09F00019A33 = {
 						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = CG5VZPNQ3N;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					1A043DB01E1AE0A000019A33 = {
 						CreatedOnToolsVersion = 8.1;
@@ -431,7 +441,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A043DAB1E1AE0A000019A33 /* LaunchScreen.storyboard in Resources */,
-				1AD0635D1E22C856008F0321 /* AWSConstants.json in Resources */,
 				1A043DA81E1AE0A000019A33 /* Assets.xcassets in Resources */,
 				1A043DA61E1AE0A000019A33 /* Main.storyboard in Resources */,
 			);
@@ -524,6 +533,7 @@
 				1A043D9D1E1AE0A000019A33 /* main.m in Sources */,
 				1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */,
 				1A2937F41E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m in Sources */,
+				1AE9FA971E24DA1E004C1377 /* RootViewController.m in Sources */,
 				1AD0636C1E2351EF008F0321 /* MYPREFIXCredentials.m in Sources */,
 				1AC9B4661E1F625700962F77 /* FormViewController.m in Sources */,
 				1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */,
@@ -678,6 +688,8 @@
 			baseConfigurationReference = AFF7EF6CD6D7201AEE160EDD /* Pods-lambdaAuth.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lambdaAuth/lambdaAuth.entitlements;
+				DEVELOPMENT_TEAM = CG5VZPNQ3N;
 				INFOPLIST_FILE = lambdaAuth/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuth;
@@ -690,6 +702,8 @@
 			baseConfigurationReference = 66CCCC6BBF9417ECC7CB8CE2 /* Pods-lambdaAuth.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lambdaAuth/lambdaAuth.entitlements;
+				DEVELOPMENT_TEAM = CG5VZPNQ3N;
 				INFOPLIST_FILE = lambdaAuth/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.horsenoggin.lambdaAuth;
