@@ -9,7 +9,9 @@
   ],
   "dependencies": {
     "yamljs": "latest",
-    "yargs": "latest"
+    "yargs": "latest",
+    "jslint": "latest",
+    "jshint": "latest"
   },
   "scripts" : {
     "postinstall": "./installLambdaModules.sh",

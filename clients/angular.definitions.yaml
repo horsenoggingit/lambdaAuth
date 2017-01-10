@@ -18,6 +18,8 @@ s3Info:
                     Action: 's3:GetObject'
                     Resource: 'arn:aws:s3:::$name/*'
         region: us-east-1
+        name: iostestlambdaauth
+        location: /iostestlambdaauth
     fileSyncInfo:
         syncPath: angular/lambda-auth/app
         acl: public-read
@@ -28,8 +30,3 @@ s3Info:
             - '*.zip'
             - '*_test.js'
             - '*-test.js'
-lambdaInfo:
-    awsResources:
-        -
-            type: cognitoIdentityPoolInfo
-            resourceName: testPool

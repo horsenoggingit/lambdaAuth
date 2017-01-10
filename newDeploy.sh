@@ -18,7 +18,7 @@ AWSTools/updateLinkedFiles.js
 AWSTools/updateLambdaHandlerEventParams.js
 
 # update constants for accessing AWS resources
-AWSTools/updateLambdaAWSConstants.js
+AWSTools/updateAWSConstants.js -t lambda
 
 # finally create new lambdas
 AWSTools/createLambda.js
@@ -32,6 +32,9 @@ AWSTools/deployAPI.js
 
 # get the SDK's for the clients
 AWSTools/getClientSDK.js
+
+#update any client constants
+AWSTools/updateAWSConstants.js -t client
 
 # create s3 bucket for Angular app distribution
 AWSTools/createAngularClientBucket.js

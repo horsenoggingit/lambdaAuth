@@ -1,0 +1,30 @@
+{
+	"DYNAMO_DB": {
+		"USERS": {
+			"ID": "id",
+			"EMAIL": "email",
+			"NAME": "name",
+			"DOB": "dob",
+			"LAST_LOGIN_TIMESTAMP": "lastLoginTimestamp",
+			"PASSWORD": "password",
+			"SIGNUP_TIMESTAMP": "signupTimestamp",
+			"name": "iostestUsers"
+		},
+		"DEVICES": {
+			"DEVICE_ID": "deviceId",
+			"IDS": "ids",
+			"name": "iostestDeviceUsers"
+		}
+	},
+	"COGNITO": {
+		"IDENTITY_POOL": {
+			"name": "iostestPool",
+			"authProviders": {
+				"custom": {
+					"developerProvider": "testProvider"
+				}
+			},
+			"identityPoolId": "us-east-1:218ac90c-30ed-4215-a013-7143dc394ac3"
+		}
+	}
+}

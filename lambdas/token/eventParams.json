@@ -1,0 +1,1 @@
+{"/token":{"post":{"type":"object","properties":{"id":{"type":"string"},"provider_name":{"type":"string"},"device_id":{"type":"string"}},"required":["id","provider_name","device_id"]}}}
