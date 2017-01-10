@@ -18,8 +18,8 @@
 AWSRegionType __AWSRegionType;
 UICKeyChainStore  *__keychain;
 
-MYPREFIXIostestSwaggerAuthClient *__apiUnAuthInstance;
-MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
+MYPREFIXAuthClient *__apiUnAuthInstance;
+MYPREFIXAuthClient *__apiAuthInstance;
 
 +(void)initialize {
     if (self == [AWSAPIClientsManager class]) {
@@ -32,20 +32,20 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
 }
 
 #pragma mark - client getters
-+(MYPREFIXIostestSwaggerAuthClient *)unauthedClient {
++(MYPREFIXAuthClient *)unauthedClient {
     if (!__apiUnAuthInstance) {
         
         AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUnknown
                                                                              credentialsProvider:nil];
        
-        [MYPREFIXIostestSwaggerAuthClient registerClientWithConfiguration:configuration forKey:@"unAuthClient"];
+        [MYPREFIXAuthClient registerClientWithConfiguration:configuration forKey:@"unAuthClient"];
        
-        __apiUnAuthInstance = [MYPREFIXIostestSwaggerAuthClient clientForKey:@"unAuthClient"];
+        __apiUnAuthInstance = [MYPREFIXAuthClient clientForKey:@"unAuthClient"];
     }
     return __apiUnAuthInstance;
 }
 
-+(MYPREFIXIostestSwaggerAuthClient *)authedClient {
++(MYPREFIXAuthClient *)authedClient {
     return __apiAuthInstance;
 }
 
@@ -118,9 +118,9 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
                                                           identityProvider:devAuth];
     AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:__AWSRegionType
                                                                          credentialsProvider:credentialsProvider];
-    [MYPREFIXIostestSwaggerAuthClient registerClientWithConfiguration:configuration forKey:@"authClient"];
+    [MYPREFIXAuthClient registerClientWithConfiguration:configuration forKey:@"authClient"];
 
-    __apiAuthInstance = [MYPREFIXIostestSwaggerAuthClient clientForKey:@"authClient"];
+    __apiAuthInstance = [MYPREFIXAuthClient clientForKey:@"authClient"];
     
     
     // get the user to obtain logins
@@ -169,7 +169,7 @@ MYPREFIXIostestSwaggerAuthClient *__apiAuthInstance;
     [self clearLogins];
     [self invalidateAuth];
     __apiAuthInstance = nil;
-    [MYPREFIXIostestSwaggerAuthClient removeClientForKey:@"authClient"];
+    [MYPREFIXAuthClient removeClientForKey:@"authClient"];
 }
 
 +(void)setLogin:(NSString *)login forProviderName:(NSString *)providerName {

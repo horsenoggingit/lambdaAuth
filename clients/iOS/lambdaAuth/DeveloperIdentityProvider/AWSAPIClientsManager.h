@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <AWSCore/AWSCore.h>
-#import "MYPREFIXIostestSwaggerAuthClient.h"
+#import "MYPREFIXAuthClient.h"
 
 @interface AWSAPIClientsManager : NSObject
 
-+(MYPREFIXIostestSwaggerAuthClient *)unauthedClient;
-+(MYPREFIXIostestSwaggerAuthClient *)authedClient;
++(MYPREFIXAuthClient *)unauthedClient;
++(MYPREFIXAuthClient *)authedClient;
 +(void)setAuthedClientWithIdentityId:(NSString *)identityID token:(NSString *)token error:(NSError **)error;
 +(NSString *)deviceId;
 +(void)invalidateAuth;

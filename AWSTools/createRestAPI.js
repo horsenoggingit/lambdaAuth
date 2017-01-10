@@ -37,6 +37,7 @@ if (typeof baseDefinitions.apiInfo.region !== 'string') {
     console.log("Missing \"region\" in \"apiInfo\" section of base definitions file \"" + argv.baseDefinitionsFile + "\" - has this API been created? (use createRestAPI.js)");
     process.exit(1);
 }
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 if (typeof baseDefinitions.apiInfo === 'object') {
     if (typeof baseDefinitions.apiInfo.awsId === 'string' && !argv.updateAWSId) {

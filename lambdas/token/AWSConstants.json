@@ -8,23 +8,23 @@
 			"LAST_LOGIN_TIMESTAMP": "lastLoginTimestamp",
 			"PASSWORD": "password",
 			"SIGNUP_TIMESTAMP": "signupTimestamp",
-			"name": "iostestUsers"
+			"name": "testUsers"
 		},
 		"DEVICES": {
 			"DEVICE_ID": "deviceId",
 			"IDS": "ids",
-			"name": "iostestDeviceUsers"
+			"name": "testDeviceUsers"
 		}
 	},
 	"COGNITO": {
 		"IDENTITY_POOL": {
-			"name": "iostestPool",
+			"name": "testPool",
 			"authProviders": {
 				"custom": {
 					"developerProvider": "testProvider"
 				}
 			},
-			"identityPoolId": "us-east-1:218ac90c-30ed-4215-a013-7143dc394ac3"
+			"identityPoolId": "us-east-1:f258c781-d066-4f3e-bdbe-b02f5c80faf2"
 		}
 	}
 }

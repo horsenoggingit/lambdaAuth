@@ -48,6 +48,25 @@ forEachLambdaDefinition(function (fileName) {
     if (typeof definitions !== 'object') {
         throw new Error("Definitions file \"" + fileName + "\" could not be parsed");
     }
+    var checks = [];
+    checks.push(awsc.verifyPath(baseDefinitions,['apiInfo', 'awsId'], 's'));
+    checks.push(awsc.verifyPath(baseDefinitions,['apiInfo', 'defaultDeployStage'], 's'));
+    checks.push(awsc.verifyPath(definitions,['apiInfo', 'clientSDK', 'sdkType'], 's'));
+    checks.push(awsc.verifyPath(definitions,['apiInfo', 'clientSDK', 'downloadPath'], 's'));
+
+    var shouldSkip = false;
+    checks.forEach(function (check){
+        if (check.isVerifyError) {
+            console.log(check);
+            shouldSkip = true;
+        }
+    });
+
+    if (shouldSkip) {
+        console.log("Skipping '" + fileName + "'.");
+        return;
+    }
+
     var params = {
         'rest-api-id': {type: 'string', value:baseDefinitions.apiInfo.awsId},
         'stage-name': {type: 'string', value:baseDefinitions.apiInfo.defaultDeployStage},
@@ -55,13 +74,15 @@ forEachLambdaDefinition(function (fileName) {
         profile: {type:'string', value:AWSCLIUserProfile}
     };
 
-    if (typeof definitions.apiInfo.clientSDK.parameters === 'object') {
+    // if there are parameters add them
+    if (!awsc.verifyPath(definitions,['apiInfo', 'clientSDK', 'parameters'], 'o').isVerifyError) {
         var paramstrings = [];
         Object.keys(definitions.apiInfo.clientSDK.parameters).forEach(function (parameter) {
             paramstrings.push(parameter + "='" + definitions.apiInfo.clientSDK.parameters[parameter] + "'");
         });
         params.parameters = {type: 'string', value:paramstrings.join(',')};
     }
+
     // make sure the download path exists. If not create it.
     var downloadPath;
     if (!path.isAbsolute(definitions.apiInfo.clientSDK.downloadPath)) {
@@ -85,7 +106,7 @@ forEachLambdaDefinition(function (fileName) {
             {
                 serviceName: "apigateway",
                 functionName: "get-sdk",
-                context:{fileName: fileName, downloadPath: definitions.apiInfo.clientSDK.downloadPath},
+                context:{fileName: fileName, downloadPath: definitions.apiInfo.clientSDK.downloadPath, clientDefinitions: definitions},
                 parameters: params,
                 outFile: path.join(argv.clientDefinitionsDir, definitions.apiInfo.clientSDK.downloadPath, "api.zip"),
                 returnSchema: 'json',
@@ -114,7 +135,10 @@ function() {
                     } else {
                         console.log(stdout);
                         console.log("Updated SDK for definitions file: " + request.context.fileName);
-                    }
+                        // iOS clients may want to change the class name of the auth client because
+                        // it is composed of Prefix+APIName+AuthClient
+                        renameAuthClientClass(request.context.clientDefinitions, request.context.fileName, path.join(argv.clientDefinitionsDir, request.context.downloadPath));
+                   }
                 });
             }
         });
@@ -147,5 +171,66 @@ function forEachLambdaDefinition (callback, doneCallback) {
             }
         }
         doneCallback();
+    });
+}
+
+function renameAuthClientClass(definitions, fileName, basePath) {
+    if (definitions.apiInfo.clientSDK.sdkType === 'objectivec' &&
+    !awsc.verifyPath(definitions,['apiInfo', 'clientSDK', 'renameAuthClientClass'], 's').isVerifyError) {
+        var check = awsc.verifyPath(definitions,['apiInfo', 'clientSDK', 'parameters', 'classPrefix'], 's');
+        if (check.isVerifyError) {
+            console.log(check);
+            return;
+        }
+        var currentName = definitions.apiInfo.clientSDK.parameters.classPrefix;
+        currentName = currentName.toUpperCase();
+        // now add the api name from the base definitions file (need to capitalize first letter)
+        var apiName;
+        if (baseDefinitions.environment.AWSResourceNamePrefix) {
+          apiName = baseDefinitions.environment.AWSResourceNamePrefix + baseDefinitions.apiInfo.title;
+        } else {
+          apiName = baseDefinitions.apiInfo.title;
+        }
+        if (apiName && apiName.length >= 0) {
+            apiName = apiName.charAt(0).toUpperCase() + apiName.slice(1);
+            currentName += apiName + "Client";
+            var classPath = path.join(basePath, "aws-apigateway-ios", "generated-src");
+            renameObjcClass(classPath, currentName, definitions.apiInfo.clientSDK.renameAuthClientClass);
+        } else {
+            console.log("Invalid API Name when renaming the Auth Client for definitions file " + fileName);
+            return;
+        }
+   }
+}
+
+function renameObjcClass(classPath, currentClassName, newClassName) {
+    [".m", ".h"].forEach(function (ext) {
+        var oldFileName = path.join(classPath, currentClassName + ext);
+        var newFileName = path.join(classPath, newClassName + ext);
+        var inFile = fs.readFileSync(oldFileName, "utf8");
+        var regexp = new RegExp( "([^@][^\"])" + currentClassName, "g");
+        console.log("Looking for '" + currentClassName + "'");
+        var outFile =  inFile.replace(regexp, "$1" + newClassName);
+        var regexp2 = new RegExp("([^@]\")" + currentClassName, "g");
+        outFile = outFile.replace(regexp2,  "$1" + newClassName);
+        saveNewDeletingOld(outFile, newFileName, oldFileName, function (err, newFileName) {
+            if (err) {
+                console.log("Couldn't save updated Client class " + newClassName);
+            } else {
+                console.log("Updated Client class to " + newFileName);
+            }
+        });
+
+    });
+ }
+
+function saveNewDeletingOld(outFile, newFileName, oldFileName, callback) {
+    fs.writeFile(newFileName, outFile, function(err) {
+        if (err) {
+           callback(err, newFileName);
+        } else {
+            fs.unlinkSync(oldFileName);
+            callback(null, newFileName);
+        }
     });
 }
