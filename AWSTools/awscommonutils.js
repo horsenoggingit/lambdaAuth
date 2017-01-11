@@ -153,7 +153,6 @@ function checkPath(structure, pathArray, leafTypeKey) {
     return null;
 }
 
-
 function getTypeKey(item) {
     var typeKey = "u";
     switch (typeof item) {
@@ -280,7 +279,5 @@ exports.validatejs = function(lambdaDefintitions, lambdaPath) {
                 console.log(JSHINT.JSHINT.data().errors);
             }
         });
-
-
     }
 };
