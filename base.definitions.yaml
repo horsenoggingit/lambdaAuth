@@ -21,6 +21,7 @@ cognitoIdentityPoolInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'
                     name: AmazonAPIGatewayInvokeFullAccess
+            arnRole: 'arn:aws:iam::940223146162:role/testapiAccessRole'
     identityPools:
         Pool:
             lambdaAliases:
@@ -40,6 +41,7 @@ cognitoIdentityPoolInfo:
                                 'cognito-identity.amazonaws.com:aud': $identityPoolId
                             'ForAnyValue:StringLike':
                                 'cognito-identity.amazonaws.com:amr': authenticated
+            identityPoolId: 'us-east-1:f258c781-d066-4f3e-bdbe-b02f5c80faf2'
 lambdaInfo:
     roleDefinitions:
         userConsumer:
@@ -61,6 +63,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/testuserConsumer'
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -80,6 +83,7 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+            arnRole: 'arn:aws:iam::940223146162:role/testuserCreator'
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
@@ -95,6 +99,7 @@ apiInfo:
                 -
                     arnPolicy: 'arn:aws:iam::940223146162:policy/LambdaInvocation'
                     name: LambdaInvocation
+            arnRole: 'arn:aws:iam::940223146162:role/testlambdaExecuteRole'
     defaultDeployStage: dev
     region: us-east-1
     title: SwaggerAuth
@@ -129,23 +134,28 @@ apiInfo:
                     type: string
                 dob:
                     type: number
-                last-login-timestamp:
+                last_login_timestamp:
                     type: number
-                signup-timestamp:
+                signup_timestamp:
                     type: number
                 logins:
                     type: object
-                provider-name:
+                    additionalProperties:
+                        type: string
+                provider_name:
                     type: string
         signupRequest:
             type: object
             required:
                 - email
                 - password
+                - device_id
             properties:
                 email:
                     type: string
                 password:
+                    type: string
+                device_id:
                     type: string
                 name:
                     type: string
@@ -153,15 +163,30 @@ apiInfo:
                     type: number
         loginRequest:
             type: object
+            required:
+                - email
+                - password
+                - device_id
             properties:
                 email:
                     type: string
                 password:
                     type: string
-                provider-name:
+                device_id:
                     type: string
+        tokenRequest:
+            type: object
+            required:
+                - id
+                - provider_name
+                - device_id
+            properties:
                 id:
-                    type: number
+                    type: string
+                provider_name:
+                    type: string
+                device_id:
+                    type: string
         credentials:
             type: object
             required:
@@ -177,13 +202,13 @@ apiInfo:
             required:
                 - message
                 - type
-                - request-id
+                - requestId
             properties:
                 message:
                     type: string
                 type:
                     type: string
-                request-id:
+                requestId:
                     type: string
     sharedSecurityDefinitions:
         sigv4:
@@ -191,6 +216,13 @@ apiInfo:
             name: Authorization
             in: header
             x-amazon-apigateway-authtype: awsSigv4
+    awsId: 4799n0v6ce
+    lastDeploy:
+        uploadResult:
+            description: 'Yet another deploy...'
+            id: ukiaep
+            createdDate: 1484045788
+        invokeURL: 'https://4799n0v6ce.execute-api.us-east-1.amazonaws.com/dev'
 dynamodbInfo:
     Users:
         lambdaAliases:
@@ -214,6 +246,25 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testUsers'
+            AttributeDefinitions:
+                -
+                    AttributeName: id
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: testUsers
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: id
+            ItemCount: 0
+            CreationDateTime: 1484045772.453
     UserEmail:
         lambdaAliases:
             resource: EMAILS
@@ -231,3 +282,58 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testUserEmail'
+            AttributeDefinitions:
+                -
+                    AttributeName: email
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: testUserEmail
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: email
+            ItemCount: 0
+            CreationDateTime: 1484045772.49
+    DeviceUsers:
+        lambdaAliases:
+            resource: DEVICES
+            attributes:
+                DEVICE_ID: deviceId
+                IDS: ids
+        attributeDefinitions:
+            -
+                AttributeName: deviceId
+                AttributeType: S
+        keySchema:
+            -
+                AttributeName: deviceId
+                KeyType: HASH
+        provisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        Table:
+            TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testDeviceUsers'
+            AttributeDefinitions:
+                -
+                    AttributeName: deviceId
+                    AttributeType: S
+            ProvisionedThroughput:
+                NumberOfDecreasesToday: 0
+                WriteCapacityUnits: 5
+                ReadCapacityUnits: 5
+            TableSizeBytes: 0
+            TableName: testDeviceUsers
+            TableStatus: CREATING
+            KeySchema:
+                -
+                    KeyType: HASH
+                    AttributeName: deviceId
+            ItemCount: 0
+            CreationDateTime: 1484045772.452

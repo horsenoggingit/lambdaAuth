@@ -6,7 +6,7 @@ const AwsRequest = require(path.join(__dirname, 'AwsRequest'));
 const fs = require('fs');
 const YAML = require('yamljs');
 
-var argv = require('yargs')
+const argv = require('yargs')
 .usage('Upldate project API.\n"createAPI" should have been previously called.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your API')
@@ -19,16 +19,16 @@ var argv = require('yargs')
 .argv;
 
 if (!fs.existsSync(argv.baseDefinitionsFile)) {
-  console.log("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.")
+  console.log("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.");
   process.exit(1);
 }
 
 if (!fs.existsSync(argv.apiDefinitionFile)) {
-  throw new Error("API definition file \"" + argv.apiDefinitionFile + "\" not found.")
+  throw new Error("API definition file \"" + argv.apiDefinitionFile + "\" not found.");
 }
 
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
-if (typeof baseDefinitions.apiInfo != 'object') {
+if (typeof baseDefinitions.apiInfo !== 'object') {
   throw new Error("Missing apiInfo in base definitions file");
 }
 
@@ -42,7 +42,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
   console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Uploading API to AWS")
+console.log("Uploading API to AWS");
 
 AwsRequest.createRequest({
   serviceName: 'apigateway',
@@ -61,5 +61,5 @@ AwsRequest.createRequest({
     throw request.response.error;
   }
   console.log(request.response.stdout);
-  console.log("Done.")
-}).startRequest()
+  console.log("Done.");
+}).startRequest();

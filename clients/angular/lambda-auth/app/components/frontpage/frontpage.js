@@ -1,3 +1,4 @@
+/* jshint undef: true, unused: true, esversion: 6, devel: true, node: false, browser: true, module: true */
 'use strict';
 
 function frontpage(authService, $location, $scope) {
@@ -22,13 +23,13 @@ function frontpage(authService, $location, $scope) {
         });
       });
     }
-  })
+});
 
-};
+}
 
 angular
 .module('frontpageModule',['awsAPIClients', 'sharedInfo', 'ngRoute'])
 .component('frontpage', {
   templateUrl: 'components/frontpage/frontpage.html',
   controller: frontpage
-})
+});

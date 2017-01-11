@@ -6,18 +6,23 @@ linkFiles:
         - PasswordHash.js
         - UserIdentity.js
         - APIParamVerify.js
+        - Devices.js
 AWSCLIProfile: adminuser
 lambdaInfo:
-    awsResources:
-        -
-            type: dynamodbInfo
-            resourceName: Users
-        -
-            type: dynamodbInfo
-            resourceName: UserEmail
-        -
-            type: cognitoIdentityPoolInfo
-            resourceName: Pool
+    awsResourceInfo:
+        awsResources:
+            -
+                type: dynamodbInfo
+                resourceName: Users
+            -
+                type: dynamodbInfo
+                resourceName: UserEmail
+            -
+                type: dynamodbInfo
+                resourceName: DeviceUsers
+            -
+                type: cognitoIdentityPoolInfo
+                resourceName: Pool
     roleName: userConsumer
     functionName: login
     region: us-east-1
@@ -26,14 +31,18 @@ lambdaInfo:
         /login:
             post:
                 type: object
+                required:
+                    - email
+                    - password
+                    - device_id
                 properties:
                     email:
                         type: string
                     password:
                         type: string
-                    provider-name:
+                    device_id:
                         type: string
-                    id: 'type:string'
+    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testlogin'
 apiInfo:
     paths:
         /login:
@@ -130,7 +139,7 @@ apiInfo:
                         '.*httpStatus\":400.*':
                             statusCode: '400'
                             responseTemplates:
-                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
                                 method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
@@ -138,7 +147,7 @@ apiInfo:
                         '.*httpStatus\":401.*':
                             statusCode: '401'
                             responseTemplates:
-                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
                                 method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
@@ -146,7 +155,7 @@ apiInfo:
                         '.*httpStatus\":404.*':
                             statusCode: '404'
                             responseTemplates:
-                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
                                 method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
@@ -154,7 +163,7 @@ apiInfo:
                         '.*httpStatus\":405.*':
                             statusCode: '405'
                             responseTemplates:
-                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
                                 method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''
@@ -162,7 +171,7 @@ apiInfo:
                         '.*httpStatus\":500.*':
                             statusCode: '500'
                             responseTemplates:
-                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"request-id\" : \"$errorMessageObj.requestId\"\n}"
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:
                                 method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
                                 method.response.header.Access-Control-Allow-Methods: '''*'''

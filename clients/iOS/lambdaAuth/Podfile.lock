@@ -1,0 +1,44 @@
+PODS:
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - AWSAPIGateway (2.4.16):
+    - AWSCore (= 2.4.16)
+  - AWSCore (2.4.16)
+  - InputValidators (1.0.0)
+  - UICKeyChainStore (2.0.7)
+
+DEPENDENCIES:
+  - AFNetworking (~> 2.6)
+  - AWSAPIGateway (~> 2.4.2)
+  - InputValidators (~> 1.0.0)
+  - UICKeyChainStore (~> 2.0.0)
+
+SPEC CHECKSUMS:
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  AWSAPIGateway: 49d48577724a9f53eda1e8c53411c1f1ebac3b7b
+  AWSCore: 7c3c129991e6387bcbad7132bc3661e7135754db
+  InputValidators: b278d3042d23893533d688cfb1563370d4cb184e
+  UICKeyChainStore: 696cd35083f7c8fb5e201d909b7e6aea6b478575
+
+PODFILE CHECKSUM: a0f809f1bbf4a6409223f62373ab7add2294295b
+
+COCOAPODS: 1.1.1
