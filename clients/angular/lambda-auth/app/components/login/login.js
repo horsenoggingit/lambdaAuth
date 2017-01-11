@@ -9,7 +9,9 @@ function login(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $scop
     ctrl.signupButtonDisable = false;
 
     ctrl.$onInit = function() {
-
+        if (authService.isLoggedIn()) {
+            $location.path('frontpage').replace();
+        }
     };
 
     ctrl.flash = function(name) {

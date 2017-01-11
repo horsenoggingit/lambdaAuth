@@ -31,6 +31,10 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         return $cookies.get("deviceId");
     };
 
+    ctrl.isLoggedIn = function () {
+        return (ctrl.hasReceivedProviderData());
+    }
+
     ctrl.sessionExpired = function () {
         if (AWS.config.credentials && AWS.config.credentials.expireTime) {
             console.log("session will expire in " + ((AWS.config.credentials.expireTime.getTime() - (new Date()).getTime())/1000.0/60.0) + " minutes.");
@@ -220,6 +224,11 @@ awsAPIClientsModule.service('authService', function(apiUnauthedClientFactory, id
         };
 
         ctrl.hasReceivedProviderData = function () {
+            if (providerData.providerName && providerData.providerId) {
+                return true;
+            }
+            // check to see if we have any in the keychain
+            ctrl.restoreProviederData();
             if (providerData.providerName && providerData.providerId) {
                 return true;
             }

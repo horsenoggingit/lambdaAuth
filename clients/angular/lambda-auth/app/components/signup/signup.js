@@ -12,7 +12,9 @@ function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $loc
     ctrl.signupButtonDisable = false;
 
     ctrl.$onInit = function() {
-
+        if (authService.isLoggedIn()) {
+            $location.path('frontpage').replace();
+        }
     };
 
     ctrl.flash = function(name) {
