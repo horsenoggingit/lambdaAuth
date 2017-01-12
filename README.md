@@ -60,4 +60,4 @@ TODO
 TODO
 
 ##Adding a New Endpoint##
-TODO
+Currently woking on a simple commanline tool to add endpoints backed by lambda that would set up the basic definitions file and create templates for common scenarios.
