@@ -33,8 +33,8 @@ The default configuration of this project creates a series of API endpoints (/si
 Now you can signup and login to the test app through the Angular client. To configure the iOS client do the following:
 
 1. You are going to need to install Xcode (from the app store) and CocoaPods (https://cocoapods.org)
-2. cd to "clients/iOS/lambdaAuth"
-3. run "pod install"
+2. "cd" to "clients/iOS/lambdaAuth"
+3. Run "pod install" in this directory.
   * this can take a really long time the first time doing a "pod install". Look here to accelerate the process: http://stackoverflow.com/questions/21022638/pod-install-is-staying-on-setting-up-cocoapods-master-repo
 4. Build and Run in Xcode!
 
