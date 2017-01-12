@@ -39,5 +39,5 @@ AWSTools/updateAWSConstants.js -t client
 # create s3 bucket for Angular app distribution
 AWSTools/createAngularClientBucket.js
 
-# now that we have a bucket we can sync the static angular substitue
+# now that we have a bucket we can sync the static angular
 AWSTools/syncAngularClientBucket.js
