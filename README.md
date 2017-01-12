@@ -59,3 +59,5 @@ TODO
 ##Project Configuration##
 TODO
 
+##Adding a New Endpoint##
+TODO
