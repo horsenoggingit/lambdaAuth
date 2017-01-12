@@ -29,6 +29,16 @@ The default configuration of this project creates a series of API endpoints (/si
   * run "npm start”
     * This will build the backend configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://testlambdaauth.s3-website-us-east-1.amazonaws.com
   * run "npm stop" to remove everything that was built with "npm start".
+  
+Now you can signup and login to the test app through the Angular client. To configure the iOS client do the following:
+
+1. You are going to need to install Xcode (from the app store) and CocoaPods (https://cocoapods.org)
+2. cd to "clients/iOS/lambdaAuth"
+3. run "pod install"
+  * this can take a really long time the first time doing a "pod install". Look here to accelerate the process: http://stackoverflow.com/questions/21022638/pod-install-is-staying-on-setting-up-cocoapods-master-repo
+4. Build and Run in Xcode!
+
+Android coming soon...
     
 # Documentation #
 This project started as my Hello World app for javascript and node.js. As such there is an evident evolution of coding patterns as I became familiar with the language. I will be improving the situation. By and large you will likely see that this project is written by a long time client developer, so please be forgiving.
