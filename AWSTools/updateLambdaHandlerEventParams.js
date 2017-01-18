@@ -47,7 +47,7 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
                             writeOut = false;
                         }
                         if (writeOut) {
-                            fs.writeFile(path.join(argv.lambdaDefinitionsDir, allkeys[0] ,argv.outputFilename), JSON.stringify(definitions.lambdaInfo.eventParamPaths));
+                            fs.writeFile(path.join(argv.lambdaDefinitionsDir, allkeys[0] ,argv.outputFilename), JSON.stringify(definitions.lambdaInfo.eventParamPaths, null, '\t'));
                             writtenLambdaCount ++;
                         }
                     } else {

@@ -281,3 +281,23 @@ exports.validatejs = function(lambdaDefintitions, lambdaPath) {
         });
     }
 };
+
+exports.createPath = function (pathString) {
+    // make sure the download path exists. If not create it.
+    var downloadPath;
+    if (!path.isAbsolute(pathString)) {
+        downloadPath = path.join(path.resolve(), pathString);
+    } else {
+        downloadPath = pathString;
+    }
+    downloadPath = path.normalize(downloadPath);
+
+    var downloadPathComponents = downloadPath.split(path.sep);
+    var mkPath = path.sep;
+    downloadPathComponents.forEach(function (pathComponent) {
+        mkPath = path.join(mkPath, pathComponent);
+        if (!fs.existsSync(mkPath)){
+            fs.mkdirSync(mkPath);
+        }
+    });
+};

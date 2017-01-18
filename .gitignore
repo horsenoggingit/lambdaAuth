@@ -103,3 +103,25 @@ clients/iOS/lambdaAuth/DeveloperIdentityProvider/AWSConstants.json
 lambdas/token.definitions.yaml.old
 
 lambdas/token.zip
+
+lambdas/jakfDsfAsa.zip
+
+lambdas/jakfDsfAsa.definitions.yaml.old
+
+lambdas/jakfDsfAsa/APIParamVerify.js
+
+lambdas/jakfDsfAsa/AWSConstants.json
+
+lambdas/jakfDsfAsa/eventParams.json
+
+lambdas/token/APIParamVerify.js
+
+lambdas/token/APIParamVerify.js
+
+lambdas/userMe/eventParams.json
+
+lambdas/token/eventParams.json
+
+lambdas/token/AWSConstants.json
+
+lambdas/token/APIParamVerify.js

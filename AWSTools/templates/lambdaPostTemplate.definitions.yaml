@@ -1,0 +1,180 @@
+implementationFiles:
+    {$lambdaName}:
+        - {$lambdaName}.js
+linkFiles:
+    common:
+        - APIParamVerify.js
+AWSCLIProfile: adminuser
+lambdaInfo:
+    awsResourceInfo:
+        awsResources:
+            -
+                type: dynamodbInfo
+                resourceName: Users
+    roleName: userConsumer
+    functionName: {$lambdaName}
+    region: us-east-1
+    language: nodejs4.3
+    eventParamPaths:
+        {$urlPath}:
+            post:
+                type: object
+                required:
+                    - identity_id
+                    - auth_provider
+                    - auth_type
+                    - identitypool_id
+                    - some_post_param
+                properties:
+                    identity_id:
+                        type: string
+                    auth_provider:
+                        type: string
+                    auth_type:
+                        type: string
+                    identitypool_id:
+                        type: string
+                    some_post_param:
+                        type: string
+apiInfo:
+    paths:
+        {$urlPath}:
+            post:
+                description: 'a new post endpoint'
+                operationId: {$lambdaName}
+                produces:
+                    - application/json
+                responses:
+                    '200':
+                        description: ok
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
+                    '400':
+                        description: '400 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
+                    '404':
+                        description: '404 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
+                    '405':
+                        description: '405 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
+                    '500':
+                        description: '405 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
+                x-amazon-apigateway-integration:
+                    credentials: lambdaExecuteRole
+                    requestTemplates:
+                        application/json: "{\n    \"identity_id\" : \"$context.identity.cognitoIdentityId\",\n \"auth_provider\" : \"$context.identity.cognitoAuthenticationProvider\",\n \"auth_type\" : \"$context.identity.cognitoAuthenticationType\",\n \"identitypool_id\" : \"$context.identity.cognitoIdentityPoolId\"\n}"
+                    responses:
+                        default:
+                            statusCode: '200'
+                            responseTemplates:
+                                application/json: __passthrough__
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                        '.*httpStatus\":400.*':
+                            statusCode: '400'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                        '.*httpStatus\":404.*':
+                            statusCode: '404'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                        '.*httpStatus\":405.*':
+                            statusCode: '405'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                        '.*httpStatus\":500.*':
+                            statusCode: '500'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                security:
+                    -
+                        sigv4: []
+            options:
+                summary: 'CORS support'
+                description: "Enable CORS by returning correct headers\n"
+                consumes:
+                    - application/json
+                produces:
+                    - application/json
+                tags:
+                    - CORS
+                x-amazon-apigateway-integration:
+                    type: mock
+                    requestTemplates:
+                        application/json: "{\n  \"statusCode\" : 200\n}\n"
+                    responses:
+                        default:
+                            statusCode: '200'
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-amz-security-token'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                            responseTemplates:
+                                application/json: "{}\n"
+                responses:
+                    '200':
+                        description: 'Default response for CORS method'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string

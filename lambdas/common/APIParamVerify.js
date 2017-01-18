@@ -14,7 +14,6 @@ var paramDefs = JSON.parse(fs.readFileSync('eventParams.json', 'utf8'));
 */
 function verify(APIPath, reqMode, params) {
 
-    var definitions = paramDefs[APIPath][reqMode];
     if (typeof paramDefs[APIPath] !== 'object') {
         console.log("Undefined API Path '" + APIPath + "'");
         // this is a 404
@@ -36,6 +35,29 @@ function verify(APIPath, reqMode, params) {
             message: "Request method is not supported for the requested resource"
         };
     }
+
+    var definitions = paramDefs[APIPath][reqMode];
+    // legacy
+    if (definitions.type) {
+        return verifyDefinitions(definitions, params);
+    }
+    // updated
+    var keys = Object.keys(definitions);
+    var index;
+    for (index = 0; index < keys.length; index += 1) {
+        var err = verifyDefinitions(definitions[keys[index]], params[keys[index]]);
+        if (err) {
+            return err;
+        }
+    }
+}
+
+exports.verify = verify;
+
+function verifyDefinitions(definitions, params) {
+    console.log(definitions);
+    console.log(params);
+    console.log(typeof params);
 
     var expectedType;
     if (typeof definitions === 'object') {
@@ -64,7 +86,10 @@ function verify(APIPath, reqMode, params) {
                 // now lets validate types
                 if (typeof definitions.properties === 'object') {
                     for (index = 0; index < keys.length; index += 1) {
-                        expectedType = definitions.properties[keys[index]].type;
+                        expectedType = definitions.properties[keys[index]];
+                        if (expectedType) {
+                            expectedType = definitions.properties[keys[index]].type;
+                        }
                         if (expectedType) {
                             switch (expectedType) {
                             case 'object':
@@ -167,5 +192,3 @@ function verify(APIPath, reqMode, params) {
         }
     }
 }
-
-exports.verify = verify;
