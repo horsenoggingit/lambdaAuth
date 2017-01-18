@@ -17,12 +17,12 @@ lambdaInfo:
     language: nodejs4.3
     eventParamPaths:
         {$urlPath}:
-            post: {}
+            get: {}
 apiInfo:
     paths:
         {$urlPath}:
-            post:
-                description: 'a new post endpoint'
+            get:
+                description: 'a new get endpoint'
                 operationId: {$lambdaName}
                 produces:
                     - application/json

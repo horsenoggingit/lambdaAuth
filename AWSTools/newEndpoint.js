@@ -6,7 +6,7 @@ const fs = require('fs');
 const YAML = require('yamljs');
 
 const yargs = require('yargs')
-.usage('Create a new endpoint \nUsage: $0 [options]')
+.usage('Helper script to get started with a new endpoint. This script will initialize a new lambda configuration file and setup a boilerplate lambda node.js file. You can start with either post or get method, authed or unauthed, and specify request and response parameters/schema.\nUsage: $0 [options]')
 .alias('s', 'baseDefinitionsFile')
 .describe('s',' yaml file that contains information about your dynamodb (dynamodbInfo)')
 .default('s', './base.definitions.yaml')
@@ -18,13 +18,13 @@ const yargs = require('yargs')
 .alias('a', 'authenticated')
 .describe('a', "If present the endpoint will require authentication.")
 .alias('b', 'bodyParameters')
-.describe('b', 'Swagger compliant parameter schema definition json object. e.g. {"required" : ["username"], "properties": {"username" : "string", "id" : "number"}}')
+.describe('b', 'Swagger compliant parameter definition json array object. e.g. [{"name": "param_1", "type":"string"},{"name": "param_2", "type":"number", "required: true"}]')
 .alias('d', 'sharedBodyParameters')
 .describe('d', 'Name of parameter object defined in the base definitions file at apiInfo.sharedDefinitions. e.g. "user"')
 .alias('q', 'queryParameters')
-.describe('q', 'Swagger compliant parameter definitions json object. e.g. [{"name": "param_1", "type":"string"},{"name": "param_2", "type":"number", "required: true"}]')
+.describe('q', 'Swagger compliant parameter definitions json array object. e.g. [{"name": "param_1", "type":"string"},{"name": "param_2", "type":"number", "required: true"}]')
 .alias('r', 'response')
-.describe('r', 'Swagger compliant parameter schema definition json object. e.g. {"required" : ["username"], "properties": {"username" : "string", "id" : "number"}}')
+.describe('r', 'Swagger compliant parameter definitions json schema object. e.g. {"required" : ["username"], "properties": {"username" : {"type": "string"}, "age" : {"type": "number"}}')
 .alias('o','sharedResponse')
 .describe('o', 'Name of response object defined in the base definitions file at apiInfo.sharedDefinitions. e.g. "user"')
 .alias('m', 'methodExecution')
@@ -64,6 +64,10 @@ if (argv.sharedBodyParameters) {
     }
 }
 
+if (argv.methodExecution === "get" && (argv.sharedBodyParameters || argv.bodyParameters)) {
+    throw new Error("'get' method does not support body parameters.");
+}
+
 var pathComponents = argv.endpoint.split("/");
 var lambdaName = "";
 pathComponents.forEach(function (component) {
@@ -88,6 +92,7 @@ var templateLambdaPathName;
 switch (argv.methodExecution) {
     case 'get':
         templateDefPathName = path.join(__dirname, 'templates', 'lambdaGetTemplate.definitions.yaml');
+        templateLambdaPathName = path.join(__dirname, 'templates', 'lambdaPostTemplate.js');
         break;
     case 'post':
         templateDefPathName = path.join(__dirname, 'templates', 'lambdaPostTemplate.definitions.yaml');
@@ -151,13 +156,26 @@ var has_mapped_params = (argv.authenticated);
 
 var paramMapper;
 
+if (argv.bodyParameters) {
+    // convert from individual parameter definitions to a schema
+    var params = JSON.parse(argv.bodyParameters);
+    var outParam = {required: [], properties:{}, type: 'object'};
+    params.forEach(function (parameterBlock) {
+        if (parameterBlock.required) {
+            outParam.required.push(parameterBlock.name);
+        }
+        outParam.properties[parameterBlock.name] = {type: parameterBlock.type};
+    });
+    argv.bodyParameters = JSON.stringify(outParam);
+}
+
 if (argv.sharedBodyParameters) {
     // fetch the parameter definition
     argv.bodyParameters = JSON.stringify(baseDefinitions.apiInfo.sharedDefinitions[argv.sharedBodyParameters]);
 }
 
-// to simplify things expect json in body, just map all params over
-
+// To simplify things expect json in body, just map all params over.
+// The query parameters should be extracted from the map and assinged to their own object.
 if (argv.bodyParameters) {
     if (argv.methodExecution === 'post') {
         paramMapper = "\"bodyParams\": $input.json('$$'), \"queryParams\": {#foreach($queryParam in $input.params().querystring.keySet())\"$queryParam\": \"$util.escapeJavaScript($input.params().querystring.get($queryParam))\" #if($foreach.hasNext),#end #end }";
