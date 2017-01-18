@@ -64,7 +64,7 @@ To help get the ball rolling new API endpoints can be easily added using a comma
 
 In the root project folder run the command "AWSTools/newEndpoint.js -h".
 
-You will get the following text followed by a number of parameters. "Helper script to get started with a new endpoint. This script will initialize a new lambda configuration file and setup a boilerplate lambda node.js file. You can start with either post or get method, authed or unauthed, and specify request and response parameters/schema."
+You will get the following text and parameter definitions. "Helper script to get started with a new endpoint. This script will initialize a new lambda configuration file and setup a boilerplate lambda node.js file. You can start with either post or get method, authed or unauthed, and specify request and response parameters/schema."
 
 In this excersize we will create a new authenticated get endpoint that accepts a parameter and makes a new response object.
 
