@@ -24,7 +24,7 @@ const yargs = require('yargs')
 .alias('q', 'queryParameters')
 .describe('q', 'Swagger compliant parameter definitions json array object. e.g. [{"name": "param_1", "type":"string"},{"name": "param_2", "type":"number", "required: true"}]')
 .alias('r', 'response')
-.describe('r', 'Swagger compliant parameter definitions json schema object. e.g. {"required" : ["username"], "properties": {"username" : {"type": "string"}, "age" : {"type": "number"}}')
+.describe('r', 'Swagger compliant parameter definitions json schema object (http://json-schema.org). e.g. {"required" : ["username"], "properties": {"username" : {"type": "string"}, "age" : {"type": "number"}}')
 .alias('o','sharedResponse')
 .describe('o', 'Name of response object defined in the base definitions file at apiInfo.sharedDefinitions. e.g. "user"')
 .alias('m', 'methodExecution')
@@ -113,6 +113,9 @@ if (!argv.authenticated) {
     delete templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution].security;
 }
 
+if (argv.sharedResponse || argv.response) {
+    console.log("Adding response.");
+}
 if (argv.sharedResponse) {
     templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution].responses['200'].schema = {'$ref' : '#/definitions/' + argv.sharedResponse};
 } else {
@@ -121,29 +124,11 @@ if (argv.sharedResponse) {
 
 if (argv.response) {
     // now add the parameters to the base definition file
-    var sharedResponseDefinition = {
-                                    type: 'object',
-                                    required: [],
-                                    properties: {}
-                                  };
-    var responseParsed = JSON.parse(argv.response);
-
-    if (responseParsed.required) {
-      responseParsed.required.forEach(function (requiredParam) {
-          sharedResponseDefinition.required.push(requiredParam);
-      });
-    }
-    if (responseParsed.properties) {
-      Object.keys(responseParsed.properties).forEach(function (propertyName) {
-          sharedResponseDefinition.properties[propertyName] = responseParsed.properties[propertyName];
-      });
-    }
 
     templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution].responses['200'].schema = {'$ref' : '#/definitions/' + lambdaName + "Response"};
 
-    baseDefinitions.apiInfo.sharedDefinitions[lambdaName + "Response"] = sharedResponseDefinition;
+    baseDefinitions.apiInfo.sharedDefinitions[lambdaName + "Response"] = JSON.parse(argv.response);
     fs.writeFileSync(argv.baseDefinitionsFile, YAML.stringify(baseDefinitions, 15));
-
 }
 
 // now handle how the endpoint params map to the lambda handler event
@@ -275,20 +260,25 @@ if (argv.bodyParameters && argv.methodExecution === 'post') {
     }
 }
 
+// add any query parameters
 if (argv.queryParameters) {
     if (!templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution].parameters) {
         templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution].parameters = [];
     }
     var params = JSON.parse(argv.queryParameters);
+
     params.forEach(function (parameterObj) {
         parameterObj.in = "query";
         templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution].parameters.push(parameterObj);
     });
 }
-
+console.log("Writing new definitions file " + newDefinitionsFile);
 fs.writeFileSync(newDefinitionsFile, YAML.stringify(templateDefinitions, 15));
 
+// create the path to the new lambda
 awsc.createPath(newLambdaDir);
+
+console.log("Creating new template lambda node.js file " + newLambdaFile);
 
 // process the lambda js file
 var lambdaFile = fs.readFileSync(templateLambdaPathName,'utf8');
@@ -298,3 +288,5 @@ regexp = new RegExp("{[$]urlPath}", "g");
 lambdaFile = lambdaFile.replace(regexp, argv.endpoint);
 
 fs.writeFileSync(newLambdaFile, lambdaFile);
+
+console.log("Done.");
