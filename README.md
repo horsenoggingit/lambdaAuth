@@ -119,9 +119,9 @@ You will see that that the file `swaggerAPI.yaml` file in the root directory has
 
 Finally we upload the API and deploy it:
 
- `AWSTools/uploadRestAPI.js
+ `AWSTools/uploadRestAPI.js`
  
- AWSTools/deployAPI.js`
+ `AWSTools/deployAPI.js`
 
 Now our new lambda backed API is live and ready to go!
 
