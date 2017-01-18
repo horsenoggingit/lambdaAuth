@@ -1,1 +1,0 @@
-{"/user/me":{"get":{"type":"object","required":["identity_id","auth_provider","auth_type","identitypool_id"],"properties":{"identity_id":{"type":"string"},"auth_provider":{"type":"string"},"auth_type":{"type":"string"},"identitypool_id":{"type":"string"}}}}}
