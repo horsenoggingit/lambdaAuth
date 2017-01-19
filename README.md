@@ -133,5 +133,14 @@ This command updates all client SDKs that are defined in the client directory (f
 
 At the moment this API doens't 'do' anything except return errors if required parameters are not specified. Now you can add the business logic you want in `lambdas/introRandom/introRandom.js`.
 
+You can copy and paste the following to the command line to do everthing in one shot:
 
-
+`AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated`
+`AWSTools/updateAWSConstants.js --constantsType lambda`
+`AWSTools/updateLinkedFiles.js --lambdaName introRandom`
+`AWSTools/updateLambdaHandlerEventParams.js`
+`AWSTools/createLambda.js --lambdaName introRandom`
+`AWSTools/coalesceSwaggerAPIDefinition.js`
+`AWSTools/uploadRestAPI.js`
+`AWSTools/deployAPI.js`
+`AWSTools/getClientSDK.js`
