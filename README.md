@@ -142,7 +142,7 @@ AWSTools/getClientSDK.js;`
 
 The follwing utilities parse the various definitions files to create or destroy AWS resources. They are intended to be executed in the project root folder and their defaults should be sufficient for most cases. If a lambda or client is not specified the action will occur on all lambdas or clients in scope.
 
-**coalesceSwaggerAPIDefinition.js**  
+````**coalesceSwaggerAPIDefinition.js**  
 Create a single API definitions file to upload to AWS.
 x-amazon-apigateway-integration fields are updated with latest role and lambda
 arn.
@@ -462,7 +462,7 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -a, --apiDefinitionFile    yaml swagger API file to upload to AWS
                                                   [default: "./swaggerAPI.yaml"]
-  -h, --help                 Show help                                 [boolean]
+  -h, --help                 Show help                                 [boolean]````
 
 
 
