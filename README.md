@@ -324,6 +324,24 @@ Options:
                              resource to create.                [default: "dev"]
   -h, --help                 Show help                                 [boolean]
 
+**deployParameters.js**
+Print or delete deploy parameters from project.
+WARNING: You cannot recover these settings and will have to reomve the deploy
+manually in the AWS console once deleted.
+Usage: AWSTools/deployParameters.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --lambdaDefinitionsDir  directory that contains lambda definition files
+                              and implementations. <lambdaName>.zip archives
+                              will be placed here.        [default: "./lambdas"]
+  -c, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -d, --delete                delete the deploy parameters
+  -p, --print                 print the deploy parameters
+  -h, --help                  Show help                                [boolean]
+
 **getClientSDK.js**  
 Get AWS API Gateway SDK for the project clients.
 Usage: getClientSDK.js [options]
