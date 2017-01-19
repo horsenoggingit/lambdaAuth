@@ -52,13 +52,6 @@ In the **root** directory of the project you will find **base.definitions.yaml**
 
 **Next introduce the definitions.yaml files in the lambda and client directories**
 
-
-##AWS Utilities##
-TODO
-
-##Project Configuration##
-TODO
-
 ##Adding a New Endpoint##
 To help get the ball rolling new API endpoints can be easily added using a command line tool. After going through the installation process outlined above it should only take a few minutes to add another endpoint and update the clients.
 
@@ -144,3 +137,10 @@ AWSTools/coalesceSwaggerAPIDefinition.js;
 AWSTools/uploadRestAPI.js;
 AWSTools/deployAPI.js;
 AWSTools/getClientSDK.js;`
+
+##AWS Utilities##
+TODO
+
+##Project Configuration##
+TODO
+
