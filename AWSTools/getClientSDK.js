@@ -42,7 +42,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
 }
 
 var awsRequests = [];
-forEachLambdaDefinition(function (fileName) {
+forEachClientDefinition(function (fileName) {
     // here we would want to fork to do ops in parallel
     var definitions = YAML.load(path.join(argv.clientDefinitionsDir,fileName));
     if (typeof definitions !== 'object') {
@@ -133,7 +133,7 @@ function() {
 }
 );
 
-function forEachLambdaDefinition (callback, doneCallback) {
+function forEachClientDefinition (callback, doneCallback) {
     fs.readdir(argv.clientDefinitionsDir, function (err, files) {
         if (err) {
             throw err;
