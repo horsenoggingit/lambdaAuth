@@ -128,21 +128,21 @@ At the moment this API doens't 'do' anything except return errors if required pa
 
 You can copy and paste the following to the command line to do everthing in one shot:
 
-`AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated;
-AWSTools/updateAWSConstants.js --constantsType lambda;
-AWSTools/updateLinkedFiles.js --lambdaName introRandom;
-AWSTools/updateLambdaHandlerEventParams.js;
-AWSTools/createLambda.js --lambdaName introRandom;
-AWSTools/coalesceSwaggerAPIDefinition.js;
-AWSTools/uploadRestAPI.js;
-AWSTools/deployAPI.js;
-AWSTools/getClientSDK.js;`
+`AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated;  
+AWSTools/updateAWSConstants.js --constantsType lambda;  
+AWSTools/updateLinkedFiles.js --lambdaName introRandom;  
+AWSTools/updateLambdaHandlerEventParams.js;  
+AWSTools/createLambda.js --lambdaName introRandom;  
+AWSTools/coalesceSwaggerAPIDefinition.js;  
+AWSTools/uploadRestAPI.js;  
+AWSTools/deployAPI.js;  
+AWSTools/getClientSDK.js;`  
 
 ##AWS Utilities##
 
 The follwing utilities parse the various definitions files to create or destroy AWS resources. They are intended to be executed in the project root folder and their defaults should be sufficient for most cases. If a lambda or client is not specified the action will occur on all lambdas or clients in scope.
 
-**coalesceSwaggerAPIDefinition.js**
+**coalesceSwaggerAPIDefinition.js**  
 Create a single API definitions file to upload to AWS.
 x-amazon-apigateway-integration fields are updated with latest role and lambda
 arn.
@@ -159,7 +159,7 @@ Options:
   -c, --commonModelDefinitionFile  yaml file with common definitions of models
   -h, --help                       Show help                           [boolean]
 
-**createAngularClientBucket.js**
+**createAngularClientBucket.js**  
 Creates an s3 bucket if needed and configures as static web host.
 Usage: createAngularClientBucket.js [options]
 
@@ -170,7 +170,7 @@ Options:
                               and implementations.        [default: "./clients"]
   -h, --help                  Show help                                [boolean]
 
-**createDynamodb.js**
+**createDynamodb.js**  
 Create the tables required for the project.
 If a table with the same name already exists a new table
 will not be create and the existing table information will be used.
@@ -185,7 +185,7 @@ Options:
                              If not specified all db found will be created
   -h, --help                 Show help                                 [boolean]
 
-**createIdentityPool.js**
+**createIdentityPool.js**  
 Create the identity pools required for the project.
 If identity pools with the same name already exist a new pool will not be
 created and the existing pool infomation will be used.
@@ -196,7 +196,7 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -h, --help                 Show help                                 [boolean]
 
-**createLambda.js**
+**createLambda.js**  
 Create the lambdas for the project.
 If a lambda with the same name already exists the operation will fail.
 Use "deleteLambda" first to remove the exisiting function.
@@ -216,7 +216,7 @@ Options:
                               value on success
   -h, --help                  Show help                                [boolean]
 
-**createRestAPI.js**
+**createRestAPI.js**  
 Create a new API
 Usage: createRestAPI.js [options]
 
@@ -230,7 +230,7 @@ Options:
                              success
   -h, --help                 Show help                                 [boolean]
 
-**createRole.js**
+**createRole.js**  
 Create project roles and attach policies.
 Usage: createRole.js [options]
 
@@ -241,7 +241,7 @@ Options:
                                 [required] [choices: "api", "lambda", "cognito"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteAngularClientBucket.js**
+**deleteAngularClientBucket.js**  
 Deletes the s3 bucket and removes it from the client defiition file.
 Usage: deleteAngularClientBucket.js [options]
 
@@ -252,7 +252,7 @@ Options:
                               and implementations.        [default: "./clients"]
   -h, --help                  Show help                                [boolean]
 
-**deleteDynamodb.js**
+**deleteDynamodb.js**  
 Delete project dynamodb.
 Usage: deleteDynamodb.js [options]
 
@@ -264,7 +264,7 @@ Options:
                              specified all tables found will be deleted
   -h, --help                 Show help                                 [boolean]
 
-**deleteIdentityPool.js**
+**deleteIdentityPool.js**  
 Delete project identity pools.
 Usage: deleteIdentityPool.js [options]
 
@@ -273,7 +273,7 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteLambda.js**
+**deleteLambda.js**  
 Delete the project lambdas.
 Usage: deleteLambda.js [options]
 
@@ -287,7 +287,7 @@ Options:
                               lambdas found will be uploaded
   -h, --help                  Show help                                [boolean]
 
-**deleteRestAPI.js**
+**deleteRestAPI.js**  
 Delete project API definitions.
 Usage: deleteRestAPI.js [options]
 
@@ -296,7 +296,7 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteRole.js**
+**deleteRole.js**  
 Delete a role, detaching policies first.
 Note: at the moment this script only detaches policies specified
 in config files.
@@ -309,7 +309,7 @@ Options:
                                 [required] [choices: "api", "lambda", "cognito"]
   -h, --help                 Show help                                 [boolean]
 
-**deployAPI.js**
+**deployAPI.js**  
 Deploy API to a stage.
 Usage: deployAPI.js [options]
 
@@ -322,7 +322,7 @@ Options:
                              resource to create.                [default: "dev"]
   -h, --help                 Show help                                 [boolean]
 
-**getClientSDK.js**
+**getClientSDK.js**  
 Get AWS API Gateway SDK for the project clients.
 Usage: getClientSDK.js [options]
 
@@ -335,7 +335,7 @@ Options:
                               clients found will be uploaded
   -h, --help                  Show help                                [boolean]
 
-**newEndpoint.js**
+**newEndpoint.js**  
 Helper script to get started with a new endpoint. This script will initialize a
 new lambda configuration file and setup a boilerplate lambda node.js file. You
 can start with either post or get method, authed or unauthed, and specify
@@ -376,7 +376,7 @@ Options:
                                              [required] [choices: "get", "post"]
   -h, --help                  Show help                                [boolean]
 
-**syncAngularClientBucket.js**
+**syncAngularClientBucket.js**  
 Syncs client angular files to their s3 bucket. Creates the bucket if needed and
 configures as static web host.
 Usage: syncAngularClientBucket.js [options]
@@ -388,7 +388,7 @@ Options:
                               and implementations.        [default: "./clients"]
   -h, --help                  Show help                                [boolean]
 
-**updateAWSConstants.js**
+**updateAWSConstants.js**  
 Create a json description of constants needed to access AWS services.
 Usage: updateAWSConstants.js [options]
 
@@ -405,7 +405,7 @@ Options:
                                         [required] [choices: "lambda", "client"]
   -h, --help                 Show help                                 [boolean]
 
-**updateLambdaHandlerEventParams.js**
+**updateLambdaHandlerEventParams.js**  
 Create a json description compatible with APIParamVerify.js to validate lambda
 input arguments from API.
 Usage: updateLambdaHandlerEventParams.js [options]
@@ -419,7 +419,7 @@ Options:
                               directory
   -h, --help                  Show help                                [boolean]
 
-**updateLinkedFiles.js**
+**updateLinkedFiles.js**  
 Removes and re-creates link files base on linkFiles in
 [your_lambda].definitions.yaml.
 Usage: updateLinkedFiles.js [options]
@@ -431,7 +431,7 @@ Options:
   -c, --cleanOnly             Just delete the links
   -h, --help                  Show help                                [boolean]
 
-**uploadLambda.js**
+**uploadLambda.js**  
 Update project lambdas.
 "createLambda" should have been previously called.
 "Usage: uploadLambda.js [options]
@@ -452,7 +452,7 @@ Options:
                                             not upload
   -h, --help                                Show help                  [boolean]
 
-**uploadRestAPI.js**
+**uploadRestAPI.js**  
 Upldate project API.
 "createAPI" should have been previously called.
 Usage: uploadRestAPI.js [options]
