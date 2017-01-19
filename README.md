@@ -139,7 +139,332 @@ AWSTools/deployAPI.js;
 AWSTools/getClientSDK.js;`
 
 ##AWS Utilities##
-TODO
+
+The follwing utilities parse the various definitions files to create or destroy AWS resources. They are intended to be executed in the project root folder and their defaults should be sufficient for most cases. If a lambda or client is not specified the action will occur on all lambdas or clients in scope.
+
+**coalesceSwaggerAPIDefinition.js**
+Create a single API definitions file to upload to AWS.
+x-amazon-apigateway-integration fields are updated with latest role and lambda
+arn.
+Usage: coalesceSwaggerAPIDefinition.js [options]
+
+Options:
+  -s, --baseDefinitionsFile        yaml file that contains top level definitions
+                                   including swagger template header
+                                            [default: "./base.definitions.yaml"]
+  -l, --lambdaDefinitionsDir       directory containing lambda definition yaml
+                                   files                  [default: "./lambdas"]
+  -o, --outputFilename             coalesced yaml file for upload to AWS
+                                                    [default: "swaggerAPI.yaml"]
+  -c, --commonModelDefinitionFile  yaml file with common definitions of models
+  -h, --help                       Show help                           [boolean]
+
+**createAngularClientBucket.js**
+Creates an s3 bucket if needed and configures as static web host.
+Usage: createAngularClientBucket.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -h, --help                  Show help                                [boolean]
+
+**createDynamodb.js**
+Create the tables required for the project.
+If a table with the same name already exists a new table
+will not be create and the existing table information will be used.
+Usage: createDynamodb.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your
+                             dynamodb (dynamodbInfo)
+                                            [default: "./base.definitions.yaml"]
+  -k                         a specific dynamo table key to process (the name of
+                             the db is environment.AWSResourceNamePrefix + key).
+                             If not specified all db found will be created
+  -h, --help                 Show help                                 [boolean]
+
+**createIdentityPool.js**
+Create the identity pools required for the project.
+If identity pools with the same name already exist a new pool will not be
+created and the existing pool infomation will be used.
+Usage: createIdentityPool.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+**createLambda.js**
+Create the lambdas for the project.
+If a lambda with the same name already exists the operation will fail.
+Use "deleteLambda" first to remove the exisiting function.
+Usage: createLambda.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --lambdaDefinitionsDir  directory that contains lambda definition files
+                              and implementations. <lambdaName>.zip archives
+                              will be placed here.        [default: "./lambdas"]
+  -n, --lambdaName            a specific lambda to process. If not specified all
+                              lambdas found will be uploaded
+  -a, --archiveOnly           Only perform archive operation. Do not upload
+  -u, --updateArnLambda       ignore existing "arnLambda" in "lambdaInfo"
+                              section of definitions file and overwrite new
+                              value on success
+  -h, --help                  Show help                                [boolean]
+
+**createRestAPI.js**
+Create a new API
+Usage: createRestAPI.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -a, --apiDefinitionFile    yaml swagger API file to upload to AWS
+                                                  [default: "./swaggerAPI.yaml"]
+  -u, --updateAWSId          ignore existing "awsId" in "apiInfo" section of
+                             base definitions file and overwrite new value on
+                             success
+  -h, --help                 Show help                                 [boolean]
+
+**createRole.js**
+Create project roles and attach policies.
+Usage: createRole.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -t, --roleType             which roles to create [api | lambda | cognito]
+                                [required] [choices: "api", "lambda", "cognito"]
+  -h, --help                 Show help                                 [boolean]
+
+**deleteAngularClientBucket.js**
+Deletes the s3 bucket and removes it from the client defiition file.
+Usage: deleteAngularClientBucket.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -h, --help                  Show help                                [boolean]
+
+**deleteDynamodb.js**
+Delete project dynamodb.
+Usage: deleteDynamodb.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your
+                             dynamodb (dynamodbInfo)
+                                            [default: "./base.definitions.yaml"]
+  -n                         a specific dynamo table key to process. If not
+                             specified all tables found will be deleted
+  -h, --help                 Show help                                 [boolean]
+
+**deleteIdentityPool.js**
+Delete project identity pools.
+Usage: deleteIdentityPool.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+**deleteLambda.js**
+Delete the project lambdas.
+Usage: deleteLambda.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --lambdaDefinitionsDir  directory that contains lambda definition files
+                              and implementations. <lambdaName>.zip archives
+                              will be placed here.        [default: "./lambdas"]
+  -n, --lambdaName            a specific lambda to process. If not specified all
+                              lambdas found will be uploaded
+  -h, --help                  Show help                                [boolean]
+
+**deleteRestAPI.js**
+Delete project API definitions.
+Usage: deleteRestAPI.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+**deleteRole.js**
+Delete a role, detaching policies first.
+Note: at the moment this script only detaches policies specified
+in config files.
+Usage: deleteRole.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -t, --roleType             which roles to delete
+                                [required] [choices: "api", "lambda", "cognito"]
+  -h, --help                 Show help                                 [boolean]
+
+**deployAPI.js**
+Deploy API to a stage.
+Usage: deployAPI.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -d, --description          The description for the  Deployment resource to
+                             create.          [default: "Yet another deploy..."]
+  -t, --stageName            The name of the Stage resource for the Deployment
+                             resource to create.                [default: "dev"]
+  -h, --help                 Show help                                 [boolean]
+
+**getClientSDK.js**
+Get AWS API Gateway SDK for the project clients.
+Usage: getClientSDK.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -n, --clientName            a specific client to process. If not specified all
+                              clients found will be uploaded
+  -h, --help                  Show help                                [boolean]
+
+**newEndpoint.js**
+Helper script to get started with a new endpoint. This script will initialize a
+new lambda configuration file and setup a boilerplate lambda node.js file. You
+can start with either post or get method, authed or unauthed, and specify
+request and response parameters/schema.
+Usage: newEndpoint.js [options]
+
+Options:
+  -s, --baseDefinitionsFile    yaml file that contains information about your
+                               dynamodb (dynamodbInfo)
+                                            [default: "./base.definitions.yaml"]
+  -l, --lambdaDefinitionsDir  directory that contains lambda definition files
+                              and implementations.        [default: "./lambdas"]
+  -e, --endpoint              The url path (e.g. '/user/me'). The lambda for
+                              this endpoint will be camel case of the path
+                              components ('userMe')                   [required]
+  -a, --authenticated         If present the endpoint will require
+                              authentication.
+  -b, --bodyParameters        Swagger compliant parameter definition json array
+                              object. e.g. [{"name": "param_1",
+                              "type":"string"},{"name": "param_2",
+                              "type":"number", "required: true"}]
+  -d, --sharedBodyParameters  Name of parameter object defined in the base
+                              definitions file at apiInfo.sharedDefinitions.
+                              e.g. "user"
+  -q, --queryParameters       Swagger compliant parameter definitions json array
+                              object. e.g. [{"name": "param_1",
+                              "type":"string"},{"name": "param_2",
+                              "type":"number", "required: true"}]
+  -r, --response              Swagger compliant parameter definitions json
+                              schema object (http://json-schema.org). e.g.
+                              {"required" : ["username"], "properties":
+                              {"username" : {"type": "string"}, "age" : {"type":
+                              "number"}}
+  -o, --sharedResponse        Name of response object defined in the base
+                              definitions file at apiInfo.sharedDefinitions.
+                              e.g. "user"
+  -m, --methodExecution       Select method execution type for API
+                                             [required] [choices: "get", "post"]
+  -h, --help                  Show help                                [boolean]
+
+**syncAngularClientBucket.js**
+Syncs client angular files to their s3 bucket. Creates the bucket if needed and
+configures as static web host.
+Usage: syncAngularClientBucket.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -h, --help                  Show help                                [boolean]
+
+**updateAWSConstants.js**
+Create a json description of constants needed to access AWS services.
+Usage: updateAWSConstants.js [options]
+
+Options:
+  -l, --definitionsDir       directory containing definition yaml files
+  -s, --baseDefinitionsFile  yaml file that contains information about your
+                             dynamodb (dynamodbInfo)
+                                            [default: "./base.definitions.yaml"]
+  -o, --outputFilename       name of file that will be added to each lambda
+                             directory            [default: "AWSConstants.json"]
+  -n, --lambdaName           update handler event params for only this lambda
+                             directory
+  -t, --constantsType        which constants to update [lambda | client]
+                                        [required] [choices: "lambda", "client"]
+  -h, --help                 Show help                                 [boolean]
+
+**updateLambdaHandlerEventParams.js**
+Create a json description compatible with APIParamVerify.js to validate lambda
+input arguments from API.
+Usage: updateLambdaHandlerEventParams.js [options]
+
+Options:
+  -l, --lambdaDefinitionsDir  directory containing lambda definition yaml files
+                                                          [default: "./lambdas"]
+  -o, --outputFilename        name of file that will be added to each lambda
+                              directory            [default: "eventParams.json"]
+  -n, --lambdaName            update handler event params for only this lambda
+                              directory
+  -h, --help                  Show help                                [boolean]
+
+**updateLinkedFiles.js**
+Removes and re-creates link files base on linkFiles in
+[your_lambda].definitions.yaml.
+Usage: updateLinkedFiles.js [options]
+
+Options:
+  -l, --lambdaDefinitionsDir  Directory containing lambda definition yaml files
+                                                          [default: "./lambdas"]
+  -n, --lambdaName            Only process links for this lambda
+  -c, --cleanOnly             Just delete the links
+  -h, --help                  Show help                                [boolean]
+
+**uploadLambda.js**
+Update project lambdas.
+"createLambda" should have been previously called.
+"Usage: uploadLambda.js [options]
+
+Options:
+  -s, --baseDefinitionsFile                 yaml file that contains information
+                                            about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --lambdaDefinitionsDir,               directory that contains lambda
+  --lambdaDefinitionsDir                    definition files and
+                                            implementations. <lambdaName>.zip
+                                            archives will be placed here.
+                                                          [default: "./lambdas"]
+  -n, --lambdaName                          a specific lambda to process. If not
+                                            specified all lambdas found will be
+                                            uploaded
+  -a, --archiveOnly                         Only perform archive operation. Do
+                                            not upload
+  -h, --help                                Show help                  [boolean]
+
+**uploadRestAPI.js**
+Upldate project API.
+"createAPI" should have been previously called.
+Usage: uploadRestAPI.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -a, --apiDefinitionFile    yaml swagger API file to upload to AWS
+                                                  [default: "./swaggerAPI.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+
 
 ##Project Configuration##
 TODO
