@@ -49,7 +49,6 @@ lambdaInfo:
                         type: string
                     dob:
                         type: number
-    arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testsignup'
 apiInfo:
     paths:
         /signup:
