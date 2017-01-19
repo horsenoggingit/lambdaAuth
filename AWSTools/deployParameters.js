@@ -6,7 +6,7 @@ const path = require('path');
 const vp = require(path.join(__dirname, 'awscommonutils'));
 
 const yargs = require('yargs')
-.usage('Print or delete deploy parameters from project.\nWARNING: You cannot recover these settings are will have to delete the deploy manually once deleted.\nUsage: $0 [options]')
+.usage('Print or delete deploy parameters from project.\nWARNING: You cannot recover these settings and will have to remove the deploy manually in the AWS console once deleted.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
