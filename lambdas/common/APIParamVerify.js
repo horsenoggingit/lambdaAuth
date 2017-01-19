@@ -55,9 +55,6 @@ function verify(APIPath, reqMode, params) {
 exports.verify = verify;
 
 function verifyDefinitions(definitions, params) {
-    console.log(definitions);
-    console.log(params);
-    console.log(typeof params);
 
     var expectedType;
     if (typeof definitions === 'object') {
@@ -103,13 +100,17 @@ function verifyDefinitions(definitions, params) {
                                 }
                                 break;
                             case 'number':
-                                if (typeof params[keys[index]] !== 'number') {
+                                if ((typeof params[keys[index]] !== 'number') && isNaN(params[keys[index]])) {
                                     return {
                                         errorType: "BadRequest",
                                         httpStatus: 400,
                                         requestId: "",
                                         message: "Validation error: parameter '" + keys[index] + "' is not number."
                                     };
+                                }
+                                // we want a number so convert it to one.
+                                if ((typeof params[keys[index]] !== 'number')) {
+                                    params[keys[index]] = +params[keys[index]];
                                 }
                                 break;
                             case 'string':
@@ -176,14 +177,14 @@ function verifyDefinitions(definitions, params) {
             }
             break;
         case "number":
-            if (typeof params === 'number') {
+            if ((typeof params === 'number') || !isNaN(params)) {
                 return null;
             } else {
                 return {
                     errorType: "BadRequest",
                     httpStatus: 400,
                     requestId: "",
-                    message: "Validation error: expected string."
+                    message: "Validation error: expected number."
                 };
             }
             break;

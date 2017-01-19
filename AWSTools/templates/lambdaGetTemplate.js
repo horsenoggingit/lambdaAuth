@@ -17,7 +17,7 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 function handler(event, context, callback) {
 
     // make sure we have needed params
-    var verifyResult = APIParamVerify.verify("{$urlPath}", "post", event);
+    var verifyResult = APIParamVerify.verify("{$urlPath}", "get", event);
     if (verifyResult) {
         verifyResult.requestId = context.awsRequestId;
         console.log(verifyResult);

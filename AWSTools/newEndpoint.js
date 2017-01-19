@@ -92,7 +92,7 @@ var templateLambdaPathName;
 switch (argv.methodExecution) {
     case 'get':
         templateDefPathName = path.join(__dirname, 'templates', 'lambdaGetTemplate.definitions.yaml');
-        templateLambdaPathName = path.join(__dirname, 'templates', 'lambdaPostTemplate.js');
+        templateLambdaPathName = path.join(__dirname, 'templates', 'lambdaGetTemplate.js');
         break;
     case 'post':
         templateDefPathName = path.join(__dirname, 'templates', 'lambdaPostTemplate.definitions.yaml');
@@ -133,7 +133,7 @@ if (argv.response) {
 
 // now handle how the endpoint params map to the lambda handler event
 
-var authedEndpointDefaultMapping = "{ \"awsParams\" = {\n \"identity_id\" : \"$context.identity.cognitoIdentityId\",\n \"auth_provider\" : \"$context.identity.cognitoAuthenticationProvider\",\n \"auth_type\" : \"$context.identity.cognitoAuthenticationType\",\n \"identitypool_id\" : \"$context.identity.cognitoIdentityPoolId\"\n} $insertMapper }";
+var authedEndpointDefaultMapping = "{ \"awsParams\" : {\n \"identity_id\" : \"$context.identity.cognitoIdentityId\",\n \"auth_provider\" : \"$context.identity.cognitoAuthenticationProvider\",\n \"auth_type\" : \"$context.identity.cognitoAuthenticationType\",\n \"identitypool_id\" : \"$context.identity.cognitoIdentityPoolId\"\n} $insertMapper }";
 var unauthedEndpointDefaultMappin = "{$insertMapper}";
 
 var endpointMappingJSONString = (argv.authenticated) ? authedEndpointDefaultMapping : unauthedEndpointDefaultMappin;
@@ -164,9 +164,9 @@ if (argv.sharedBodyParameters) {
 if (argv.bodyParameters) {
     if (argv.methodExecution === 'post') {
         paramMapper = "\"bodyParams\": $input.json('$$'), \"queryParams\": {#foreach($queryParam in $input.params().querystring.keySet())\"$queryParam\": \"$util.escapeJavaScript($input.params().querystring.get($queryParam))\" #if($foreach.hasNext),#end #end }";
-    } else if (argv.methodExecution === 'get') {
-        paramMapper = "\"queryParams\": {#foreach($queryParam in $input.params().querystring.keySet())\"$queryParam\": \"$util.escapeJavaScript($input.params().querystring.get($queryParam))\" #if($foreach.hasNext),#end #end }";
     }
+} else if (argv.queryParameters) {
+    paramMapper = "\"queryParams\": {#foreach($queryParam in $input.params().querystring.keySet())\"$queryParam\": \"$util.escapeJavaScript($input.params().querystring.get($queryParam))\" #if($foreach.hasNext),#end #end }";
 } else {
     paramMapper = "";
     has_mapped_params = false;
@@ -185,7 +185,7 @@ templateDefinitions.apiInfo.paths[argv.endpoint][argv.methodExecution]['x-amazon
 // update definitions to handle expected event parameters (eventParamPaths)
 var authedEventParamPaths = { awsParams: {
                                     type: 'object',
-                                    required: ["aws_identity_id", "aws_auth_provider", "aws_auth_type", "aws_identitypool_id"],
+                                    required: ["identity_id", "auth_provider", "auth_type", "identitypool_id"],
                                     properties: {
                                         aws_identity_id: {type: "string"},
                                         aws_auth_provider:  {type: "string"},
