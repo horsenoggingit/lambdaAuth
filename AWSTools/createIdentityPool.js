@@ -76,7 +76,7 @@ getIdentityPools(function (serverIdentityPools) {
             switch (authProvider) {
                 case 'custom':
                 awscommon.verifyPath(poolDef.authProviders,['custom', 'developerProvider'],'s','custom developer provider for pool "' + identityPoolKey + '""').exitOnError();
-                params['developer-provider_name'] = {type: 'string', value:poolDef.authProviders.custom.developerProvider};
+                params['developer-provider-name'] = {type: 'string', value:poolDef.authProviders.custom.developerProvider};
                 break;
                 default:
             }
