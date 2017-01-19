@@ -135,12 +135,12 @@ At the moment this API doens't 'do' anything except return errors if required pa
 
 You can copy and paste the following to the command line to do everthing in one shot:
 
-`AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated`
-`AWSTools/updateAWSConstants.js --constantsType lambda`
-`AWSTools/updateLinkedFiles.js --lambdaName introRandom`
-`AWSTools/updateLambdaHandlerEventParams.js`
-`AWSTools/createLambda.js --lambdaName introRandom`
-`AWSTools/coalesceSwaggerAPIDefinition.js`
-`AWSTools/uploadRestAPI.js`
-`AWSTools/deployAPI.js`
-`AWSTools/getClientSDK.js`
+`AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated
+AWSTools/updateAWSConstants.js --constantsType lambda
+AWSTools/updateLinkedFiles.js --lambdaName introRandom
+AWSTools/updateLambdaHandlerEventParams.js
+AWSTools/createLambda.js --lambdaName introRandom
+AWSTools/coalesceSwaggerAPIDefinition.js
+AWSTools/uploadRestAPI.js
+AWSTools/deployAPI.js
+AWSTools/getClientSDK.js`
