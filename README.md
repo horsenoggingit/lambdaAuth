@@ -127,8 +127,8 @@ This command updates all client SDKs that are defined in the client directory (f
 At the moment this API doens't 'do' anything except return errors if required parameters are not specified. Now you can add the business logic you want in `lambdas/introRandom/introRandom.js`.
 
 You can copy and paste the following to the command line to do everthing in one shot:
-
-`AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated;  
+```
+AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated;  
 AWSTools/updateAWSConstants.js --constantsType lambda;  
 AWSTools/updateLinkedFiles.js --lambdaName introRandom;  
 AWSTools/updateLambdaHandlerEventParams.js;  
@@ -137,12 +137,14 @@ AWSTools/coalesceSwaggerAPIDefinition.js;
 AWSTools/uploadRestAPI.js;  
 AWSTools/deployAPI.js;  
 AWSTools/getClientSDK.js;`  
+```
 
 ##AWS Utilities##
 
 The follwing utilities parse the various definitions files to create or destroy AWS resources. They are intended to be executed in the project root folder and their defaults should be sufficient for most cases. If a lambda or client is not specified the action will occur on all lambdas or clients in scope.
 
-````**coalesceSwaggerAPIDefinition.js**  
+```
+**coalesceSwaggerAPIDefinition.js**  
 Create a single API definitions file to upload to AWS.
 x-amazon-apigateway-integration fields are updated with latest role and lambda
 arn.
@@ -462,7 +464,8 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -a, --apiDefinitionFile    yaml swagger API file to upload to AWS
                                                   [default: "./swaggerAPI.yaml"]
-  -h, --help                 Show help                                 [boolean]````
+  -h, --help                 Show help                                 [boolean]
+  ```
 
 
 
