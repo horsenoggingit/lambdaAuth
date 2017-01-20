@@ -12,10 +12,10 @@ The default configuration of this project creates a series of API endpoints (/si
 1. If it isn't installed on your machine install node.js from https://nodejs.org (node is used for local AWS tools as well as lambdas - npm rules!).
 2. Create an AWS free account.
 3. Add an IAM user to act as proxy (it isn’t good to use your master user day to day)
-  * http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html 
+  * http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html
 4. Install the AWS CLI
   * http://docs.aws.amazon.com/cli/latest/userguide/installing.html
-  * Configure the CLI 
+  * Configure the CLI
     http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
   * Configure a local profile
     http://docs.aws.amazon.com/cli/latest/userguide/cli-roles.html
@@ -29,7 +29,7 @@ The default configuration of this project creates a series of API endpoints (/si
   * run "npm start”
     * This will build the backend configuration and upload the angular app to s3. The last line will give you the URL of the site that you can just paste into a browser. e.g. http://testlambdaauth.s3-website-us-east-1.amazonaws.com
   * run "npm stop" to remove everything that was built with "npm start".
-  
+
 Now you can signup and login to the test app through the Angular client. To configure the iOS client do the following:
 
 1. You are going to need to install Xcode (from the app store) and CocoaPods (https://cocoapods.org)
@@ -39,7 +39,7 @@ Now you can signup and login to the test app through the Angular client. To conf
 4. Build and Run in Xcode!
 
 Android coming soon...
-    
+
 # Documentation #
 This project started as my Hello World app for javascript and node.js. As such there is an evident evolution of coding patterns as I became familiar with the language. I will be improving the situation. By and large you will likely see that this project is written by a long time client developer, so please be forgiving.
 
@@ -83,19 +83,19 @@ Next we'll get this endpoint into the cloud!
 Since the endpoint uses AWS resource we should update the automatically generated constants file by executing:
 
  `AWSTools/updateAWSConstants.js --constantsType lambda`
- 
+
 This adds constants files to all the lambda function directories that reflect the resources specified in their definitions files. Check out `lambdas/introRandom/AWSConstants.json` to see the newly created constant file that has definitions for the `Users` dynamoDB table.
- 
+
  Next we want to pull in all the utilities and suport files for our new lambda by executing:
- 
+
   `AWSTools/updateLinkedFiles.js --lambdaName introRandom`
-  
+
 You don't have to add the `--lambdaName` parameter if you want to just update all lambdas. This goes for all AWSTools commands. The file `lambdas/introRandom/APIParamVerify.js` has been introduced to the directory as specified in the definitions file. This will assist in doing parameter checking.
 
 Next we want to pull into the lambda infomation about the input parameters that it should expect from APIGateway:
 
  `AWSTools/updateLambdaHandlerEventParams.js`
- 
+
 You'll see that the file `lambdas/introRandom/eventParams.json` has been added to the project. If you take a look at this JSON object you will see that our input parameters `quanitiy` is defined under `"queryParams"` as well as information about the authenticated user from cognito under `awsParams`.
 
 Now we can create the lambda in our AWS environment:
@@ -107,13 +107,13 @@ This command lints the files being uploaded (you can ignor warnings about unused
 Now we can package the updated API:
 
  `AWSTools/coalesceSwaggerAPIDefinition.js`
- 
+
 You will see that that the file `swaggerAPI.yaml` file in the root directory has been updated with the new definition.
 
 Finally we upload the API and deploy it:
 
  `AWSTools/uploadRestAPI.js`
- 
+
  `AWSTools/deployAPI.js`
 
 Now our new lambda backed API is live and ready to go!
@@ -326,21 +326,26 @@ Options:
 
 **deployParameters.js**
 Print or delete deploy parameters from project.
-WARNING: You cannot recover these settings and will have to reomve the deploy
+WARNING: You cannot recover these settings and will have to remove the deploy
 manually in the AWS console once deleted.
-Usage: AWSTools/deployParameters.js [options]
+Usage: AWSTools/deployParameters.js <command> [options] filename
+
+Commands:
+  print            print current parameters
+  delete           remove current parameters
+  save <fileName>  store parameters in YAML format to file
 
 Options:
   -s, --baseDefinitionsFile   yaml file that contains information about your API
                                             [default: "./base.definitions.yaml"]
   -l, --lambdaDefinitionsDir  directory that contains lambda definition files
-                              and implementations. <lambdaName>.zip archives
-                              will be placed here.        [default: "./lambdas"]
+                              and implementations.        [default: "./lambdas"]
   -c, --clientDefinitionsDir  directory that contains client definition files
                               and implementations.        [default: "./clients"]
-  -d, --delete                delete the deploy parameters
-  -p, --print                 print the deploy parameters
   -h, --help                  Show help                                [boolean]
+
+Examples:
+  AWSTools/deployParameters.js save foo.js  save parameters to the given file
 
 **getClientSDK.js**  
 Get AWS API Gateway SDK for the project clients.
@@ -489,4 +494,3 @@ Options:
 
 ##Project Configuration##
 TODO
-
