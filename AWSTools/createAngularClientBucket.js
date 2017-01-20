@@ -87,6 +87,8 @@ function createBucket(fileName, definitions, callback, attemptNo) {
 
     if (baseDefinitions.environment.AWSResourceNamePrefix) {
         bucketName = baseDefinitions.environment.AWSResourceNamePrefix + bucketName;
+    } else {
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
     }
 
     awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'region'], 's', 'in angular client definition file').exitOnError();

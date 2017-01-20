@@ -70,7 +70,7 @@ function deletePolicies(policyArray, roleKey) {
     if (baseDefinitions.environment.AWSResourceNamePrefix) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
     } else {
-        roleName = roleKey;
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
     }
 
     var policyArrayLength = policyArray.length;
@@ -128,7 +128,7 @@ function deletePolicies(policyArray, roleKey) {
                             }
                             if (writeErr) {
                                 console.log("Unable to write updated definitions file.");
-                                throw Error(writeErr);
+                                throw new Error(writeErr);
                             }
                             if (successDecCount !== 0) {
                                 console.log("Some creation operations failed.");

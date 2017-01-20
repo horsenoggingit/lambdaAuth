@@ -92,7 +92,7 @@ forEachLambdaDefinition(function (fileName) {
     if (baseDefinitions.environment.AWSResourceNamePrefix) {
         lambdaName = baseDefinitions.environment.AWSResourceNamePrefix + definitions.lambdaInfo.functionName;
     } else {
-        lambdaName = definitions.lambdaInfo.functionName;
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
     }
 
     var params = {

@@ -41,7 +41,7 @@ getIdentityPools(function (serverIdentityPools) {
         if (baseDefinitions.environment.AWSResourceNamePrefix) {
             identityPoolName =  baseDefinitions.environment.AWSResourceNamePrefix + identityPoolKey;
         } else {
-            identityPoolName = identityPoolKey;
+            throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
         }
 
         var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey];
@@ -194,7 +194,7 @@ function updateRolePolicyDocumentStatementConditions(identityPoolKey) {
             if (baseDefinitions.environment.AWSResourceNamePrefix) {
                 roleName = baseDefinitions.environment.AWSResourceNamePrefix + role;
             } else {
-                roleName = role;
+                throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
             }
             AwsRequest.createRequest({
                 serviceName: 'iam',

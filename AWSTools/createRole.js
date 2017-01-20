@@ -65,7 +65,7 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
     if (baseDefinitions.environment.AWSResourceNamePrefix) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
     } else {
-        roleName = roleKey;
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
     }
     // all done verifying now lets have some fun
     var params = ['iam',
@@ -85,7 +85,7 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
             if (baseDefinitions.environment.AWSResourceNamePrefix) {
                 rlName = baseDefinitions.environment.AWSResourceNamePrefix + rlKey;
             } else {
-                rlName = rlKey;
+                throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
             }
 
             policyArr.forEach(function (policyArn) {
@@ -139,7 +139,7 @@ function createRoleAndUploadPolicies(createCommand, policyArray, roleKey, profil
     if (baseDefinitions.environment.AWSResourceNamePrefix) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
     } else {
-        roleName = roleKey;
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
     }
 
     console.log("Creating role \"" + roleName + "\"");

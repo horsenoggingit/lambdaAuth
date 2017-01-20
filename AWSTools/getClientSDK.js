@@ -173,7 +173,7 @@ function renameAuthClientClass(definitions, fileName, basePath) {
         if (baseDefinitions.environment.AWSResourceNamePrefix) {
           apiName = baseDefinitions.environment.AWSResourceNamePrefix + baseDefinitions.apiInfo.title;
         } else {
-          apiName = baseDefinitions.apiInfo.title;
+            throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
         }
         if (apiName && apiName.length >= 0) {
             apiName = apiName.charAt(0).toUpperCase() + apiName.slice(1);

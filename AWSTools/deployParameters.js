@@ -39,6 +39,7 @@ if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
 
 var paths = {};
 paths[argv.baseDefinitionsFile] =[
+    ["environment", "AWSResourceNamePrefix"],
     ["cognitoIdentityPoolInfo", "roleDefinitions", "*", "arnRole"],
     ["cognitoIdentityPoolInfo", "identityPools", "*", "identityPoolId"],
     ["lambdaInfo", "roleDefinitions", "*", "arnRole"],

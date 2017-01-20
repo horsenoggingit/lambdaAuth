@@ -104,7 +104,7 @@ forEachDefinition(function (fileName) {
       if (baseDefinitions.environment.AWSResourceNamePrefix) {
         resourceName = baseDefinitions.environment.AWSResourceNamePrefix + resource.resourceName;
       } else {
-        resourceName = resource.resourceName;
+          throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
       }
 
       resourceRoot[source.resource].name = resourceName;

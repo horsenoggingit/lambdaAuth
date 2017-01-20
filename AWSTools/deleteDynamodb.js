@@ -46,7 +46,7 @@ for (var keyIndex = 0; keyIndex < localDbKeys.length; keyIndex++) {
     if (baseDefinitions.environment.AWSResourceNamePrefix) {
         tableName = baseDefinitions.environment.AWSResourceNamePrefix + tableKey;
     } else {
-        tableName = tableKey;
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.")
     }
 
     // send out a request to delete a new table.
