@@ -101,10 +101,8 @@ forEachDefinition(function (fileName) {
       }
 
       var resourceName;
-      if (baseDefinitions.environment.AWSResourceNamePrefix) {
+      if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         resourceName = baseDefinitions.environment.AWSResourceNamePrefix + resource.resourceName;
-      } else {
-          throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
       }
 
       resourceRoot[source.resource].name = resourceName;

@@ -52,10 +52,8 @@ getTableNameArray(function(tableNames) {
     for (var keyIndex = 0; keyIndex < localDbKeys.length; keyIndex++) {
         var tableKey = localDbKeys[keyIndex];
         var tableName;
-        if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
             tableName = baseDefinitions.environment.AWSResourceNamePrefix + tableKey;
-        } else {
-            throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
         }
 
         // does the name exist in the name server name list

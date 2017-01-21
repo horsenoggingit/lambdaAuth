@@ -38,7 +38,7 @@ getIdentityPools(function (serverIdentityPools) {
     var poolCreateRequests = [];
     Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolKey) {
         var identityPoolName;
-        if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
             identityPoolName =  baseDefinitions.environment.AWSResourceNamePrefix + identityPoolKey;
         } else {
             throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
@@ -191,10 +191,8 @@ function updateRolePolicyDocumentStatementConditions(identityPoolKey) {
         if (!awscommon.verifyPath(baseDefinitions,['cognitoIdentityPoolInfo','identityPools',identityPoolKey,'rolePolicyDocumentStatementConditions',role],'a').isVerifyError) {
             // get the role
             var roleName;
-            if (baseDefinitions.environment.AWSResourceNamePrefix) {
+            if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
                 roleName = baseDefinitions.environment.AWSResourceNamePrefix + role;
-            } else {
-                throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
             }
             AwsRequest.createRequest({
                 serviceName: 'iam',

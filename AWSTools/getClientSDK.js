@@ -170,10 +170,8 @@ function renameAuthClientClass(definitions, fileName, basePath) {
         currentName = currentName.toUpperCase();
         // now add the api name from the base definitions file (need to capitalize first letter)
         var apiName;
-        if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
           apiName = baseDefinitions.environment.AWSResourceNamePrefix + baseDefinitions.apiInfo.title;
-        } else {
-            throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
         }
         if (apiName && apiName.length >= 0) {
             apiName = apiName.charAt(0).toUpperCase() + apiName.slice(1);

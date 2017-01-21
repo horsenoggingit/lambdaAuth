@@ -35,11 +35,9 @@ var swaggerBaseFile = baseDefinitions.apiInfo.AWSSwaggerHeader;
 // update the title to include the resource.
 awsc.verifyPath(baseDefinitions,['apiInfo', 'title'], 's', "in base definitions file", "This is needed to identify the API").exitOnError();
 
-if (baseDefinitions.environment.AWSResourceNamePrefix) {
+if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
     baseDefinitions.apiInfo.AWSSwaggerHeader.info.title = baseDefinitions.environment.AWSResourceNamePrefix + baseDefinitions.apiInfo.title;
-} else {
-    throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
-}
+} 
 
 if (fs.existsSync(argv.outputFilename)) {
     fs.unlinkSync(argv.outputFilename);

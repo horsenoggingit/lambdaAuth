@@ -1,7 +1,7 @@
 apiInfo:
-  clientSDK:
-    downloadPath: "iOS/lambdaAuth/Vendor"
-    sdkType: objectivec
-    parameters:
-        classPrefix: MYPREFIX
-    renameAuthClientClass: MYPREFIXAuthClient
+    clientSDK:
+        downloadPath: iOS/lambdaAuth/Vendor
+        sdkType: objectivec
+        parameters:
+            classPrefix: MYPREFIX
+        renameAuthClientClass: MYPREFIXAuthClient

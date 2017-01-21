@@ -25,7 +25,10 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
     yargs.showHelp("log");
     process.exit(1);
 }
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
+
+awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile);
 
 if (!fs.existsSync(argv.apiDefinitionFile)) {
     console.log("API definition file \"" + argv.apiDefinitionFile + "\" not found.");

@@ -301,3 +301,15 @@ exports.createPath = function (pathString) {
         }
     });
 };
+
+exports.isValidAWSResourceNamePrefix = function (baseDefinitions, fileName) {
+    var prefix = baseDefinitions.environment.AWSResourceNamePrefix;
+    if (!prefix) {
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + fileName + "'. AWSResourceNamePrefix unfortunately must be all lower case [a-z] characters.");
+    }
+    var testPattern = /^[a-z]+$/;
+    if (!testPattern.test(prefix)) {
+        throw new Error("Invalid AWSResourceNamePrefix at AWSResourceNamePrefix in 'environment.AWSResourceNamePrefix' in base definitions file '" + fileName + "'. AWSResourceNamePrefix unfortunately must be all lower case [a-z] characters.");
+    }
+    return true;
+};
