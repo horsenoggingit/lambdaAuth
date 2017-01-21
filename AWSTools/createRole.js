@@ -62,11 +62,10 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
     });
 
     var roleName;
-    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
-    } else {
-        roleName = roleKey;
     }
+
     // all done verifying now lets have some fun
     var params = ['iam',
     'create-role',
@@ -82,10 +81,8 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
 
             // start uploading policies
             var rlName;
-            if (baseDefinitions.environment.AWSResourceNamePrefix) {
+            if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
                 rlName = baseDefinitions.environment.AWSResourceNamePrefix + rlKey;
-            } else {
-                rlName = rlKey;
             }
 
             policyArr.forEach(function (policyArn) {
@@ -136,10 +133,8 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
 
 function createRoleAndUploadPolicies(createCommand, policyArray, roleKey, profileName, callback) {
     var roleName;
-    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
-    } else {
-        roleName = roleKey;
     }
 
     console.log("Creating role \"" + roleName + "\"");

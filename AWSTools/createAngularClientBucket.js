@@ -85,7 +85,7 @@ forEachLambdaDefinition(function (fileName) {
 function createBucket(fileName, definitions, callback, attemptNo) {
     var bucketName = definitions.s3Info.bucketInfo.namePrefix;
 
-    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         bucketName = baseDefinitions.environment.AWSResourceNamePrefix + bucketName;
     }
 

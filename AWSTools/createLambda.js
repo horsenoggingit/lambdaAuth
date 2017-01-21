@@ -89,10 +89,8 @@ forEachLambdaDefinition(function (fileName) {
     functionHandler = path.basename(functionHandler, path.extname(functionHandler)) + ".handler";
 
     var lambdaName;
-    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    if (vp.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         lambdaName = baseDefinitions.environment.AWSResourceNamePrefix + definitions.lambdaInfo.functionName;
-    } else {
-        lambdaName = definitions.lambdaInfo.functionName;
     }
 
     var params = {

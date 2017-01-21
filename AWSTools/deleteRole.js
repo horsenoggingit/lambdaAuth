@@ -67,10 +67,8 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
 
 function deletePolicies(policyArray, roleKey) {
     var roleName;
-    if (baseDefinitions.environment.AWSResourceNamePrefix) {
+    if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
-    } else {
-        roleName = roleKey;
     }
 
     var policyArrayLength = policyArray.length;
@@ -91,7 +89,7 @@ function deletePolicies(policyArray, roleKey) {
                 console.log(err);
                 console.log("Failed to detach policy" + pol + " from " + roleName + ".");
             } else {
-                console.log("Successfully detached policy" + pol + " from " + roleName + ".");
+                console.log("Successfully detached policy " + pol + " from " + roleName + ".");
             }
 
             policyArrayLength --;
@@ -128,7 +126,7 @@ function deletePolicies(policyArray, roleKey) {
                             }
                             if (writeErr) {
                                 console.log("Unable to write updated definitions file.");
-                                throw Error(writeErr);
+                                throw new Error(writeErr);
                             }
                             if (successDecCount !== 0) {
                                 console.log("Some creation operations failed.");

@@ -1,6 +1,6 @@
 implementationFiles:
-    userMe:
-        - userMe.js
+    {$lambdaName}:
+        - {$lambdaName}.js
 linkFiles:
     common:
         - APIParamVerify.js
@@ -12,40 +12,23 @@ lambdaInfo:
                 type: dynamodbInfo
                 resourceName: Users
     roleName: userConsumer
-    functionName: userMe
+    functionName: {$lambdaName}
     region: us-east-1
     language: nodejs4.3
     eventParamPaths:
-        /user/me:
-            get:
-                type: object
-                required:
-                    - identity_id
-                    - auth_provider
-                    - auth_type
-                    - identitypool_id
-                properties:
-                    identity_id:
-                        type: string
-                    auth_provider:
-                        type: string
-                    auth_type:
-                        type: string
-                    identitypool_id:
-                        type: string
+        {$urlPath}:
+            post: {}
 apiInfo:
     paths:
-        /user/me:
-            get:
-                description: 'get info about me'
-                operationId: userMeGet
+        {$urlPath}:
+            post:
+                description: 'a new post endpoint'
+                operationId: {$lambdaName}
                 produces:
                     - application/json
                 responses:
                     '200':
                         description: ok
-                        schema:
-                            $ref: '#/definitions/user'
                         headers:
                             Access-Control-Allow-Headers:
                                 type: string

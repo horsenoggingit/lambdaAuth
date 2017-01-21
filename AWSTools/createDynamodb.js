@@ -52,10 +52,8 @@ getTableNameArray(function(tableNames) {
     for (var keyIndex = 0; keyIndex < localDbKeys.length; keyIndex++) {
         var tableKey = localDbKeys[keyIndex];
         var tableName;
-        if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
             tableName = baseDefinitions.environment.AWSResourceNamePrefix + tableKey;
-        } else {
-            tableName = tableKey;
         }
 
         // does the name exist in the name server name list

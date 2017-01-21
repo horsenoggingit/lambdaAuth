@@ -101,10 +101,8 @@ forEachDefinition(function (fileName) {
       }
 
       var resourceName;
-      if (baseDefinitions.environment.AWSResourceNamePrefix) {
+      if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         resourceName = baseDefinitions.environment.AWSResourceNamePrefix + resource.resourceName;
-      } else {
-        resourceName = resource.resourceName;
       }
 
       resourceRoot[source.resource].name = resourceName;

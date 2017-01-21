@@ -281,3 +281,35 @@ exports.validatejs = function(lambdaDefintitions, lambdaPath) {
         });
     }
 };
+
+exports.createPath = function (pathString) {
+    // make sure the download path exists. If not create it.
+    var downloadPath;
+    if (!path.isAbsolute(pathString)) {
+        downloadPath = path.join(path.resolve(), pathString);
+    } else {
+        downloadPath = pathString;
+    }
+    downloadPath = path.normalize(downloadPath);
+
+    var downloadPathComponents = downloadPath.split(path.sep);
+    var mkPath = path.sep;
+    downloadPathComponents.forEach(function (pathComponent) {
+        mkPath = path.join(mkPath, pathComponent);
+        if (!fs.existsSync(mkPath)){
+            fs.mkdirSync(mkPath);
+        }
+    });
+};
+
+exports.isValidAWSResourceNamePrefix = function (baseDefinitions, fileName) {
+    var prefix = baseDefinitions.environment.AWSResourceNamePrefix;
+    if (!prefix) {
+        throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + fileName + "'. AWSResourceNamePrefix unfortunately must be all lower case [a-z] characters.");
+    }
+    var testPattern = /^[a-z]+$/;
+    if (!testPattern.test(prefix)) {
+        throw new Error("Invalid AWSResourceNamePrefix at AWSResourceNamePrefix in 'environment.AWSResourceNamePrefix' in base definitions file '" + fileName + "'. AWSResourceNamePrefix unfortunately must be all lower case [a-z] characters.");
+    }
+    return true;
+};

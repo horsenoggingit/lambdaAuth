@@ -61,10 +61,8 @@ forEachLambdaDefinition(function (fileName) {
   vp.verifyPath(definitions,['lambdaInfo', 'functionName'], 's', "definitions file \"" + fileName + "\"").exitOnError();
 
   var lambdaName;
-  if (baseDefinitions.environment.AWSResourceNamePrefix) {
+  if (vp.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
     lambdaName = baseDefinitions.environment.AWSResourceNamePrefix + definitions.lambdaInfo.functionName;
-  } else {
-    lambdaName = definitions.lambdaInfo.functionName;
   }
 
   var params = {

@@ -38,10 +38,10 @@ getIdentityPools(function (serverIdentityPools) {
     var poolCreateRequests = [];
     Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).forEach(function (identityPoolKey) {
         var identityPoolName;
-        if (baseDefinitions.environment.AWSResourceNamePrefix) {
+        if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
             identityPoolName =  baseDefinitions.environment.AWSResourceNamePrefix + identityPoolKey;
         } else {
-            identityPoolName = identityPoolKey;
+            throw new Error("Please assign a AWSResourceNamePrefix at 'environment.AWSResourceNamePrefix' in base definitions file '" + argv.baseDefinitionsFile + "'.");
         }
 
         var poolDef = baseDefinitions.cognitoIdentityPoolInfo.identityPools[identityPoolKey];
@@ -76,7 +76,7 @@ getIdentityPools(function (serverIdentityPools) {
             switch (authProvider) {
                 case 'custom':
                 awscommon.verifyPath(poolDef.authProviders,['custom', 'developerProvider'],'s','custom developer provider for pool "' + identityPoolKey + '""').exitOnError();
-                params['developer-provider_name'] = {type: 'string', value:poolDef.authProviders.custom.developerProvider};
+                params['developer-provider-name'] = {type: 'string', value:poolDef.authProviders.custom.developerProvider};
                 break;
                 default:
             }
@@ -191,10 +191,8 @@ function updateRolePolicyDocumentStatementConditions(identityPoolKey) {
         if (!awscommon.verifyPath(baseDefinitions,['cognitoIdentityPoolInfo','identityPools',identityPoolKey,'rolePolicyDocumentStatementConditions',role],'a').isVerifyError) {
             // get the role
             var roleName;
-            if (baseDefinitions.environment.AWSResourceNamePrefix) {
+            if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
                 roleName = baseDefinitions.environment.AWSResourceNamePrefix + role;
-            } else {
-                roleName = role;
             }
             AwsRequest.createRequest({
                 serviceName: 'iam',
