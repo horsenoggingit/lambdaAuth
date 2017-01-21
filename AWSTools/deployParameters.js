@@ -10,7 +10,7 @@ const yargs = require('yargs')
 .command('print', 'print current parameters', {}, function () {command = 'print';})
 .command('delete', 'remove current parameters', {}, function () {command = 'delete';})
 .command('save <fileName>', 'store parameters in YAML format to file', {}, function (argv2) {command = 'save'; commandFileName = argv2.fileName;})
-//.command('apply <fileName>', 'overwrite current parameters with saved file', {}, function (argv2) {command = 'apply'; commandFileName = argv2.fileName;})
+.command('apply <fileName>', 'overwrite current parameters with saved file', {}, function (argv2) {command = 'apply'; commandFileName = argv2.fileName;})
 .example('$0 save foo.js', 'save parameters to the given file')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your API')
@@ -35,7 +35,6 @@ if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
     yargs.showHelp("log");
     throw new Error("Lambda's path \"" + argv.lambdaDefinitionsDir + "\" not found.");
 }
-
 
 var paths = {};
 paths[argv.baseDefinitionsFile] =[
@@ -77,6 +76,10 @@ function runCommands() {
         allParams(logobj, false, {paramObj: paramObj});
         fs.writeFile(commandFileName, YAML.stringify(paramObj, 10));
     }
+    if (command === "apply") {
+        YAML.load(commandFileName);
+        applyFileParams(YAML.load(commandFileName));
+    }
 }
 
 function logobj(base, pathString, context, actualPath, pathType) {
@@ -103,7 +106,7 @@ function logobj(base, pathString, context, actualPath, pathType) {
     });
 }
 
-function delObj(base, pathString, context) {
+function delObj(base, pathString) {
     delete base[pathString];
 }
 
@@ -118,23 +121,82 @@ function allParams(action, saveFile, context) {
          paths[fileName].forEach(function (pathArray) {
             context.fileName = fileName;
             lastNode(definitions, pathArray, action, context);
-            if (saveFile) {
-                if (saveFile) {
-                    vp.updateFile(fileName, function ()
-                    {
-                        return YAML.stringify(definitions, 15);
-                    }, function(err1, err2){
-                        if (err1 || err2) {
-                            console.log("Could not update " + fileName);
-                            return;
-                        }
-                        console.log("Saved " + fileName);
-                    });
+        });
+        if (saveFile) {
+            vp.updateFile(fileName, function ()
+            {
+                return YAML.stringify(definitions, 15);
+            }, function(err1, err2){
+                if (err1) {
+                    console.log(err1);
+                    return;
                 }
+                if (err2) {
+                    console.log(err2);
+                    return;
+                }
+                console.log("Saved " + fileName);
+            });
+        }
+    });
+}
+
+function applyFileParams (params) {
+    Object.keys(params).forEach(function (fileName) {
+        var definitions = YAML.load(fileName);
+        applyParams(definitions, params[fileName]);
+        vp.updateFile(fileName, function ()
+        {
+            return YAML.stringify(definitions, 15);
+        }, function(err1, err2){
+            if (err1) {
+                console.log(err1);
+                return;
             }
+            if (err2) {
+                console.log(err2);
+                return;
+            }
+            console.log("Saved " + fileName);
         });
     });
+}
 
+function applyParams(base, params) {
+    if (typeof params === 'object') {
+        Object.keys(params).forEach(function (name) {
+            var item = params[name];
+            if (Array.isArray(item)) {
+                // basically do the best we can to update using the existing order
+                if (!base[name]) {
+                    base[name] = item;
+                } else {
+                    if (!Array.isArray(base[name])) {
+                        throw new Error("Expected array at '" + name + "'");
+                    }
+                    if (base[name].length !== item.length) {
+                        throw new Error("Array item has miss-matched length at '" + name + "'");
+                    }
+                    base[name].forEach(function (arrayItem, index) {
+                        applyParams(arrayItem, item[index]);
+                    });
+                }
+            } else if (typeof item === 'object') {
+                if (!base[name]) {
+                    base[name] = item;
+                } else {
+                    if (typeof (base[name]) !== 'object') {
+                        throw new Error("Expected object at '" + name + "'");
+                    }
+                    applyParams(base[name], item);
+                }
+            } else {
+                base[name] = item;
+            }
+        });
+    } else {
+        throw new Error("unexpected item passed as params: " + params);
+    }
 }
 
 function forEachLambdaDefinition (callback, doneCallback) {

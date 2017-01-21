@@ -331,9 +331,10 @@ manually in the AWS console once deleted.
 Usage: AWSTools/deployParameters.js <command> [options] filename
 
 Commands:
-  print            print current parameters
-  delete           remove current parameters
-  save <fileName>  store parameters in YAML format to file
+  print             print current parameters
+  delete            remove current parameters
+  save <fileName>   store parameters in YAML format to file
+  apply <fileName>  overwrite current parameters with saved file
 
 Options:
   -s, --baseDefinitionsFile   yaml file that contains information about your API
