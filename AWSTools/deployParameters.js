@@ -45,13 +45,15 @@ paths[argv.baseDefinitionsFile] =[
     ["apiInfo", "roleDefinitions", "*", "arnRole"],
     ["apiInfo", "awsId"],
     ["apiInfo", "lastDeploy"],
-    ["dynamodbInfo", "*", "Table"]
+    ["dynamodbInfo", "*", "Table"],
+    ["s3Info", "buckets", "*", "name"],
+    ["s3Info", "buckets", "*", "location"]
 ];
 
 forEachClientDefinition(function (fileName) {
     paths[path.join(argv.clientDefinitionsDir, fileName)] = [
-        ["s3Info", "bucketInfo", "name"],
-        ["s3Info", "bucketInfo", "location"]
+        ["s3Info", "buckets", "*", "name"],
+        ["s3Info", "buckets", "*", "location"]
     ];
 }, getLambdaDefinitions);
 

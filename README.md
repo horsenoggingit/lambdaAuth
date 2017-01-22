@@ -161,17 +161,6 @@ Options:
   -c, --commonModelDefinitionFile  yaml file with common definitions of models
   -h, --help                       Show help                           [boolean]
 
-**createAngularClientBucket.js**  
-Creates an s3 bucket if needed and configures as static web host.
-Usage: createAngularClientBucket.js [options]
-
-Options:
-  -s, --baseDefinitionsFile   yaml file that contains information about your API
-                                            [default: "./base.definitions.yaml"]
-  -l, --clientDefinitionsDir  directory that contains client definition files
-                              and implementations.        [default: "./clients"]
-  -h, --help                  Show help                                [boolean]
-
 **createDynamodb.js**  
 Create the tables required for the project.
 If a table with the same name already exists a new table
@@ -243,15 +232,17 @@ Options:
                                 [required] [choices: "api", "lambda", "cognito"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteAngularClientBucket.js**  
-Deletes the s3 bucket and removes it from the client defiition file.
-Usage: deleteAngularClientBucket.js [options]
+**createS3Bucket.js**  
+Creates an s3 bucket if needed and configures as static web host.
+Usage: createS3Bucket.js [options]
 
 Options:
   -s, --baseDefinitionsFile   yaml file that contains information about your API
                                             [default: "./base.definitions.yaml"]
   -l, --clientDefinitionsDir  directory that contains client definition files
                               and implementations.        [default: "./clients"]
+  -t, --type                  create client or lambda buckets.
+                                     [required] [choices: "lambda", "webClient"]
   -h, --help                  Show help                                [boolean]
 
 **deleteDynamodb.js**  
@@ -311,6 +302,19 @@ Options:
                                 [required] [choices: "api", "lambda", "cognito"]
   -h, --help                 Show help                                 [boolean]
 
+**deleteS3Bucket.js**  
+Deletes the s3 bucket and removes it from the client defiition file.
+Usage: deleteS3Bucket.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -t, --type                  create client or lambda buckets.
+                                     [required] [choices: "lambda", "webClient"]
+  -h, --help                  Show help                                [boolean]
+
 **deployAPI.js**  
 Deploy API to a stage.
 Usage: deployAPI.js [options]
@@ -324,11 +328,11 @@ Options:
                              resource to create.                [default: "dev"]
   -h, --help                 Show help                                 [boolean]
 
-**deployParameters.js**
+**deployParameters.js**  
 Print or delete deploy parameters from project.
 WARNING: You cannot recover these settings and will have to remove the deploy
 manually in the AWS console once deleted.
-Usage: AWSTools/deployParameters.js <command> [options] filename
+Usage: deployParameters.js <command> [options] filename
 
 Commands:
   print             print current parameters
@@ -346,7 +350,7 @@ Options:
   -h, --help                  Show help                                [boolean]
 
 Examples:
-  AWSTools/deployParameters.js save foo.js  save parameters to the given file
+  deployParameters.js save foo.js  save parameters to the given file
 
 **getClientSDK.js**  
 Get AWS API Gateway SDK for the project clients.
@@ -414,6 +418,8 @@ Options:
                               and implementations.        [default: "./clients"]
   -h, --help                  Show help                                [boolean]
 
+**templates**  
+-bash: ./templates: is a directory
 **updateAWSConstants.js**  
 Create a json description of constants needed to access AWS services.
 Usage: updateAWSConstants.js [options]
@@ -431,6 +437,8 @@ Options:
                                         [required] [choices: "lambda", "client"]
   -h, --help                 Show help                                 [boolean]
 
+**updateDynamodb.js**  
+-bash: ./updateDynamodb.js: Permission denied
 **updateLambdaHandlerEventParams.js**  
 Create a json description compatible with APIParamVerify.js to validate lambda
 input arguments from API.
@@ -489,6 +497,7 @@ Options:
   -a, --apiDefinitionFile    yaml swagger API file to upload to AWS
                                                   [default: "./swaggerAPI.yaml"]
   -h, --help                 Show help                                 [boolean]
+
   ```
 
 

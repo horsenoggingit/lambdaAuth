@@ -272,3 +272,9 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+s3Info:
+    buckets:
+        photobucket:
+            region: us-east-1
+            lambdaAliases:
+                resource: PHOTOBUCKET
