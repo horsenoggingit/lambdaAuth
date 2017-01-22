@@ -88,7 +88,6 @@ function createBucketForDefinitions(definitions, fileName) {
                             });
                             return;
                         }
-                        console.log('Site URL is: http://' + definitions.s3Info.buckets[bucketPrefix].name + ".s3-website-" + definitions.s3Info.buckets[bucketPrefix].region + ".amazonaws.com");
                         console.log('Done.');
                     });
                 });
@@ -174,6 +173,7 @@ function enableWeb(bucketPrefix, definitions, callback) {
                     callback(request.response.error, null);
                 } else {
                     console.log("Put bucket websiteConfiguration.");
+                    console.log('Site URL is: http://' + definitions.s3Info.buckets[bucketPrefix].name + ".s3-website-" + definitions.s3Info.buckets[bucketPrefix].region + ".amazonaws.com");
                     callback(null, bucketPrefix);
                 }
             }
