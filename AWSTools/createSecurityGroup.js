@@ -91,6 +91,13 @@ function checkTagName(nameTag, groupName, callback) {
 }
 
 function createSecurityGroup(nameTag, groupName, callback) {
+
+    var pathError = awsc.verifyPath(baseDefinitions,["vpcInfo", "vpcs", baseDefinitions.securityGroupInfo.securityGroups[groupName].vpc, "VpcId"], "s", "definitions file \"" + argv.baseDefinitionsFile + "\"");
+    if (pathError.isVerifyError) {
+        console.log(pathError);
+        throw new Error("Please create the VPC first using 'createVPC.js'");
+    }
+
     AWSRequest.createRequest({
         serviceName: "ec2",
         functionName: "create-security-group",

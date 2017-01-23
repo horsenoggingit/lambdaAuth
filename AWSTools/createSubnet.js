@@ -92,6 +92,13 @@ function checkTagName(nameTag, subnetName, callback) {
 }
 
 function createSubnet(nameTag, subnetName, callback) {
+
+    var pathError = awsc.verifyPath(baseDefinitions,["vpcInfo", "vpcs", baseDefinitions.subnetInfo.subnets[subnetName].vpc, "VpcId"], "s", "definitions file \"" + argv.baseDefinitionsFile + "\"");
+    if (pathError.isVerifyError) {
+        console.log(pathError);
+        throw new Error("Please create the VPC first using 'createVPC.js'");
+    }
+
     AWSRequest.createRequest({
         serviceName: "ec2",
         functionName: "create-subnet",

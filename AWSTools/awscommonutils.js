@@ -35,54 +35,57 @@ class VerifyResultString extends Object {
 
 exports.VerifyResultString = VerifyResultString;
 
-exports.verifyPath = function verifyPath(structure, pathArray, leafTypeKey, itemName, extraString) {
+
+function verifyPath(structure, pathArray, leafTypeKey, itemName, extraString) {
     var leafTypes = {"s" : "string",
-    "n" : "number",
-    "o" : "object",
-    "a" : "array",
-    "f" : "function",
-    "b" : "boolean"
-};
+        "n" : "number",
+        "o" : "object",
+        "a" : "array",
+        "f" : "function",
+        "b" : "boolean"
+    };
 
-if (!extraString) {
-    extraString = "";
-}
-
-var result = checkPath(structure, pathArray, leafTypeKey);
-if (!result) {
-    return new VerifyResultString();
-}
-var path = pathArray.join(".");
-var errorString;
-var key1String;
-var key2String;
-if (typeof leafTypeKey === "object") {
-    errorString = "Failed validation of action \"" + result.failAction + "\". ";
-    if (result.failIndex === 0) {
-        switch (result.failAction) {
-            case "oneOfs":
-            key1String = "string ([" + leafTypeKey.oneOfs.join("|") + "])";
-            key2String = leafTypes[getTypeKey(structure)];
-            break;
-            default:
-        }
+    if (!extraString) {
+        extraString = "";
     }
-} else {
-    errorString = "";
-    key1String = leafTypes[leafTypeKey];
-    key2String = leafTypes[getTypeKey(structure)];
-}
-if (result.failIndex === 0) {
-    errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" was not found because the \"" + itemName + "\" was of type " + key2String + ". " + extraString;
-} else if (result.failIndex < pathArray.length) {
-    errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was not an object. It was of type \"" + leafTypes[result.failType] + "\". " + extraString;
-} else {
-    errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was of type \"" + leafTypes[result.failType] + "\"." + extraString;
+
+    var result = checkPath(structure, pathArray, leafTypeKey);
+    if (!result) {
+        return new VerifyResultString();
+    }
+    var path = pathArray.join(".");
+    var errorString;
+    var key1String;
+    var key2String;
+    if (typeof leafTypeKey === "object") {
+        errorString = "Failed validation of action \"" + result.failAction + "\". ";
+        if (result.failIndex === 0) {
+            switch (result.failAction) {
+                case "oneOfs":
+                key1String = "string ([" + leafTypeKey.oneOfs.join("|") + "])";
+                key2String = leafTypes[getTypeKey(structure)];
+                break;
+                default:
+            }
+        }
+    } else {
+        errorString = "";
+        key1String = leafTypes[leafTypeKey];
+        key2String = leafTypes[getTypeKey(structure)];
+    }
+    if (result.failIndex === 0) {
+        errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" was not found because the \"" + itemName + "\" was of type " + key2String + ". " + extraString;
+    } else if (result.failIndex < pathArray.length) {
+        errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was not an object. It was of type \"" + leafTypes[result.failType] + "\". " + extraString;
+    } else {
+        errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was of type \"" + leafTypes[result.failType] + "\"." + extraString;
+    }
+
+    var x = new VerifyResultString(errorString, true);
+    return x;
 }
 
-var x = new VerifyResultString(errorString, true);
-return x;
-};
+exports.verifyPath = verifyPath;
 
 function checkPath(structure, pathArray, leafTypeKey) {
     var items = [structure];
@@ -95,13 +98,13 @@ function checkPath(structure, pathArray, leafTypeKey) {
             var item = items[itemIndex];
             typeResult = getTypeKey(item);
             switch (typeResult) {
-            case "a":
+                case "a":
                 // if it is an array push each item for verification on the next pass
                 item.forEach(function (arrayItem) {
                     nextItems.push(arrayItem[pathArray[index]]);
                 });
                 break;
-            case "o":
+                case "o":
                 // when * is encountere on the path we push each item regardles of key.
                 if (pathArray[index] === "*") {
                     Object.keys(item).forEach(function (itemKey) {
@@ -111,7 +114,7 @@ function checkPath(structure, pathArray, leafTypeKey) {
                     nextItems.push(item[pathArray[index]]);
                 }
                 break;
-            default:
+                default:
                 breakOut = true;
             }
             if (breakOut) {
@@ -135,13 +138,13 @@ function checkPath(structure, pathArray, leafTypeKey) {
             for (var oneOfsIndex = 0; oneOfsIndex < actions.length; oneOfsIndex ++) {
                 var action = actions[oneOfsIndex];
                 switch (action) {
-                case "oneOfs":
+                    case "oneOfs":
                     // value for oneOfs is an array of strings.
                     if ((typeResult !== "s") || (leafTypeKey[action].indexOf(item2)) < 0) {
                         return {failIndex:index, failType:typeResult, failAction:action};
                     }
                     break;
-                default:
+                    default:
                     console.log("Unrecognized leafTypeKey command: " + action);
                 }
 
@@ -312,4 +315,48 @@ exports.isValidAWSResourceNamePrefix = function (baseDefinitions, fileName) {
         throw new Error("Invalid AWSResourceNamePrefix at AWSResourceNamePrefix in 'environment.AWSResourceNamePrefix' in base definitions file '" + fileName + "'. AWSResourceNamePrefix unfortunately must be all lower case [a-z] characters.");
     }
     return true;
+};
+
+exports.addLambdaVPCConfiguration = function(params, definitions, fileName, baseDefinitions, baseDefinitionsFileName) {
+    // see if we have enough information to add VPC
+    var pathErrorSecGrps = verifyPath(definitions,["lambdaInfo", "securityGroups"], 'a', "definitions file \"" + fileName + "\"");
+    var pathErrorSubnets = verifyPath(definitions,["lambdaInfo", "subnets"], 'a', "definitions file \"" + fileName + "\"");
+    if (pathErrorSecGrps.isVerifyError && pathErrorSubnets.isVerifyError) {
+        // nothing to do
+        return;
+    }
+    if ((pathErrorSecGrps.isVerifyError && !pathErrorSubnets.isVerifyError) || (!pathErrorSecGrps.isVerifyError && pathErrorSubnets.isVerifyError)) {
+        if (pathErrorSecGrps.isVerifyError) {
+            console.log(pathErrorSecGrps);
+        }
+        if (pathErrorSubnets.isVerifyError) {
+            console.log(pathErrorSubnets);
+        }
+        throw new Error("VPC configuration requires both a security group and subnet in definitions file \"" + fileName + "\"");
+    }
+    var secGroups = definitions.lambdaInfo.securityGroups;
+    var subnets = definitions.lambdaInfo.subnets;
+
+    if ((secGroups.length === 0) && (subnets.length === 0)) {
+        // nothing to do
+        return;
+    }
+
+    if (((secGroups.length === 0) && (subnets.length !== 0)) || ((secGroups.length !== 0) && (subnets.length === 0))) {
+        throw new Error("VPC configuration requires both a security group and subnet in definitions file \"" + fileName + "\"");
+    }
+    console.log("Adding VPC configuration");
+    var subnetIds = [];
+    subnets.forEach(function (subnetName) {
+        verifyPath(baseDefinitions, ["subnetInfo", "subnets", subnetName, "SubnetId"], "s", "base definition file " + baseDefinitionsFileName).exitOnError();
+        subnetIds.push(baseDefinitions.subnetInfo.subnets[subnetName].SubnetId);
+    });
+    var secGroupsIds = [];
+    secGroups.forEach(function (secGroupName) {
+        verifyPath(baseDefinitions, ["securityGroupInfo", "securityGroups", secGroupName, "GroupId"], "s", "base definition file " + baseDefinitionsFileName).exitOnError();
+        secGroupsIds.push(baseDefinitions.securityGroupInfo.securityGroups[secGroupName].GroupId);
+    });
+    var vpcConfigString = "SubnetIds=" + subnetIds.join(",") + ",SecurityGroupIds=" + secGroupsIds.join(",");
+
+    params["vpc-config"]= {type: "string", value: vpcConfigString};
 };

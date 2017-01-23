@@ -4,7 +4,7 @@ const fs = require('fs');
 const YAML = require('yamljs');
 const exec = require('child_process').exec;
 const path = require('path');
-const vp = require(path.join(__dirname, 'awscommonutils'));
+const awsc = require(path.join(__dirname, 'awscommonutils'));
 const AWSRequest = require(path.join(__dirname, 'AWSRequest'));
 
 const yargs = require('yargs')
@@ -56,11 +56,11 @@ forEachLambdaDefinition(function (fileName) {
         throw new Error("Definitions file \"" + fileName + "\" could not be parsed");
     }
 
-    if (vp.verifyPath(definitions,['lambdaInfo', 'arnLambda'], 's', "definitions file \"" + fileName + "\"").isValidationErrpr && !argv.updateArnLambda) {
+    if (awsc.verifyPath(definitions,['lambdaInfo', 'arnLambda'], 's', "definitions file \"" + fileName + "\"").isValidationErrpr && !argv.updateArnLambda) {
         throw new Error("There is already a \"arnLambda\" string in \"lambdaInfo\" object in definitions file \"" + fileName + "\". To overwrite this value when created run with option \"--updateArnLambda\".");
     }
 
-    vp.verifyPath(definitions,['lambdaInfo','functionName'],'s', "definitions file \"" + fileName + "\"", "This should be the name of the lambda function.").exitOnError();
+    awsc.verifyPath(definitions,['lambdaInfo','functionName'],'s', "definitions file \"" + fileName + "\"", "This should be the name of the lambda function.").exitOnError();
 
     // remove older archives
     if (fs.existsSync(path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName + ".zip"))) {
@@ -70,7 +70,7 @@ forEachLambdaDefinition(function (fileName) {
     var cdCommand = "cd \"" + path.join(argv.lambdaDefinitionsDir,definitions.lambdaInfo.functionName) + "\"; ";
     var zipCommandString = (cdCommand + "zip -r " + path.join("..", definitions.lambdaInfo.functionName) + ".zip *");
 
-    vp.verifyPath(definitions,['implementationFiles'],'o', "definitions file \"" + fileName + "\"").exitOnError();
+    awsc.verifyPath(definitions,['implementationFiles'],'o', "definitions file \"" + fileName + "\"").exitOnError();
 
 
     var functionHandler = definitions.implementationFiles[definitions.lambdaInfo.functionName][0];
@@ -78,18 +78,18 @@ forEachLambdaDefinition(function (fileName) {
         console.log("Cannot find \"lambdaInfo.functionName\" as a key in \"implementationFiles\" in \"" + fileName + "\".");
     }
 
-    //vp.verifyPath(definitions,['lambdaInfo','arnRole'],'s', "definitions file \"" + fileName + "\"").exitOnError();
-    vp.verifyPath(definitions,['lambdaInfo', 'roleName'], 's', "definitions file \"" + fileName + "\"").exitOnError();
+    //awsc.verifyPath(definitions,['lambdaInfo','arnRole'],'s', "definitions file \"" + fileName + "\"").exitOnError();
+    awsc.verifyPath(definitions,['lambdaInfo', 'roleName'], 's', "definitions file \"" + fileName + "\"").exitOnError();
 
-    vp.verifyPath(definitions,['lambdaInfo','language'],'s', "definitions file \"" + fileName + "\"").exitOnError();
+    awsc.verifyPath(definitions,['lambdaInfo','language'],'s', "definitions file \"" + fileName + "\"").exitOnError();
 
-    vp.verifyPath(baseDefinitions,['lambdaInfo', 'roleDefinitions', definitions.lambdaInfo.roleName, 'arnRole'],'s',"base definition file " + argv.baseDefinitionsFile).exitOnError();
+    awsc.verifyPath(baseDefinitions,['lambdaInfo', 'roleDefinitions', definitions.lambdaInfo.roleName, 'arnRole'], 's', "base definition file " + argv.baseDefinitionsFile).exitOnError();
     var arnRole = baseDefinitions.lambdaInfo.roleDefinitions[definitions.lambdaInfo.roleName].arnRole;
 
     functionHandler = path.basename(functionHandler, path.extname(functionHandler)) + ".handler";
 
     var lambdaName;
-    if (vp.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
+    if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         lambdaName = baseDefinitions.environment.AWSResourceNamePrefix + definitions.lambdaInfo.functionName;
     }
 
@@ -103,11 +103,13 @@ forEachLambdaDefinition(function (fileName) {
         'profile' : {type: 'string', value:AWSCLIUserProfile}
     };
 
+    awsc.addLambdaVPCConfiguration(params, definitions, fileName, baseDefinitions, argv.baseDefinitionsFile);
+
     // check to make sure everything compiles at least
-    vp.validatejs(definitions, path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName));
+    awsc.validatejs(definitions, path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName));
 
     // capture values here by creating a function
-    zipAndUpload(definitions.lambdaInfo.functionName, zipCommandString, params, path.join(argv.lambdaDefinitionsDir,fileName));
+    zipAndUpload(definitions.lambdaInfo.functionName, zipCommandString, params, path.join(argv.lambdaDefinitionsDir, fileName));
 
 });
 
@@ -139,7 +141,7 @@ function createLambda(functionName, reqParams, defaultsFileName) {
                     }, 3000);
                     return;
                 } else {
-                    throw request.response.console.error;
+                    throw request.response.error;
                 }
             } else {
                 throw request.response.error;
@@ -147,7 +149,7 @@ function createLambda(functionName, reqParams, defaultsFileName) {
         }
         console.log("Updating defaults file: \"" + defaultsFileName + "\"");
         var localDefinitions = YAML.load(defaultsFileName);
-        vp.updateFile(defaultsFileName, function () {
+        awsc.updateFile(defaultsFileName, function () {
             localDefinitions.lambdaInfo.arnLambda = request.response.parsedJSON.FunctionArn;
             return YAML.stringify(localDefinitions, 15);
         }, function (backupErr, writeErr) {
