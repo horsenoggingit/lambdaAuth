@@ -1,5 +1,6 @@
 environment:
     AWSCLIUserProfile: adminuser
+    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -60,6 +61,9 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+                    name: AWSLambdaVPCAccessExecutionRole
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -79,6 +83,9 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+                    name: AWSLambdaVPCAccessExecutionRole
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
