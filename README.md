@@ -11,7 +11,7 @@ The default configuration of this project creates a series of API endpoints (/si
 
 1. If it isn't installed on your machine install node.js from https://nodejs.org (node is used for local AWS tools as well as lambdas - npm rules!).
 2. Create an AWS free account.
-3. Add an IAM user to act as proxy (it isn’t good to use your master user day to day)
+3. Add an IAM user in the us-east-1 region to act as proxy (it isn’t good to use your master user day to day)
   * http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html
 4. Install the AWS CLI
   * http://docs.aws.amazon.com/cli/latest/userguide/installing.html
