@@ -47,7 +47,10 @@ paths[argv.baseDefinitionsFile] =[
     ["apiInfo", "lastDeploy"],
     ["dynamodbInfo", "*", "Table"],
     ["s3Info", "buckets", "*", "name"],
-    ["s3Info", "buckets", "*", "location"]
+    ["s3Info", "buckets", "*", "location"],
+    ["vpcInfo","vpcs", "*", "VpcId"],
+    ["securityGroupInfo","securityGroups", "*", "GroupId"],
+    ["subnetInfo", "subnets", "*", "SubnetId"]
 ];
 
 forEachClientDefinition(function (fileName) {

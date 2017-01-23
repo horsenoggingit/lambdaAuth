@@ -5,6 +5,11 @@ AWSTools/createRole.js --roleType lambda
 AWSTools/createRole.js --roleType api
 AWSTools/createRole.js --roleType cognito
 
+#create VPCs and security groups
+AWSTools/createVPC.js
+AWSTools/createSubnet.js
+AWSTools/createSecurityGroup.js
+
 # create storage (db and identity pool)
 AWSTools/createDynamodb.js
 AWSTools/createIdentityPool.js

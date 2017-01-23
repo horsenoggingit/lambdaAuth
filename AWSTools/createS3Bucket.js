@@ -93,7 +93,7 @@ function createBucketForDefinitions(definitions, fileName) {
                 });
             });
         } else {
-            console.log('Bucket already defined. Use "deleteAngularClientBucket.js" first.');
+            console.log('Bucket already defined. Use "deleteS3Bucket.js" first.');
         }
     });
 }

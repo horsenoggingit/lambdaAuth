@@ -1,6 +1,5 @@
 environment:
     AWSCLIUserProfile: adminuser
-    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -278,3 +277,17 @@ s3Info:
             region: us-east-1
             lambdaAliases:
                 resource: PHOTOBUCKET
+vpcInfo:
+    vpcs:
+        lambdaAuth:
+            instance-tenancy: default
+            cidr-block: 10.0.0.0/24
+securityGroupInfo:
+    securityGroups:
+        lambdaAuth:
+            vpc: lambdaAuth
+subnetInfo:
+    subnets:
+        lambdaAuth:
+            cidr-block: 10.0.0.0/24
+            vpc: lambdaAuth

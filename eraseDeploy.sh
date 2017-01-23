@@ -20,5 +20,10 @@ AWSTools/deleteRole.js --roleType api
 AWSTools/deleteRole.js --roleType lambda
 AWSTools/deleteRole.js --roleType cognito
 
+#remove security groups and VPCs
+AWSTools/deleteSecurityGroup.js
+AWSTools/deleteSubnet.js
+AWSTools/deleteVPC.js
+
 # remove Angular client s3 bucket
 AWSTools/deleteS3Bucket.js --type webClient

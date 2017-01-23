@@ -30,6 +30,10 @@ lambdaInfo:
     functionName: signup
     region: us-east-1
     language: nodejs4.3
+    securityGroups:
+        - lambdaAuth
+    subnets:
+        - lambdaAuth
     eventParamPaths:
         /signup:
             post:
