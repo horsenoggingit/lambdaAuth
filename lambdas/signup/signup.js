@@ -12,6 +12,7 @@ const UniqueID = require("./UniqueID");
 const UserIdentity = require("./UserIdentity");
 const APIParamVerify = require("./APIParamVerify");
 const Devices = require("./Devices");
+//const elasticache = new AWS.ElastiCache({apiVersion: '2015-02-02', endpoint: });
 
 /**
 * handler signup

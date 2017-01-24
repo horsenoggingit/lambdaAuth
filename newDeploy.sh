@@ -14,6 +14,7 @@ AWSTools/createSecurityGroup.js
 AWSTools/createDynamodb.js
 AWSTools/createIdentityPool.js
 AWSTools/createS3Bucket.js --type lambda
+AWSTools/createElastiCache.js
 
 # create lambdas
 

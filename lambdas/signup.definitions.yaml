@@ -26,6 +26,9 @@ lambdaInfo:
             -
                 type: cognitoIdentityPoolInfo
                 resourceName: Pool
+            -
+                type: elasticacheInfo
+                resourceName: Memcache
     roleName: userCreator
     functionName: signup
     region: us-east-1

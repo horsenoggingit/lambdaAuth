@@ -24,6 +24,8 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
+awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile);
+
 var AWSCLIUserProfile = "default";
 if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
@@ -79,7 +81,6 @@ function checkTagName(nameTag, subnetName, callback) {
     },
     function (request) {
         if (request.response.error) {
-            console.log(console.error());
             callback(false, null, nameTag, subnetName);
             return;
         }
@@ -112,7 +113,6 @@ function createSubnet(nameTag, subnetName, callback) {
     },
     function (request) {
         if (request.response.error) {
-            console.log(console.error());
             callback(request.response.error, nameTag, subnetName);
             return;
         }
@@ -131,7 +131,6 @@ function createSubnet(nameTag, subnetName, callback) {
         },
         function (request) {
             if (request.response.error) {
-                console.log(console.error());
                 callback(request.response.error, nameTag, subnetName);
                 return;
             }

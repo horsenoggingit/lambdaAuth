@@ -67,7 +67,7 @@ forEachDefinition(function (fileName) {
     };
     var constantsJson = {};
     if (definitions[definitionsBase]) {
-        awsc.verifyPath(definitions,[definitionsBase, 'awsResourceInfo', 'awsResources', 'type'], {oneOfs:['dynamodbInfo','cognitoIdentityPoolInfo']}, "definition file \"" + fileName + "\"").callbackOnError(logfunction);
+        awsc.verifyPath(definitions,[definitionsBase, 'awsResourceInfo', 'awsResources', 'type'], {oneOfs:['dynamodbInfo', 'cognitoIdentityPoolInfo', 's3Info', 'elasticacheInfo']}, "definition file \"" + fileName + "\"").callbackOnError(logfunction);
         awsc.verifyPath(definitions,[definitionsBase, 'awsResourceInfo', 'awsResources', 'resourceName'], 's', "definition file \"" + fileName + "\"").callbackOnError(logfunction);
         definitions[definitionsBase].awsResourceInfo.awsResources.forEach(function (resource) {
             console.log("... adding resouce " + resource.type + ": " + resource.resourceName);
@@ -99,6 +99,13 @@ forEachDefinition(function (fileName) {
                     awsc.verifyPath(baseDefinitions,[resource.type, 'buckets', resource.resourceName, 'lambdaAliases', 'resource'], 's', "definition file \"" + argv.baseDefinitionsFile + "\"").callbackOnError(logfunction);
                     source = baseDefinitions[resource.type].buckets[resource.resourceName].lambdaAliases;
                 break;
+                case 'elasticacheInfo':
+                    if (typeof constantsJson.ELASTICACHE !== 'object') {
+                        constantsJson.ELASTICACHE = {};
+                    }
+                    resourceRoot = constantsJson.ELASTICACHE;
+                    awsc.verifyPath(baseDefinitions,[resource.type, 'elasticaches', resource.resourceName, 'lambdaAliases', 'resource'], 's', "definition file \"" + argv.baseDefinitionsFile + "\"").callbackOnError(logfunction);
+                    source = baseDefinitions[resource.type].elasticaches[resource.resourceName].lambdaAliases;
             }
 
             // attach any attributes here
@@ -126,6 +133,12 @@ forEachDefinition(function (fileName) {
                 case 's3Info':
                     resourceRoot[source.resource].name = baseDefinitions[resource.type].buckets[resource.resourceName].name;
                     resourceRoot[source.resource].location = baseDefinitions[resource.type].buckets[resource.resourceName].location;
+                break;
+                case 'elasticacheInfo':
+                    resourceRoot[source.resource].cacheClusterId = baseDefinitions[resource.type].elasticaches[resource.resourceName].CacheCluster.CacheClusterId;
+                    var configurationEndpoint = baseDefinitions[resource.type].elasticaches[resource.resourceName].CacheCluster.ConfigurationEndpoint;
+                    resourceRoot[source.resource].configurationEndpoint = configurationEndpoint.Address + ":" + configurationEndpoint.Port;
+                    resourceRoot[source.resource].engine = baseDefinitions[resource.type].elasticaches[resource.resourceName].CacheCluster.engine;
                 break;
             }
             var outFname;

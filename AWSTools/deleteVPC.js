@@ -24,6 +24,8 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
+awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile);
+
 var AWSCLIUserProfile = "default";
 if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
@@ -69,7 +71,6 @@ function deleteVPC(nameTag, vpcName, callback) {
     },
     function (request) {
         if (request.response.error && (request.response.errorId !== "InvalidVpcID.NotFound")) {
-            console.log(console.error());
             callback(request.response.error, nameTag, vpcName);
             return;
         }

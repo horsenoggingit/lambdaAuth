@@ -3,7 +3,7 @@
 # remove API
 AWSTools/deleteRestAPI.js
 
-# remove lambdas INCOMPLETE
+# remove lambdas
 AWSTools/deleteLambda.js
 
 # remove dbs
@@ -27,3 +27,6 @@ AWSTools/deleteVPC.js
 
 # remove Angular client s3 bucket
 AWSTools/deleteS3Bucket.js --type webClient
+
+# remove memcache - done last because this operation can take 5 minutes
+AWSTools/createElastiCache.js

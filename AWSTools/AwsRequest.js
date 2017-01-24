@@ -44,6 +44,7 @@ const EventEmitter = require('events').EventEmitter;
 * retryCount: number -- number of retries that should be attempted
 * retryErrorIds: string array -- ids that trigger a retry (all if not set)
 * retryDelay: number -- ms of delay between retries (none if not set)
+* retryCallback: function (request) -- this function is called on every retry
 *
 * Response Object
 *
@@ -176,13 +177,14 @@ class AWSRequest extends EventEmitter {
         this.requestInFlight = false;
         this.requestComplete = false;
         this.retryAttempt++;
-        this.emit("AwsRequestRetry");
         var thisRequest = this;
         if (this.retryDelay) {
             setTimeout(function () {
-                thisRequest.startRequest();
+               thisRequest.emit("AwsRequestRetry", thisRequest);
+               thisRequest.startRequest();
             }, this.retryDelay);
         } else {
+            this.emit("AwsRequestRetry", this);
             this.startRequest();
         }
     }
