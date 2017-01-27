@@ -49,10 +49,16 @@ paths[argv.baseDefinitionsFile] =[
     ["s3Info", "buckets", "*", "name"],
     ["s3Info", "buckets", "*", "location"],
     ["vpcInfo","vpcs", "*", "VpcId"],
-    ["securityGroupInfo","securityGroups", "*", "GroupId"],
+    ["vpcInfo","vpcs", "*", "GroupId"],
+    ["vpcInfo","vpcs", "*", "NetworkAclId"],
+    ["vpcInfo","vpcs", "*", "RouteTableId"],
     ["subnetInfo", "subnets", "*", "SubnetId"],
+    ["internetGatewayInfo", "internetGateways", "*", "InternetGateway"],
+    ["natGatewayInfo", "natGateways", "*", "NatGateway"],
+    ["routeTableInfo", "routeTables", "*", "RouteTable"],
+    ["routeTableInfo", "routeTables", "*", "Associations"],
     ["elasticacheInfo", "elasticaches", "*", "CacheCluster"],
-    ["elasticacheInfo", "subnetGroups", "*", "CacheSubnetGroup"],    
+    ["elasticacheInfo", "subnetGroups", "*", "CacheSubnetGroup"],
 ];
 
 forEachClientDefinition(function (fileName) {

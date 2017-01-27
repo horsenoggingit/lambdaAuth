@@ -41,15 +41,15 @@ if (awsc.verifyPath(baseDefinitions,['subnetInfo', 'subnets'],'o').isVerifyError
 }
 
 Object.keys(baseDefinitions.subnetInfo.subnets).forEach(function (subnetName) {
-    var subnetDescription = baseDefinitions.subnetInfo.subnets[subnetName];
+/*    var subnetDescription = baseDefinitions.subnetInfo.subnets[subnetName];
     if (!awsc.verifyPath(subnetDescription,["SubnetId"],'s').isVerifyError) {
         console.log("Subnet '" + subnetName + "' is already defined. Please use deleteSubnet.js first.");
         return;
-    }
+    }*/
     // check to see if the name tag exists
     var nameTag = baseDefinitions.environment.AWSResourceNamePrefix + subnetName + "Subnet";
     console.log("Checking for Subnet with tag name '" + nameTag + "'");
-    checkTagName(nameTag, subnetName, function(tagExists, results, tagName, subnetName) {
+    awsc.checkEc2ResourceTagName(nameTag, subnetName, AWSCLIUserProfile, function(tagExists, results, tagName, subnetName) {
         if (tagExists) {
             console.log("Subnet '" + tagName + "' exists. updating local definitions with existing ID.");
             // update Subnet info with existing tag IDs
@@ -68,29 +68,6 @@ Object.keys(baseDefinitions.subnetInfo.subnets).forEach(function (subnetName) {
        }
     });
 });
-
-function checkTagName(nameTag, subnetName, callback) {
-    AWSRequest.createRequest({
-        serviceName: "ec2",
-        functionName: "describe-tags",
-        parameters:{
-            "filters": {type: "string", value: "Name=value,Values=" + nameTag},
-            "profile": {type: "string", value: AWSCLIUserProfile}
-        },
-        returnSchema:'json',
-    },
-    function (request) {
-        if (request.response.error) {
-            callback(false, null, nameTag, subnetName);
-            return;
-        }
-        if (!request.response.parsedJSON.Tags || (request.response.parsedJSON.Tags.length === 0)) {
-            callback(false, null, nameTag, subnetName);
-            return;
-        }
-        callback(true, request.response.parsedJSON.Tags, nameTag, subnetName);
-    }).startRequest();
-}
 
 function createSubnet(nameTag, subnetName, callback) {
 
@@ -118,24 +95,9 @@ function createSubnet(nameTag, subnetName, callback) {
         }
 
         baseDefinitions.subnetInfo.subnets[subnetName].SubnetId = request.response.parsedJSON.Subnet.SubnetId;
-
-        AWSRequest.createRequest({
-            serviceName: "ec2",
-            functionName: "create-tags",
-            parameters:{
-                "resource": {type: "string", value: baseDefinitions.subnetInfo.subnets[subnetName].SubnetId},
-                "tags": {type: "string", value: "Key=Name,Value=" + nameTag},
-                "profile": {type: "string", value: AWSCLIUserProfile}
-            },
-            returnSchema:'none',
-        },
-        function (request) {
-            if (request.response.error) {
-                callback(request.response.error, nameTag, subnetName);
-                return;
-            }
-            callback(null, nameTag, subnetName);
-        }).startRequest();
+        awsc.createEc2ResourceTag(baseDefinitions.subnetInfo.subnets[subnetName].SubnetId, nameTag, AWSCLIUserProfile, function (err) {
+            callback(err, nameTag, subnetName);
+        });
     }).startRequest();
 }
 

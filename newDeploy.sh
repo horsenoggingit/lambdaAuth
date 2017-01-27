@@ -8,7 +8,9 @@ AWSTools/createRole.js --roleType cognito
 #create VPCs and security groups
 AWSTools/createVPC.js
 AWSTools/createSubnet.js
-AWSTools/createSecurityGroup.js
+AWSTools/createInternetGateway.js
+AWSTools/createRouteTable.js
+AWSTools/createNatGateway.js
 
 # create storage (db and identity pool)
 AWSTools/createDynamodb.js

@@ -95,6 +95,7 @@ forEachLambdaDefinition(function (fileName) {
 
     var params = {
         'role': {type: 'string', value: arnRole},
+        'timeout': {type: 'string', value: "30"},
         'region': {type: 'string', value: definitions.lambdaInfo.region},
         'handler': {type: 'string', value: functionHandler},
         'function-name': {type: 'string', value: lambdaName},

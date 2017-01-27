@@ -1,6 +1,5 @@
 environment:
     AWSCLIUserProfile: adminuser
-    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -288,15 +287,36 @@ vpcInfo:
     vpcs:
         lambdaAuth:
             instance-tenancy: default
-            cidr-block: 10.0.0.0/24
-securityGroupInfo:
-    securityGroups:
+            cidr-block: 10.0.0.0/20
+routeTableInfo:
+    routeTables:
+        lambdaAuthpublic:
+            vpc: lambdaAuth
+            subnetAssociations:
+                - lambdaAuthpublic
+            routes:
+                -
+                    destination-cidr-block: 0.0.0.0/0
+                    internetGateway: lambdaAuth
+natGatewayInfo:
+    natGateways:
+        publicNat:
+            subnet: lambdaAuthpublic
+            trafficSourceRouters:
+                -
+                    vpcDefaultRouter: lambdaAuth
+                    destination-cidr-block: 0.0.0.0/0
+internetGatewayInfo:
+    internetGateways:
         lambdaAuth:
             vpc: lambdaAuth
 subnetInfo:
     subnets:
         lambdaAuth:
             cidr-block: 10.0.0.0/24
+            vpc: lambdaAuth
+        lambdaAuthpublic:
+            cidr-block: 10.0.2.0/24
             vpc: lambdaAuth
 elasticacheInfo:
     elasticaches:
@@ -305,7 +325,7 @@ elasticacheInfo:
                 resource: MEMCACHE
             num-cache-nodes: 1
             engine: memcached
-            securityGroups:
+            vpcDefaultSecurityGroups:
                 - lambdaAuth
             subnetGroup: lambdaAuth
             cache-node-type: cache.m3.medium

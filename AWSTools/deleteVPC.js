@@ -68,6 +68,8 @@ function deleteVPC(nameTag, vpcName, callback) {
             "profile": {type: "string", value: AWSCLIUserProfile}
         },
         returnSchema:'none',
+        retryCount: 4,
+        retryDelay: 5000
     },
     function (request) {
         if (request.response.error && (request.response.errorId !== "InvalidVpcID.NotFound")) {
@@ -76,6 +78,9 @@ function deleteVPC(nameTag, vpcName, callback) {
         }
 
         delete baseDefinitions.vpcInfo.vpcs[vpcName].VpcId;
+        delete baseDefinitions.vpcInfo.vpcs[vpcName].RouteTableId;
+        delete baseDefinitions.vpcInfo.vpcs[vpcName].NetworkAclId;
+        delete baseDefinitions.vpcInfo.vpcs[vpcName].GroupId;
         callback(null, nameTag, vpcName);
 
     }).startRequest();

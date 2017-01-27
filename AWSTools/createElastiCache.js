@@ -15,6 +15,7 @@ const yargs = require('yargs')
 .alias('h', 'help');
 var argv = yargs.argv;
 
+var retryCounters = {};
 
 if (!fs.existsSync(argv.baseDefinitionsFile)) {
     console.log("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.");
@@ -70,8 +71,7 @@ Object.keys(baseDefinitions.elasticacheInfo.elasticaches).forEach(function (elas
                 console.log("Creating new cache cluster with Id '" + tagName + "'");
                 createCacheCluster(tagName, elasticacheName, function (err, tagName, elasticacheName) {
                     if (err) {
-                        console.log(err);
-                        return;
+                        throw err;
                     }
                     writeOut("Could not update CacheCluster information for cache cluster '" + elasticacheName + "'.", function () {
                         waitForCacheClusterAvailable(elasticacheName, function() {
@@ -205,15 +205,28 @@ function createSubnetGroup(nameTag, subnetName, callback) {
 }
 
 function createCacheCluster(nameTag, elasticacheName, callback) {
-    awsc.verifyPath(baseDefinitions,["elasticacheInfo", "elasticaches", elasticacheName, "securityGroups"], 'a', "elastic cache definition '" + elasticacheName + "'").exitOnError();
-    var secgroups = baseDefinitions.elasticacheInfo.elasticaches[elasticacheName].securityGroups;
-    if (secgroups.length < 1) {
-        throw new Error("At least on security group is requred to create cache clunster '" + elasticacheName + "'");
+    var secgroupNames;
+    if (awsc.verifyPath(baseDefinitions,["elasticacheInfo", "elasticaches", elasticacheName, "securityGroups"], 'a', "elastic cache definition '" + elasticacheName + "'").isVerifyError) {
+        secgroupNames = [];
+    } else {
+        secgroupNames = baseDefinitions.elasticacheInfo.elasticaches[elasticacheName].securityGroups;
     }
     var secGroupIds = [];
-    for (var index = 0; index < secgroups.length; index ++) {
-        awsc.verifyPath(baseDefinitions,["securityGroupInfo", "securityGroups", secgroups[index], "GroupId"], 's', "for security group '" + secgroups[index] + "' in elastic cache definition '" + elasticacheName + "'").exitOnError();
-        secGroupIds.push(baseDefinitions.securityGroupInfo.securityGroups[secgroups[index]].GroupId);
+    for (var index = 0; index < secgroupNames.length; index ++) {
+        awsc.verifyPath(baseDefinitions,["securityGroupInfo", "securityGroups", secgroupNames[index], "GroupId"], 's', "for security group '" + secgroupNames[index] + "' in elastic cache definition '" + elasticacheName + "'").exitOnError();
+        secGroupIds.push(baseDefinitions.securityGroupInfo.securityGroups[secgroupNames[index]].GroupId);
+    }
+
+    if (!awsc.verifyPath(baseDefinitions,["elasticacheInfo", "elasticaches", elasticacheName, "vpcDefaultSecurityGroups"], 'a', "elastic cache definition '" + elasticacheName + "'").isVerifyError) {
+        var vpcs = baseDefinitions.elasticacheInfo.elasticaches[elasticacheName].vpcDefaultSecurityGroups;
+        vpcs.forEach(function (vpcName) {
+           awsc.verifyPath(baseDefinitions,["vpcInfo", "vpcs", vpcName, "GroupId"], 's', "for security vpc default secrity group '" + vpcName + "' in elastic cache definition '" + elasticacheName + "'").exitOnError();
+           secGroupIds.push(baseDefinitions.vpcInfo.vpcs[vpcName].GroupId);
+        });
+    }
+
+    if (secGroupIds.length < 1) {
+        throw new Error("At least on security group is requred to create cache clunster '" + elasticacheName + "'");
     }
     var securityGroupIds = secGroupIds.join(" ");
     awsc.verifyPath(baseDefinitions, ["elasticacheInfo", "elasticaches", elasticacheName, "subnetGroup"], 's', "elastic cache definition '" + elasticacheName + "'").exitOnError();
@@ -248,7 +261,6 @@ function createCacheCluster(nameTag, elasticacheName, callback) {
     }).startRequest();
 }
 
-var retryCounters = {};
 function waitForCacheClusterAvailable(elasticacheName, callback) {
     if (!retryCounters[elasticacheName]) {
         retryCounters[elasticacheName] = 1;

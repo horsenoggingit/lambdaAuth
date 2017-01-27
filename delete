@@ -1,0 +1,200 @@
+./base.definitions.yaml:
+    environment:
+        AWSResourceNamePrefix: testc
+    cognitoIdentityPoolInfo:
+        roleDefinitions:
+            apiAccessRole:
+                arnRole: 'arn:aws:iam::940223146162:role/testbapiAccessRole'
+        identityPools:
+            Pool:
+                identityPoolId: 'us-east-1:1b321f5a-0b1a-4988-9245-d6dc591740df'
+    lambdaInfo:
+        roleDefinitions:
+            userConsumer:
+                arnRole: 'arn:aws:iam::940223146162:role/testbuserConsumer'
+            userCreator:
+                arnRole: 'arn:aws:iam::940223146162:role/testbuserCreator'
+    apiInfo:
+        roleDefinitions:
+            lambdaExecuteRole:
+                arnRole: 'arn:aws:iam::940223146162:role/testblambdaExecuteRole'
+        awsId: 9o84w8b1k4
+        lastDeploy:
+            uploadResult:
+                description: 'Yet another deploy...'
+                id: pmkzr3
+                createdDate: 1485496867
+            invokeURL: 'https://9o84w8b1k4.execute-api.us-east-1.amazonaws.com/dev'
+    dynamodbInfo:
+        Users:
+            Table:
+                TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testbUsers'
+                AttributeDefinitions:
+                    -
+                        AttributeName: id
+                        AttributeType: S
+                ProvisionedThroughput:
+                    NumberOfDecreasesToday: 0
+                    WriteCapacityUnits: 5
+                    ReadCapacityUnits: 5
+                TableSizeBytes: 0
+                TableName: testbUsers
+                TableStatus: CREATING
+                KeySchema:
+                    -
+                        KeyType: HASH
+                        AttributeName: id
+                ItemCount: 0
+                CreationDateTime: 1485496586.653
+        UserEmail:
+            Table:
+                TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testbUserEmail'
+                AttributeDefinitions:
+                    -
+                        AttributeName: email
+                        AttributeType: S
+                ProvisionedThroughput:
+                    NumberOfDecreasesToday: 0
+                    WriteCapacityUnits: 5
+                    ReadCapacityUnits: 5
+                TableSizeBytes: 0
+                TableName: testbUserEmail
+                TableStatus: CREATING
+                KeySchema:
+                    -
+                        KeyType: HASH
+                        AttributeName: email
+                ItemCount: 0
+                CreationDateTime: 1485496586.86
+        DeviceUsers:
+            Table:
+                TableArn: 'arn:aws:dynamodb:us-east-1:940223146162:table/testbDeviceUsers'
+                AttributeDefinitions:
+                    -
+                        AttributeName: deviceId
+                        AttributeType: S
+                ProvisionedThroughput:
+                    NumberOfDecreasesToday: 0
+                    WriteCapacityUnits: 5
+                    ReadCapacityUnits: 5
+                TableSizeBytes: 0
+                TableName: testbDeviceUsers
+                TableStatus: CREATING
+                KeySchema:
+                    -
+                        KeyType: HASH
+                        AttributeName: deviceId
+                ItemCount: 0
+                CreationDateTime: 1485496586.673
+    s3Info:
+        buckets:
+            photobucket:
+                name: testbphotobucket
+                location: /testbphotobucket
+    vpcInfo:
+        vpcs:
+            lambdaAuth:
+                VpcId: vpc-adc356cb
+                GroupId: sg-1bea5867
+                NetworkAclId: acl-8b247aed
+                RouteTableId: rtb-a6a772df
+    subnetInfo:
+        subnets:
+            lambdaAuth:
+                SubnetId: subnet-c0651d9b
+            lambdaAuthpublic:
+                SubnetId: subnet-c7651d9c
+    internetGatewayInfo:
+        internetGateways:
+            lambdaAuth:
+                InternetGateway:
+                    Tags: []
+                    InternetGatewayId: igw-3e501a59
+                    Attachments: []
+    natGatewayInfo:
+        natGateways:
+            publicNat:
+                NatGateway:
+                    NatGatewayAddresses:
+                        -
+                            AllocationId: eipalloc-c9ad84f7
+                    VpcId: vpc-adc356cb
+                    State: pending
+                    NatGatewayId: nat-078d57b95a5dc0f58
+                    SubnetId: subnet-c7651d9c
+                    CreateTime: '2017-01-27T06:24:51.516Z'
+    routeTableInfo:
+        routeTables:
+            lambdaAuthpublic:
+                RouteTable:
+                    Associations: []
+                    RouteTableId: rtb-97a772ee
+                    VpcId: vpc-adc356cb
+                    PropagatingVgws: []
+                    Tags: []
+                    Routes:
+                        -
+                            GatewayId: local
+                            DestinationCidrBlock: 10.0.0.0/20
+                            State: active
+                            Origin: CreateRouteTable
+                Associations:
+                    lambdaAuthpublic: rtbassoc-5edd6926
+    elasticacheInfo:
+        elasticaches:
+            Memcache:
+                CacheCluster:
+                    Engine: memcached
+                    CacheParameterGroup:
+                        CacheNodeIdsToReboot: []
+                        CacheParameterGroupName: default.memcached1.4
+                        ParameterApplyStatus: in-sync
+                    CacheClusterId: testbmemcache
+                    PreferredAvailabilityZone: us-east-1d
+                    ConfigurationEndpoint:
+                        Port: 11211
+                        Address: testbmemcache.ufzexi.cfg.use1.cache.amazonaws.com
+                    CacheSecurityGroups: []
+                    CacheClusterCreateTime: '2017-01-27T06:00:43.069Z'
+                    AutoMinorVersionUpgrade: true
+                    CacheClusterStatus: available
+                    NumCacheNodes: 1
+                    ClientDownloadLandingPage: 'https://console.aws.amazon.com/elasticache/home#client-download:'
+                    SecurityGroups:
+                        -
+                            Status: active
+                            SecurityGroupId: sg-1bea5867
+                    CacheSubnetGroupName: testblambdaauth
+                    EngineVersion: 1.4.33
+                    PendingModifiedValues: null
+                    PreferredMaintenanceWindow: 'tue:04:30-tue:05:30'
+                    CacheNodeType: cache.m3.medium
+        subnetGroups:
+            lambdaAuth:
+                CacheSubnetGroup:
+                    VpcId: vpc-adc356cb
+                    CacheSubnetGroupDescription: lambdaAuth
+                    Subnets:
+                        -
+                            SubnetIdentifier: subnet-c0651d9b
+                            SubnetAvailabilityZone:
+                                Name: us-east-1d
+                    CacheSubnetGroupName: testblambdaauth
+clients/angular.definitions.yaml:
+    s3Info:
+        buckets:
+            lambdaauth:
+                name: testblambdaauth
+                location: /testblambdaauth
+lambdas/login.definitions.yaml:
+    lambdaInfo:
+        arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testblogin'
+lambdas/signup.definitions.yaml:
+    lambdaInfo:
+        arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testbsignup'
+lambdas/token.definitions.yaml:
+    lambdaInfo:
+        arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testbtoken'
+lambdas/userMe.definitions.yaml:
+    lambdaInfo:
+        arnLambda: 'arn:aws:lambda:us-east-1:940223146162:function:testbuserMe'
