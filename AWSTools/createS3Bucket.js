@@ -43,6 +43,8 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
+console.log("## Creating " + argv.type + " S3 Buckets ##");
+
 if (argv.type === 'webClient') {
     forEachLambdaDefinition(function (fileName) {
         // here we would want to fork to do ops in parallel

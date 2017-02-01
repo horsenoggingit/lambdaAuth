@@ -7,7 +7,7 @@ const awsc = require(path.join(__dirname, 'awscommonutils'));
 const AWSRequest = require(path.join(__dirname, 'AWSRequest'));
 
 const yargs = require('yargs')
-.usage('Creates Network ACLs.\nUsage: $0 [options]')
+.usage('Creates Route Tables.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your API')
 .default('s','./base.definitions.yaml')
@@ -33,7 +33,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Creating Route Tables");
+console.log("## Creating Route Tables ##");
 
 if (awsc.verifyPath(baseDefinitions,['routeTableInfo', 'routeTables'],'o').isVerifyError) {
     console.log("Nothing to do.");
@@ -48,11 +48,11 @@ Object.keys(baseDefinitions.routeTableInfo.routeTables).forEach(function (routeT
     }*/
     // check to see if the name tag exists
     var nameTag = baseDefinitions.environment.AWSResourceNamePrefix + routeTableName + "RouteTable";
-    console.log("Checking for Network ACL with tag name '" + nameTag + "'");
+    console.log("Checking for Route Table with tag name '" + nameTag + "'");
     awsc.checkEc2ResourceTagName(nameTag, routeTableName, AWSCLIUserProfile, function(tagExists, results, tagName, routeTableName) {
         if (tagExists) {
-            console.log("Network ALC '" + tagName + "' exists. updating local definitions with existing ID.");
-            // update Network ACL info with existing tag IDs
+            console.log("Route Table '" + tagName + "' exists. updating local definitions with existing ID.");
+            // update Route Table info with existing tag IDs
             if (!baseDefinitions.routeTableInfo.routeTables[routeTableName].RouteTable) {
                 baseDefinitions.routeTableInfo.routeTables[routeTableName].RouteTable = {};
             }
@@ -62,7 +62,7 @@ Object.keys(baseDefinitions.routeTableInfo.routeTables).forEach(function (routeT
            makeSubnetAssociations(routeTableName);
            addRoutes(routeTableName);
        } else {
-           console.log("Creating new Network ACL with tag name '" + tagName + "'");
+           console.log("Creating new Route Table with tag name '" + tagName + "'");
            createRouteTable(tagName, routeTableName, function (err, tagName, routeTableName) {
                if (err) {
                    console.log(err);
@@ -199,6 +199,5 @@ function writeOut(errorText) {
             console.log("Unable to write updated definitions file. " + errorText);
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

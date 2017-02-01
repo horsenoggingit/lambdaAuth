@@ -35,6 +35,8 @@ if (typeof baseDefinitions.apiInfo === 'object') {
     }
 }
 
+console.log("## Deploying API ##");
+
 var AWSCLIUserProfile = "default";
 if (typeof baseDefinitions.environment !== 'object') {
 } else {
@@ -103,7 +105,6 @@ exec('aws ' + params.join(" "), (err, stdout, stderr) => {
                     console.log("Unable to write updated definitions file.");
                     throw new Error(writeErr);
                 }
-                console.log("Done.");
             });
         }
     }

@@ -24,6 +24,9 @@ AWSTools/deleteRole.js --roleType lambda
 AWSTools/deleteRole.js --roleType cognito
 
 #remove security groups and VPCs
+AWSTools/deleteNatGateway.js
+AWSTools/deleteRouteTable.js
+AWSTools/deleteInternetGateway.js
 AWSTools/deleteSubnet.js
 AWSTools/deleteVPC.js
 

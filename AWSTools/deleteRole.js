@@ -38,6 +38,9 @@ switch (argv.roleType) {
     default:
 }
 
+console.log("## Deleting Roles (" + argv.roleType + ") ##");
+
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
 awscommon.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
@@ -131,7 +134,6 @@ function deletePolicies(policyArray, roleKey) {
                             if (successDecCount !== 0) {
                                 console.log("Some creation operations failed.");
                             }
-                            console.log("Done.");
                         });
                     }
                 });

@@ -399,12 +399,12 @@ function checkEc2ResourceTagName(nameTag, resourceName, AWSCLIUserProfile, callb
 
 exports.checkEc2ResourceTagName = checkEc2ResourceTagName;
 
-function describeEc2ResourvecForVpcId(describeCommand, resourceResult, VpcId, AWSCLIUserProfile, callback, retryCount) {
+function describeEc2ResourceForService(describeCommand, resourceResult, name, VpcId, AWSCLIUserProfile, waitForAtLeastOneResult, callback, retryCount) {
     AWSRequest.createRequest({
         serviceName: "ec2",
         functionName: describeCommand,
         parameters:{
-            "filters": {type: "string", value: "Name=vpc-id,Values=" + VpcId},
+            "filters": {type: "string", value: "Name=" + name + ",Values=" + VpcId},
             "profile": {type: "string", value: AWSCLIUserProfile}
         },
         returnSchema:'json',
@@ -417,7 +417,7 @@ function describeEc2ResourvecForVpcId(describeCommand, resourceResult, VpcId, AW
         }
         if (request.response.error || retryCount === 3) {
             console.log(request.response.error);
-            console.log("Unable to fetch Security Group Id");
+            console.log("Unable to fetch " + resourceResult);
             if (request.response.error) {
                 callback(request.response.error);
                 return;
@@ -425,15 +425,15 @@ function describeEc2ResourvecForVpcId(describeCommand, resourceResult, VpcId, AW
             callback(new Error("Unable to fetch " + resourceResult));
             return;
         }
-        if (request.response.parsedJSON[resourceResult].length === 0) {
-            setTimeout(function() {describeEc2ResourvecForVpcId(describeCommand, resourceResult, VpcId, AWSCLIUserProfile, retryCount + 1);}, 5000);
+        if (waitForAtLeastOneResult && request.response.parsedJSON[resourceResult].length === 0) {
+            setTimeout(function() {describeEc2ResourceForService(describeCommand, resourceResult, name, VpcId, AWSCLIUserProfile, waitForAtLeastOneResult, callback, retryCount + 1);}, 5000);
             return;
         }
         callback(null, request.response.parsedJSON[resourceResult]);
    }).startRequest();
 }
 
-exports.describeEc2ResourvecForVpcId = describeEc2ResourvecForVpcId;
+exports.describeEc2ResourceForService = describeEc2ResourceForService;
 
 function createEc2ResourceTag(resourceId, nameTag, AWSCLIUserProfile, callback) {
     AWSRequest.createRequest({

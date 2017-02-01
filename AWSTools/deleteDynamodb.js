@@ -31,6 +31,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
+console.log("## Deleting Dynamedb Tables ##");
 
 var localDbKeys = Object.keys(baseDefinitions.dynamodbInfo);
 if (argv.dynamoTableKey) {
@@ -50,7 +51,7 @@ for (var keyIndex = 0; keyIndex < localDbKeys.length; keyIndex++) {
     // send out a request to delete a new table.
     console.log("Deleting table \"" + tableName + "\"");
     requests.push(getTableDeletionRequest(tableKey, tableName, function (tblKey, tblName) {
-        console.log("Deleted table \"" + tblName + "\" description. Updating local definition");
+        console.log("Deleted table \"" + tblName + "\" description.");
         delete baseDefinitions.dynamodbInfo[tblKey].Table;
     }));
 }
@@ -59,7 +60,7 @@ AwsRequest.createBatch(requests, function (batch) {
     // write out the table.
     var failCount = 0;
     batch.requestArray.forEach(function (request) {
-        if (request.response.error) {
+        if (request.response.error && request.response.errorId !== "ResourceNotFoundException") {
             console.log(request.response.error);
             failCount ++;
         }
@@ -88,6 +89,10 @@ function getTableDeletionRequest (tableKey, tableName, callback) {
     },
     function (request) {
         if (request.response.error) {
+            if (request.response.errorId === "ResourceNotFoundException") {
+                callback(request.context.tableKey, request.context.tableName, null);
+                return;
+            }
             throw request.response.error;
         }
         callback(request.context.tableKey, request.context.tableName, request.response.parsedJSON.Table);
@@ -107,6 +112,5 @@ function writeout() {
             console.log("Unable to write updated definitions file.");
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

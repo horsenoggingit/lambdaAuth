@@ -35,6 +35,8 @@ if (typeof baseDefinitions.apiInfo !== 'object') {
 awsc.verifyPath(baseDefinitions,['apiInfo','awsId'],'s', "base definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
 awsc.verifyPath(baseDefinitions,['apiInfo','region'],'s', "base definitions file \"" + argv.baseDefinitionsFile + "\"").exitOnError();
 
+console.log("## Uploading APIs ##");
+
 var AWSCLIUserProfile = "default";
 if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
   AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
@@ -61,5 +63,4 @@ AwsRequest.createRequest({
     throw request.response.error;
   }
   console.log(request.response.stdout);
-  console.log("Done.");
 }).startRequest();

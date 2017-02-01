@@ -33,7 +33,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Creating Subnets");
+console.log("## Creating Subnets ##");
 
 if (awsc.verifyPath(baseDefinitions,['subnetInfo', 'subnets'],'o').isVerifyError) {
     console.log("Nothing to do.");
@@ -115,6 +115,5 @@ function writeOut(errorText) {
             console.log("Unable to write updated definitions file. " + errorText);
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

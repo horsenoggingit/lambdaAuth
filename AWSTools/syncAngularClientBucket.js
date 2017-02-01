@@ -59,7 +59,6 @@ forEachLambdaDefinition(function (fileName) {
                         throw err;
                     } else {
                         console.log('Site URL is: http://' + bucketInfo.name + ".s3-website-" + bucketInfo.region + ".amazonaws.com");
-                        console.log("Done.");
                     }
                 });
             } else {

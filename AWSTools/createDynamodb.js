@@ -31,6 +31,8 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
+console.log("## Creating Dynamodb Tables ##");
+
 getTableNameArray(function(tableNames) {
     // go through and see if there are any matches with tables we have here.
     // if there are table names that match but no ARN impoet the ARN.
@@ -60,14 +62,14 @@ getTableNameArray(function(tableNames) {
         if (tableNames.indexOf(tableName) >= 0) {
             console.log("Getting description of existing table \"" + tableName + "\"");
             requests.push(getTableDescriptionRequest(tableKey, tableName, function (tblKey, tblName, description) {
-                console.log("Received existing table \"" + tblName + "\" description. Updating local definition");
+                console.log("Received existing table \"" + tblName + "\" description.");
                 baseDefinitions.dynamodbInfo[tblKey].Table = description;
             }));
         } else {
             // send out a request to create a new table.
             console.log("Creating new table \"" + tableName + "\"");
             requests.push(getTableCreationRequest(tableKey, tableName, function (tblKey, tblName, description) {
-                console.log("Created table \"" + tblName + "\" description. Updating local definition");
+                console.log("Created table \"" + tblName + "\" description.");
                 baseDefinitions.dynamodbInfo[tblKey].Table = description;
             }));
         }
@@ -168,6 +170,5 @@ function writeout() {
             console.log("Unable to write updated definitions file.");
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

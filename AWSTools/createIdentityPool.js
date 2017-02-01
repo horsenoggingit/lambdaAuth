@@ -27,6 +27,8 @@ if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
+console.log("## Creating Identity Pools ##");
+
 awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var numIdentityPools = Object.keys(baseDefinitions.cognitoIdentityPoolInfo.identityPools).length;
@@ -127,7 +129,6 @@ function writeout() {
             console.log("Some creation operations failed.");
         }
 
-        console.log("Done.");
     });
 }
 

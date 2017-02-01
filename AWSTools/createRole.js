@@ -38,6 +38,8 @@ switch (argv.roleType) {
     default:
 }
 
+console.log("## Creating " + roleBase + " roles ##");
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 awscommon.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \"" + argv.baseDefinitionsFile+"\"").exitOnError();
 
@@ -106,7 +108,6 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
                 execReq(command, policyArn, rlName);
             });
         }
-        console.log("Updating definitions file with results");
         if (createRoleComplete === Object.keys(baseDefinitions[roleBase].roleDefinitions).length) {
             awscommon.updateFile(argv.baseDefinitionsFile, function () {
                 return YAML.stringify(baseDefinitions, 15);
@@ -122,7 +123,7 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
                 if (createRoleSuccess !== createRoleComplete) {
                     console.log("Some creation operations failed.");
                 }
-                console.log("Done.");
+
             });
         }
 
@@ -170,7 +171,6 @@ function createRoleAndUploadPolicies(createCommand, policyArray, roleKey, profil
 }
 
 function processRoleResult(stdout, roleKey, policyArray, callback) {
-    console.log(stdout);
     var result = JSON.parse(stdout);
     if (typeof result !== 'object') {
         console.log("AWS result could not be parsed. Command may have failed. roleArn was not updated in \"" + argv.baseDefinitionsFile + "\".");

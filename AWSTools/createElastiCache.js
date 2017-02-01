@@ -34,7 +34,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Creating ElastiCache clusters");
+console.log("## Creating ElastiCache clusters ##");
 
 if (awsc.verifyPath(baseDefinitions,['elasticacheInfo', 'elasticaches'],'o').isVerifyError) {
     console.log("Nothing to do.");
@@ -64,7 +64,7 @@ Object.keys(baseDefinitions.elasticacheInfo.elasticaches).forEach(function (elas
                 // write out result
                 writeOut("Could not update CacheCluster information for cache cluster '" + elasticacheName + "'.", function () {
                     waitForCacheClusterAvailable(elasticacheName, function() {
-                        console.log("Done");
+
                     });
                 });
             } else {
@@ -75,7 +75,7 @@ Object.keys(baseDefinitions.elasticacheInfo.elasticaches).forEach(function (elas
                     }
                     writeOut("Could not update CacheCluster information for cache cluster '" + elasticacheName + "'.", function () {
                         waitForCacheClusterAvailable(elasticacheName, function() {
-                            console.log("Done");
+
                         });
                     });
                 });

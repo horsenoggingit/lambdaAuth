@@ -299,6 +299,7 @@ routeTableInfo:
                 -
                     destination-cidr-block: 0.0.0.0/0
                     internetGateway: lambdaAuth
+            Associations: null
 natGatewayInfo:
     natGateways:
         publicNat:

@@ -24,7 +24,7 @@ const path = require('path');
 
 // the "paths" component is in the lambdaDefinitions
 // at apiInfo.path
-console.log("Updating Handler Event Parameters");
+console.log("## Updating Handler Event Parameters ##");
 fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
     if (err) {
         console.log(err);
@@ -65,5 +65,4 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
         console.log("Nothing written. Failed");
         process.exit(1);
     }
-    console.log("Done");
 });

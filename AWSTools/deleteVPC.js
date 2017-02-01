@@ -33,7 +33,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Deleting VPCs");
+console.log("## Deleting VPCs ##");
 if (awsc.verifyPath(baseDefinitions,['vpcInfo', 'vpcs'],'o').isVerifyError) {
     console.log("Nothing to do.");
     return;
@@ -100,6 +100,5 @@ function writeOut(errorText) {
             console.log("Unable to write updated definitions file. " + errorText);
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

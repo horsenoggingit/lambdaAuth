@@ -168,15 +168,22 @@ class AWSRequest extends EventEmitter {
         this.executeRequest();
     }
 
-    retry() {
-        if (!this.requestComplete) {
-            throw new Error("Attenpting to retry a request that has not been started");
+    reset() {
+        if (this.requestInFlight) {
+            throw new Error("Attenpting to reset a request that is in flight.");
         }
         this.retryResponses.push(this.response);
         this.resonse = null;
         this.requestInFlight = false;
         this.requestComplete = false;
         this.retryAttempt++;
+    }
+    
+    retry() {
+        if (!this.requestComplete) {
+            throw new Error("Attenpting to retry a request that has not been started");
+        }
+        this.reset();
         var thisRequest = this;
         if (this.retryDelay) {
             setTimeout(function () {

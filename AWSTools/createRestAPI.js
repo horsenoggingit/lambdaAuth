@@ -56,7 +56,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Uploading API to AWS");
+console.log("## Creating API ##");
 
 AwsRequest.createRequest({
     serviceName: 'apigateway',
@@ -85,6 +85,5 @@ AwsRequest.createRequest({
             console.log("Unable to write updated definitions file.");
             throw writeErr;
         }
-        console.log("Done.");
     });
 }).startRequest();

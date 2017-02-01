@@ -36,6 +36,8 @@ if (!fs.existsSync(argv.clientDefinitionsDir)) {
     throw new Error("Clients path \"" + argv.clientDefinitionsDir + "\" not found.");
 }
 
+console.log("## Deleting " + argv.type + " S3 Buckets ##");
+
 var AWSCLIUserProfile = "default";
 if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
@@ -73,7 +75,7 @@ function deleteBucketForDefinitions(definitions, fileName) {
                 delete definitions.s3Info.buckets[bucketPrefix].name;
                 delete definitions.s3Info.buckets[bucketPrefix].location;
                 writeOut(fileName, definitions, "bucket name was not removed.", function () {
-                    console.log("Done.");
+
                 });
             });
         } else {

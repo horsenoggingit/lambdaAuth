@@ -32,6 +32,8 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
+console.log("## Creating Lambdas ##");
+
 if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
     yargs.showHelp("log");
     throw new Error("Lambda's path \"" + argv.lambdaDefinitionsDir + "\" not found.");
@@ -162,7 +164,6 @@ function createLambda(functionName, reqParams, defaultsFileName) {
                 console.log("Unable to write updated definitions file.");
                 throw writeErr;
             }
-            console.log("Done.");
         });
 
     }).startRequest();

@@ -37,7 +37,7 @@ awsc.verifyPath(baseDefinitions,['apiInfo', 'title'], 's', "in base definitions 
 
 if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
     baseDefinitions.apiInfo.AWSSwaggerHeader.info.title = baseDefinitions.environment.AWSResourceNamePrefix + baseDefinitions.apiInfo.title;
-} 
+}
 
 if (fs.existsSync(argv.outputFilename)) {
     fs.unlinkSync(argv.outputFilename);
@@ -45,7 +45,7 @@ if (fs.existsSync(argv.outputFilename)) {
 
 // the "paths" component is in the lambdaDefinitions
 // at apiInfo.path
-console.log("Coalescing API");
+console.log("## Coalescing API ##");
 fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
     if (err) {
         console.log(err);
@@ -103,8 +103,6 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
     fs.writeFile(argv.outputFilename, YAML.stringify(swaggerBaseFile, 15), function (err) {
         if (err) {
             console.log(err);
-        } else {
-            console.log("Done!");
         }
     });
 

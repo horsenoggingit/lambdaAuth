@@ -30,6 +30,8 @@ if (!fs.existsSync(argv.baseDefinitionsFile)) {
 }
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
+console.log("## Updating AWS Constants ##");
+
 var constantPathBase;
 var definitionsBase;
 switch (argv.constantsType) {

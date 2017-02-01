@@ -33,7 +33,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Creating VPCs");
+console.log("## Creating VPCs ##");
 
 if (awsc.verifyPath(baseDefinitions,['vpcInfo', 'vpcs'],'o').isVerifyError) {
     console.log("Nothing to do.");
@@ -98,15 +98,16 @@ function createVPC(nameTag, vpcName, callback) {
         fetchSecurityGroupId(nameTag, vpcName);
         fetchNetworkAclId(nameTag, vpcName);
         fetchRouteTableId(nameTag, vpcName);
-
     }).startRequest();
 }
 
 function fetchSecurityGroupId(nameTag, vpcName) {
-    awsc.describeEc2ResourvecForVpcId("describe-security-groups",
+    awsc.describeEc2ResourceForService("describe-security-groups",
                                         "SecurityGroups",
+                                        "vpc-id",
                                         baseDefinitions.vpcInfo.vpcs[vpcName].VpcId,
                                         AWSCLIUserProfile,
+                                        true,
                                         function (err, resourceResult) {
                                             if (err) {
                                                 throw err;
@@ -117,10 +118,12 @@ function fetchSecurityGroupId(nameTag, vpcName) {
  }
 
 function fetchRouteTableId(nameTag, vpcName) {
-    awsc.describeEc2ResourvecForVpcId("describe-route-tables",
+    awsc.describeEc2ResourceForService("describe-route-tables",
                                         "RouteTables",
+                                        "vpc-id",
                                         baseDefinitions.vpcInfo.vpcs[vpcName].VpcId,
                                         AWSCLIUserProfile,
+                                        true,
                                         function (err, resourceResult) {
                                             if (err) {
                                                 throw err;
@@ -131,10 +134,12 @@ function fetchRouteTableId(nameTag, vpcName) {
 }
 
 function fetchNetworkAclId(nameTag, vpcName) {
-    awsc.describeEc2ResourvecForVpcId("describe-network-acls",
+    awsc.describeEc2ResourceForService("describe-network-acls",
                                         "NetworkAcls",
+                                        "vpc-id",
                                         baseDefinitions.vpcInfo.vpcs[vpcName].VpcId,
                                         AWSCLIUserProfile,
+                                        true,
                                         function (err, resourceResult) {
                                             if (err) {
                                                 throw err;
@@ -157,6 +162,5 @@ function writeOut(errorText) {
             console.log("Unable to write updated definitions file. " + errorText);
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

@@ -34,7 +34,7 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Creating NAT Gateways");
+console.log("## Creating NAT Gateways ##");
 
 if (awsc.verifyPath(baseDefinitions,['natGatewayInfo', 'natGateways'],'o').isVerifyError) {
     console.log("Nothing to do.");

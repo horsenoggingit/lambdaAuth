@@ -40,6 +40,8 @@ if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
 
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
+console.log("## Uploading Lambdas ##");
+
 var AWSCLIUserProfile = "default";
 if (typeof baseDefinitions.environment !== 'object') {
 } else {

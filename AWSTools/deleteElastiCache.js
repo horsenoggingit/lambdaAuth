@@ -34,8 +34,9 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
 }
 
 
+console.log("## Deleting ElastiCache clusters ##");
 console.log("This command may take up to 5 minutes to complete because cache subnet group deletion must wait for cache clusters to be deleted.");
-console.log("Deleting ElastiCache clusters");
+
 if (awsc.verifyPath(baseDefinitions,['elasticacheInfo', 'elasticaches'],'o').isVerifyError) {
     console.log("Nothing to do.");
     return;
@@ -79,11 +80,9 @@ function deleteSubnetGroups() {
         AWSRequest.createBatch(deleteSubnetGroupRequests, function () {
 
             writeOut("Couldn't updated deleted subnet group information.", function () {
-                console.log("Done.");
+
             });
         }).startRequest();
-    } else {
-        console.log("Done.");
     }
 }
 
