@@ -83,7 +83,7 @@ function handler(event, context, callback) {
                     message: "Could not validate email."
                 }));
             } else {
-                // it we get some objects back from the email table then the users has already signed up
+                // if we get some objects back from the email table then the users has already signed up
                 if (typeof data.Item === "object") {
                     console.log(data);
                     var errorObject = {
@@ -186,6 +186,7 @@ function handler(event, context, callback) {
                     message: "Could not put user info."
                 }));
             } else {
+                // associate this device id with the user
                 Devices.addUserId(event.device_id, OpenIDToken.IdentityId, function (err) {
                     if (err) {
                         console.log("Error creating device token.");
