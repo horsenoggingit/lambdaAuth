@@ -136,7 +136,7 @@ AWSTools/createLambda.js --lambdaName introRandom;
 AWSTools/coalesceSwaggerAPIDefinition.js;  
 AWSTools/uploadRestAPI.js;  
 AWSTools/deployAPI.js;  
-AWSTools/getClientSDK.js;`  
+AWSTools/getClientSDK.js; 
 ```
 
 ##AWS Utilities##
