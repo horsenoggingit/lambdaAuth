@@ -61,7 +61,7 @@ You will get the following text and parameter definitions. "Helper script to get
 
 In this excersize we will create a new authenticated get endpoint that accepts a parameter and makes a new response object.
 
-Lets say we want to have an endpoint that returns a specific number of users we'd like to introduce to currently authenticated user, we'll call it /intro/Random and it will accept a required parameter "quantity" that is a number representing  how many "user" objects we wish to be returned. We already have a "user" model defined in this project (see the file base.definitions.yaml in the root project directory) so we would like to piggyback off that in the response.
+Lets say we want to have an endpoint that returns a specific number of users we'd like to introduce to currently authenticated user, we'll call it /intro/random and it will accept a required parameter "quantity" that is a number representing  how many "user" objects we wish to be returned. We already have a "user" model defined in this project (see the file base.definitions.yaml in the root project directory) so we would like to piggyback off that in the response.
 
 The comand for this is:
 
