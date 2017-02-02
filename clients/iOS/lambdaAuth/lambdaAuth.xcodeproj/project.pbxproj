@@ -9,18 +9,18 @@
 /* Begin PBXBuildFile section */
 		1A043D9D1E1AE0A000019A33 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043D9C1E1AE0A000019A33 /* main.m */; };
 		1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043D9F1E1AE0A000019A33 /* AppDelegate.m */; };
-		1A043DA31E1AE0A000019A33 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DA21E1AE0A000019A33 /* NavigationController.m */; };
 		1A043DA61E1AE0A000019A33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA41E1AE0A000019A33 /* Main.storyboard */; };
 		1A043DA81E1AE0A000019A33 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA71E1AE0A000019A33 /* Assets.xcassets */; };
 		1A043DAB1E1AE0A000019A33 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */; };
 		1A043DB61E1AE0A000019A33 /* lambdaAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DB51E1AE0A000019A33 /* lambdaAuthTests.m */; };
 		1A043DC11E1AE0A000019A33 /* lambdaAuthUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */; };
+		1A062B471E42A334000AE3ED /* KeyboardHeightAutosizingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A062B461E42A334000AE3ED /* KeyboardHeightAutosizingView.m */; };
+		1A062B4A1E42A3CC000AE3ED /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A062B491E42A3CC000AE3ED /* NavigationController.m */; };
 		1A2937DB1E1B079E00AD957E /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937DA1E1B079E00AD957E /* LoginViewController.m */; };
 		1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937DD1E1B07BA00AD957E /* SignupViewController.m */; };
 		1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E01E1B07DA00AD957E /* LogoutViewController.m */; };
 		1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E31E1B07F900AD957E /* FrontPageViewController.m */; };
 		1A2937E81E1B2A5300AD957E /* NavigationReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */; };
-		1A2937EC1E1C508200AD957E /* KeyboardHeightAutosizingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */; };
 		1A2937F01E1C722800AD957E /* KeyboardStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937EF1E1C722800AD957E /* KeyboardStateManager.m */; };
 		1A2937F41E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937F31E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m */; };
 		1A2937F71E1CBB0A00AD957E /* AWSAPIClientsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2937F61E1CBB0A00AD957E /* AWSAPIClientsManager.m */; };
@@ -71,8 +71,6 @@
 		1A043D9C1E1AE0A000019A33 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1A043D9E1E1AE0A000019A33 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1A043D9F1E1AE0A000019A33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		1A043DA11E1AE0A000019A33 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
-		1A043DA21E1AE0A000019A33 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		1A043DA51E1AE0A000019A33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1A043DA71E1AE0A000019A33 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A043DAA1E1AE0A000019A33 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -83,6 +81,10 @@
 		1A043DBC1E1AE0A000019A33 /* lambdaAuthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lambdaAuthUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A043DC01E1AE0A000019A33 /* lambdaAuthUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lambdaAuthUITests.m; sourceTree = "<group>"; };
 		1A043DC21E1AE0A000019A33 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A062B451E42A334000AE3ED /* KeyboardHeightAutosizingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyboardHeightAutosizingView.h; path = Views/KeyboardHeightAutosizingView.h; sourceTree = "<group>"; };
+		1A062B461E42A334000AE3ED /* KeyboardHeightAutosizingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeyboardHeightAutosizingView.m; path = Views/KeyboardHeightAutosizingView.m; sourceTree = "<group>"; };
+		1A062B481E42A3CC000AE3ED /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavigationController.h; path = ViewControllers/NavigationController.h; sourceTree = "<group>"; };
+		1A062B491E42A3CC000AE3ED /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NavigationController.m; path = ViewControllers/NavigationController.m; sourceTree = "<group>"; };
 		1A2937D91E1B079E00AD957E /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ViewControllers/LoginViewController.h; sourceTree = "<group>"; };
 		1A2937DA1E1B079E00AD957E /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ViewControllers/LoginViewController.m; sourceTree = "<group>"; };
 		1A2937DC1E1B07BA00AD957E /* SignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SignupViewController.h; path = ViewControllers/SignupViewController.h; sourceTree = "<group>"; };
@@ -93,8 +95,6 @@
 		1A2937E31E1B07F900AD957E /* FrontPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FrontPageViewController.m; path = ViewControllers/FrontPageViewController.m; sourceTree = "<group>"; };
 		1A2937E61E1B2A5300AD957E /* NavigationReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavigationReplaceSegue.h; path = Segues/NavigationReplaceSegue.h; sourceTree = "<group>"; };
 		1A2937E71E1B2A5300AD957E /* NavigationReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NavigationReplaceSegue.m; path = Segues/NavigationReplaceSegue.m; sourceTree = "<group>"; };
-		1A2937EA1E1C508200AD957E /* KeyboardHeightAutosizingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardHeightAutosizingView.h; sourceTree = "<group>"; };
-		1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardHeightAutosizingView.m; sourceTree = "<group>"; };
 		1A2937EE1E1C722800AD957E /* KeyboardStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyboardStateManager.h; path = Managers/KeyboardStateManager.h; sourceTree = "<group>"; };
 		1A2937EF1E1C722800AD957E /* KeyboardStateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeyboardStateManager.m; path = Managers/KeyboardStateManager.m; sourceTree = "<group>"; };
 		1A2937F21E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeveloperAuthenticatedIdentityProvider.h; path = DeveloperIdentityProvider/DeveloperAuthenticatedIdentityProvider.h; sourceTree = "<group>"; };
@@ -197,8 +197,6 @@
 				1A2937D81E1B073D00AD957E /* ViewControllers */,
 				1A043D9E1E1AE0A000019A33 /* AppDelegate.h */,
 				1A043D9F1E1AE0A000019A33 /* AppDelegate.m */,
-				1A043DA11E1AE0A000019A33 /* NavigationController.h */,
-				1A043DA21E1AE0A000019A33 /* NavigationController.m */,
 				1A043DA41E1AE0A000019A33 /* Main.storyboard */,
 				1A043DA71E1AE0A000019A33 /* Assets.xcassets */,
 				1A043DA91E1AE0A000019A33 /* LaunchScreen.storyboard */,
@@ -237,6 +235,8 @@
 		1A2937D81E1B073D00AD957E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1A062B481E42A3CC000AE3ED /* NavigationController.h */,
+				1A062B491E42A3CC000AE3ED /* NavigationController.m */,
 				1A2937D91E1B079E00AD957E /* LoginViewController.h */,
 				1A2937DA1E1B079E00AD957E /* LoginViewController.m */,
 				1A2937DC1E1B07BA00AD957E /* SignupViewController.h */,
@@ -265,8 +265,8 @@
 		1A2937E91E1C504300AD957E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1A2937EA1E1C508200AD957E /* KeyboardHeightAutosizingView.h */,
-				1A2937EB1E1C508200AD957E /* KeyboardHeightAutosizingView.m */,
+				1A062B451E42A334000AE3ED /* KeyboardHeightAutosizingView.h */,
+				1A062B461E42A334000AE3ED /* KeyboardHeightAutosizingView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -538,10 +538,9 @@
 				1A2937E41E1B07F900AD957E /* FrontPageViewController.m in Sources */,
 				1A94A2E11E2597F90012528D /* MYPREFIXAuthClient.m in Sources */,
 				1A2937DB1E1B079E00AD957E /* LoginViewController.m in Sources */,
-				1A043DA31E1AE0A000019A33 /* NavigationController.m in Sources */,
 				1A043DA01E1AE0A000019A33 /* AppDelegate.m in Sources */,
 				1A94A2E51E2597F90012528D /* MYPREFIXSignupRequest.m in Sources */,
-				1A2937EC1E1C508200AD957E /* KeyboardHeightAutosizingView.m in Sources */,
+				1A062B471E42A334000AE3ED /* KeyboardHeightAutosizingView.m in Sources */,
 				1A2937F71E1CBB0A00AD957E /* AWSAPIClientsManager.m in Sources */,
 				1A94A2E61E2597F90012528D /* MYPREFIXTokenRequest.m in Sources */,
 				1A043D9D1E1AE0A000019A33 /* main.m in Sources */,
@@ -550,6 +549,7 @@
 				1A94A2E31E2597F90012528D /* MYPREFIXError.m in Sources */,
 				1AE9FA971E24DA1E004C1377 /* RootViewController.m in Sources */,
 				1AC9B4661E1F625700962F77 /* FormViewController.m in Sources */,
+				1A062B4A1E42A3CC000AE3ED /* NavigationController.m in Sources */,
 				1A2937DE1E1B07BA00AD957E /* SignupViewController.m in Sources */,
 				1A94A2E41E2597F90012528D /* MYPREFIXLoginRequest.m in Sources */,
 			);

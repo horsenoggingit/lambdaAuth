@@ -26,10 +26,17 @@ lambdaInfo:
             -
                 type: cognitoIdentityPoolInfo
                 resourceName: Pool
+            -
+                type: elasticacheInfo
+                resourceName: Memcache
     roleName: userCreator
     functionName: signup
     region: us-east-1
     language: nodejs4.3
+    vpcDefaultSecurityGroups:
+        - lambdaAuth
+    subnets:
+        - lambdaAuth
     eventParamPaths:
         /signup:
             post:
@@ -131,6 +138,17 @@ apiInfo:
                                 type: string
                             Access-Control-Allow-Origin:
                                 type: string
+                    '503':
+                        description: '503 response'
+                        schema:
+                            $ref: '#/definitions/Error'
+                        headers:
+                            Access-Control-Allow-Headers:
+                                type: string
+                            Access-Control-Allow-Methods:
+                                type: string
+                            Access-Control-Allow-Origin:
+                                type: string
                 x-amazon-apigateway-integration:
                     credentials: lambdaExecuteRole
                     responses:
@@ -176,6 +194,14 @@ apiInfo:
                                 method.response.header.Access-Control-Allow-Origin: '''*'''
                         '.*httpStatus\":500.*':
                             statusCode: '500'
+                            responseTemplates:
+                                application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
+                            responseParameters:
+                                method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+                                method.response.header.Access-Control-Allow-Methods: '''*'''
+                                method.response.header.Access-Control-Allow-Origin: '''*'''
+                        '.*httpStatus\":503.*':
+                            statusCode: '503'
                             responseTemplates:
                                 application/json: "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n#set ($bodyObj = $util.parseJson($input.body))\n{\n  \"type\" : \"$errorMessageObj.errorType\",\n  \"message\" : \"$errorMessageObj.message\",\n  \"requestId\" : \"$errorMessageObj.requestId\"\n}"
                             responseParameters:

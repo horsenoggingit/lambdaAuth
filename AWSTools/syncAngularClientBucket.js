@@ -47,35 +47,42 @@ forEachLambdaDefinition(function (fileName) {
         throw new Error("Definitions file \"" + fileName + "\" could not be parsed");
     }
 
-    if ((!awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'name'], 's', 'in angular client definition file').isVerifyError) &&
-    (!awsc.verifyPath(definitions, ['s3Info', 'fileSyncInfo', 'syncPath'], 's', 'in angular client definition file').isVerifyError)) {
+    if (!awsc.verifyPath(definitions, ['s3Info', 'buckets'], 'o', 'in angular client definition file').isVerifyError) {
+        Object.keys(definitions.s3Info.buckets).forEach(function (bucketPrefix) {
+            var bucketInfo = definitions.s3Info.buckets[bucketPrefix];
+            if ((!awsc.verifyPath(bucketInfo, ['name'], 's', 'in angular client definition file').isVerifyError) &&
+            (!awsc.verifyPath(bucketInfo, ['fileSyncInfo', 'syncPath'], 's', 'in angular client definition file').isVerifyError)) {
 
-        console.log("Syncing bucket \"" + definitions.s3Info.bucketInfo.name + "\".");
-        syncFiles(definitions, function (err, definitions) {
-            if (err) {
-                throw err;
+                console.log("Syncing bucket \"" + bucketInfo.name + "\".");
+                syncFiles(bucketInfo, function (err, bucketInfo) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.log('Site URL is: http://' + bucketInfo.name + ".s3-website-" + bucketInfo.region + ".amazonaws.com");
+                    }
+                });
             } else {
-                console.log('Site URL is: http://' + definitions.s3Info.bucketInfo.name + ".s3-website-" + definitions.s3Info.bucketInfo.region + ".amazonaws.com");
-                console.log("Done.");
+                console.log("Nothing to do.");
             }
         });
-    } else {
-        console.log("Nothing to do.");
     }
+
+
 });
 
-function syncFiles(definitions, callback) {
-    var customParamString = path.join(argv.clientDefinitionsDir,definitions.s3Info.fileSyncInfo.syncPath);
-    customParamString += " s3://" + definitions.s3Info.bucketInfo.name;
-    if (!awsc.verifyPath(definitions, ['s3Info', 'fileSyncInfo', 'syncExclusions'], 'a', 'in angular client definition file').isVerifyError) {
-        for (var index = 0; index < definitions.s3Info.fileSyncInfo.syncExclusions.length; index ++) {
-            customParamString += ' --exclude "' + definitions.s3Info.fileSyncInfo.syncExclusions[index] + '"';
+function syncFiles(bucketInfo, callback) {
+
+    var customParamString = path.join(argv.clientDefinitionsDir, bucketInfo.fileSyncInfo.syncPath);
+    customParamString += " s3://" + bucketInfo.name;
+    if (!awsc.verifyPath(bucketInfo, ['fileSyncInfo', 'syncExclusions'], 'a', 'in angular client bucket definition').isVerifyError) {
+        for (var index = 0; index < bucketInfo.fileSyncInfo.syncExclusions.length; index ++) {
+            customParamString += ' --exclude "' + bucketInfo.fileSyncInfo.syncExclusions[index] + '"';
         }
     }
 
-    var params = {'profile' : {type:'string', value:AWSCLIUserProfile}};
-    if (!awsc.verifyPath(definitions, ['s3Info', 'fileSyncInfo', 'acl'], 's', 'in angular client definition file').isVerifyError) {
-        params.acl = {type:'string', value:definitions.s3Info.fileSyncInfo.acl};
+    var params = {'profile' : {type: 'string', value: AWSCLIUserProfile}};
+    if (!awsc.verifyPath(bucketInfo, ['fileSyncInfo', 'acl'], 's', 'in angular client bucket definition').isVerifyError) {
+        params.acl = {type:'string', value: bucketInfo.fileSyncInfo.acl};
     }
     AWSRequest.createRequest(
         {
@@ -89,7 +96,7 @@ function syncFiles(definitions, callback) {
             if (!request.response.error) {
                 console.log(request.response.stdout);
             }
-            callback(request.response.error, definitions);
+            callback(request.response.error, bucketInfo);
         }
     ).startRequest();
 

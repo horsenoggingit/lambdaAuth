@@ -5,9 +5,18 @@ AWSTools/createRole.js --roleType lambda
 AWSTools/createRole.js --roleType api
 AWSTools/createRole.js --roleType cognito
 
+#create VPCs and security groups
+AWSTools/createVPC.js
+AWSTools/createSubnet.js
+AWSTools/createInternetGateway.js
+AWSTools/createRouteTable.js
+AWSTools/createNatGateway.js
+
 # create storage (db and identity pool)
 AWSTools/createDynamodb.js
 AWSTools/createIdentityPool.js
+AWSTools/createS3Bucket.js --type lambda
+AWSTools/createElastiCache.js
 
 # create lambdas
 
@@ -37,7 +46,7 @@ AWSTools/getClientSDK.js
 AWSTools/updateAWSConstants.js -t client
 
 # create s3 bucket for Angular app distribution
-AWSTools/createAngularClientBucket.js
+AWSTools/createS3Bucket.js --type webClient
 
 # now that we have a bucket we can sync the static angular
 AWSTools/syncAngularClientBucket.js

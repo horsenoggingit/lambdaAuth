@@ -14,6 +14,10 @@ const yargs = require('yargs')
 .alias('l','clientDefinitionsDir')
 .describe('l','directory that contains client definition files and implementations.')
 .default('l','./clients')
+.alias('t', 'type')
+.describe('t','create client or lambda buckets.')
+.choices('t', ['lambda', 'webClient'])
+.require(['t'])
 .help('h')
 .alias('h', 'help');
 var argv = yargs.argv;
@@ -39,57 +43,70 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Creating Angular client s3 bucket.");
-forEachLambdaDefinition(function (fileName) {
-    // here we would want to fork to do ops in parallel
-    var definitions = YAML.load(path.join(argv.clientDefinitionsDir,fileName));
+console.log("## Creating " + argv.type + " S3 Buckets ##");
+
+if (argv.type === 'webClient') {
+    forEachLambdaDefinition(function (fileName) {
+        // here we would want to fork to do ops in parallel
+        var definitions = YAML.load(path.join(argv.clientDefinitionsDir, fileName));
+        createBucketForDefinitions(definitions, path.join(argv.clientDefinitionsDir,fileName));
+    });
+} else if (argv.type === 'lambda') {
+    createBucketForDefinitions(baseDefinitions, argv.baseDefinitionsFile);
+}
+
+function createBucketForDefinitions(definitions, fileName) {
     if (typeof definitions !== 'object') {
         throw new Error("Definitions file \"" + fileName + "\" could not be parsed");
     }
 
-    if (awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'name'], 's', 'in angular client definition file').isVerifyError) {
-        awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'namePrefix'], 's', 'in angular client definition file').exitOnError();
-        // no bucket - lets create one.
-        createBucket(fileName, definitions, function (err, definitions) {
-            if (err) {
-                throw err;
-            }
-            enableWeb(definitions, function (err) {
+    if (awsc.verifyPath(definitions, ['s3Info', 'buckets'], 'o', 'in angular client definition file').isVerifyError) {
+        console.log("No buckets defined in '" + fileName + "'");
+    }
+
+    Object.keys(definitions.s3Info.buckets).forEach(function (bucketPrefix) {
+       console.log("Creating bucket '" + bucketPrefix + "'");
+       if (awsc.verifyPath(definitions, ['s3Info', 'buckets', bucketPrefix, 'name'], 's', 'in angular client definition file').isVerifyError) {
+            // no bucket - lets create one.
+            createBucket(bucketPrefix, definitions, fileName, function (err, bucketPrefix, definitions, fileName) {
                 if (err) {
-                    delete definitions.s3Info.bucketInfo.name;
-                    delete definitions.s3Info.bucketInfo.Location;
-                    writeOut(path.join(argv.clientDefinitionsDir, fileName), definitions, "bucket name was not removed.", function () {
-                        throw err;
-                    });
-                    return;
+                    throw err;
                 }
-                addBucketPolicy(definitions, function (err) {
+                enableWeb(bucketPrefix, definitions, function (err, bucketPrefix) {
                     if (err) {
-                        delete definitions.s3Info.bucketInfo.name;
-                        delete definitions.s3Info.bucketInfo.Location;
-                        writeOut(path.join(argv.clientDefinitionsDir, fileName), definitions, "bucket name was not removed.", function () {
+                        delete definitions.s3Info.buckets[bucketPrefix].name;
+                        delete definitions.s3Info.buckets[bucketPrefix].Location;
+                        writeOut(fileName, definitions, "bucket name was not removed.", function () {
                             throw err;
                         });
                         return;
                     }
-                    console.log('Site URL is: http://' + definitions.s3Info.bucketInfo.name + ".s3-website-" + definitions.s3Info.bucketInfo.region + ".amazonaws.com");
-                    console.log('Done.');
+                    addBucketPolicy(bucketPrefix, definitions, function (err) {
+                        if (err) {
+                            delete definitions.s3Info.buckets[bucketPrefix].name;
+                            delete definitions.s3Info.buckets[bucketPrefix].Location;
+                            writeOut(fileName, definitions, "bucket name was not removed.", function () {
+                                throw err;
+                            });
+                            return;
+                        }
+                    });
                 });
             });
-        });
-    } else {
-        console.log('Bucket already defined. Use "deleteAngularClientBucket.js" first.');
-    }
-});
+        } else {
+            console.log('Bucket already defined. Use "deleteS3Bucket.js" first.');
+        }
+    });
+}
 
-function createBucket(fileName, definitions, callback, attemptNo) {
-    var bucketName = definitions.s3Info.bucketInfo.namePrefix;
+function createBucket(bucketPrefix, definitions, fileName, callback, attemptNo) {
+    var bucketName = bucketPrefix;
 
     if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         bucketName = baseDefinitions.environment.AWSResourceNamePrefix + bucketName;
     }
 
-    awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'region'], 's', 'in angular client definition file').exitOnError();
+    awsc.verifyPath(definitions, ['s3Info', 'buckets', bucketPrefix, 'region'], 's', 'angular definition object').exitOnError();
     if (typeof attemptNo !== 'undefined') {
         bucketName = bucketName + zeroPadInteger(6, Math.floor(Math.random() * 100000));
     } else {
@@ -99,10 +116,10 @@ function createBucket(fileName, definitions, callback, attemptNo) {
         {
             serviceName: "s3api",
             functionName: "create-bucket",
-            context:{fileName: fileName, attemptNo: attemptNo, callback: callback, definitions : definitions},
+            context:{bucketPrefix: bucketPrefix, fileName: fileName, attemptNo: attemptNo, callback: callback, definitions : definitions},
             parameters: {
                 'bucket' : {type:'string', value:bucketName},
-                'region' : {type:'string', value:definitions.s3Info.bucketInfo.region},
+                'region' : {type:'string', value:definitions.s3Info.buckets[bucketPrefix].region},
                 'profile' : {type:'string', value:AWSCLIUserProfile}
             },
             returnSchema: 'json',
@@ -114,13 +131,13 @@ function createBucket(fileName, definitions, callback, attemptNo) {
                 if (attemptNo > 4) {
                     throw request.response.error;
                 }
-                createBucket(request.context.fileName, request.context.definitions, request.context.callback, request.context.attemptNo + 1);
+                createBucket(request.context.bucketPrefix, request.context.definitions, request.context.fileName, request.context.callback, request.context.attemptNo + 1);
             } else {
                 console.log(request.response.parsedJSON);
-                request.context.definitions.s3Info.bucketInfo.name = request.parameters.bucket.value;
-                request.context.definitions.s3Info.bucketInfo.location = request.response.parsedJSON.Location;
-                writeOut(path.join(argv.clientDefinitionsDir, request.context.fileName), request.context.definitions, "Bucket name was not updated.", function () {
-                    callback(null, definitions);
+                request.context.definitions.s3Info.buckets[bucketPrefix].name = request.parameters.bucket.value;
+                request.context.definitions.s3Info.buckets[bucketPrefix].location = request.response.parsedJSON.Location;
+                writeOut(request.context.fileName, request.context.definitions, "Bucket name was not updated.", function () {
+                    callback(null, request.context.bucketPrefix, request.context.definitions, request.context.fileName);
                 });
             }
         }
@@ -138,64 +155,65 @@ function zeroPadInteger(n, value) {
     }
 }
 
-function enableWeb(definitions, callback) {
-    if (!awsc.verifyPath(definitions,['s3Info', 'bucketInfo', 'websiteConfiguration'],'o').isVerifyError) {
+function enableWeb(bucketPrefix, definitions, callback) {
+    if (!awsc.verifyPath(definitions,['s3Info', 'buckets', bucketPrefix, 'websiteConfiguration'],'o').isVerifyError) {
         console.log("Found bucket websiteConfiguration.");
         AWSRequest.createRequest(
             {
                 serviceName: "s3api",
                 functionName: "put-bucket-website",
                 parameters: {
-                    'bucket' : {type:'string', value: definitions.s3Info.bucketInfo.name},
-                    'website-configuration' : {type:'JSONObject', value: definitions.s3Info.bucketInfo.websiteConfiguration},
+                    'bucket' : {type:'string', value: definitions.s3Info.buckets[bucketPrefix].name},
+                    'website-configuration' : {type:'JSONObject', value: definitions.s3Info.buckets[bucketPrefix].websiteConfiguration},
                     'profile' : {type:'string', value:AWSCLIUserProfile}
                 },
                 returnSchema: 'none',
             },
             function (request) {
                 if (request.response.error) {
-                    callback(request.response.error);
+                    callback(request.response.error, null);
                 } else {
                     console.log("Put bucket websiteConfiguration.");
-                    callback(null);
+                    console.log('Site URL is: http://' + definitions.s3Info.buckets[bucketPrefix].name + ".s3-website-" + definitions.s3Info.buckets[bucketPrefix].region + ".amazonaws.com");
+                    callback(null, bucketPrefix);
                 }
             }
         ).startRequest();
     } else {
-        callback(null);
+        callback(null, bucketPrefix);
     }
 }
 
-function addBucketPolicy(definitions, callback) {
-    if (!awsc.verifyPath(definitions,['s3Info', 'bucketInfo', 'policy'],'o').isVerifyError) {
+function addBucketPolicy(bucketPrefix, definitions, callback) {
+    if (!awsc.verifyPath(definitions,['s3Info', 'buckets', bucketPrefix, 'policy'],'o').isVerifyError) {
         console.log("Found bucket policy.");
         // substitute any occurrence of $name in Resources with bucket name.
-        var policy = definitions.s3Info.bucketInfo.policy;
+        var policy = definitions.s3Info.buckets[bucketPrefix].policy;
         for (var index = 0; index < policy.Statement.length; index++) {
-            policy.Statement[index].Resource = policy.Statement[index].Resource.replace('$name', definitions.s3Info.bucketInfo.name);
+            policy.Statement[index].Resource = policy.Statement[index].Resource.replace('$name', definitions.s3Info.buckets[bucketPrefix].name);
         }
         AWSRequest.createRequest(
             {
                 serviceName: "s3api",
                 functionName: "put-bucket-policy",
                 parameters: {
-                    'bucket' : {type:'string', value: definitions.s3Info.bucketInfo.name},
-                    'policy' : {type:'JSONObject', value: definitions.s3Info.bucketInfo.policy},
+                    'bucket' : {type:'string', value: definitions.s3Info.buckets[bucketPrefix].name},
+                    'policy' : {type:'JSONObject', value: definitions.s3Info.buckets[bucketPrefix].policy},
                     'profile' : {type:'string', value:AWSCLIUserProfile}
                 },
                 returnSchema: 'none',
             },
             function (request) {
                 if (request.response.error) {
-                    callback(request.response.error);
+                    callback(request.response.error, null);
                 } else {
                     console.log("Put bucket policy.");
-                    callback(null);
+                    callback(null, bucketPrefix);
                 }
             }
         ).startRequest();
     } else {
-        callback(null);
+        callback(null, bucketPrefix);
     }
 }
 

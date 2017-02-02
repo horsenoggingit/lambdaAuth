@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
-var path = require('path');
-const awscommon = require(path.join(__dirname, 'awscommonutils'));
-var fs = require('fs');
-var YAML = require('yamljs');
-const exec = require('child_process').exec;
-
-var YAML = require('yamljs');
-var argv = require('yargs')
+const path = require('path');
+const awsc = require(path.join(__dirname, 'awscommonutils'));
+const fs = require('fs');
+const YAML = require('yamljs');
+const AwsRequest = require(path.join(__dirname, 'AwsRequest'));
+const argv = require('yargs')
 .usage('Create project roles and attach policies.\nUsage: $0 [options]')
 .alias('s','baseDefinitionsFile')
 .describe('s','yaml file that contains information about your API')
@@ -38,152 +36,115 @@ switch (argv.roleType) {
     default:
 }
 
+console.log("## Creating " + roleBase + " roles ##");
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
-awscommon.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \"" + argv.baseDefinitionsFile+"\"").exitOnError();
+awsc.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \"" + argv.baseDefinitionsFile+"\"").exitOnError();
 
 var AWSCLIUserProfile = "default";
-if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 }
-
-var createRoleComplete = 0;
-var createRoleSuccess = 0;
 
 Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey) {
     var roleDef = baseDefinitions[roleBase].roleDefinitions[roleKey];
     // need a name, policyDocument and perhaps some policies
-    awscommon.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleName).exitOnError();
+    awsc.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleBase).exitOnError();
 
-    awscommon.verifyPath(roleDef, ['policies'], 'a', "role definition " + roleName).exitOnError();
+    awsc.verifyPath(roleDef, ['policies'], 'a', "role definition " + roleBase).exitOnError();
     var policyArray = [];
     roleDef.policies.forEach(function (policy) {
-        awscommon.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleName).exitOnError();
+        awsc.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleBase).exitOnError();
         policyArray.push(policy.arnPolicy);
     });
 
-    var roleName;
-    if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
-        roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
-    }
-
-    // all done verifying now lets have some fun
-    var params = ['iam',
-    'create-role',
-    '--role-name ' + roleName,
-    "--assume-role-policy-document '" + JSON.stringify(roleDef.policyDocument) + "'",
-    '--profile ' + AWSCLIUserProfile];
-
-    createRoleAndUploadPolicies('aws ' + params.join(" "), policyArray, roleKey, AWSCLIUserProfile, function (rlKey, rlARN, policyArr) {
-        createRoleComplete++;
+    createRoleAndUploadPolicies(roleDef.policyDocument, policyArray, roleKey, function (rlKey, rlARN, policyArr) {
         if (rlKey && rlARN) {
             baseDefinitions[roleBase].roleDefinitions[rlKey].arnRole = rlARN;
-            createRoleSuccess++;
 
             // start uploading policies
             var rlName;
-            if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
+            if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
                 rlName = baseDefinitions.environment.AWSResourceNamePrefix + rlKey;
             }
 
             policyArr.forEach(function (policyArn) {
-                var params = ['iam',
-                'attach-role-policy',
-                '--role-name ' + rlName,
-                "--policy-arn " + policyArn,
-                '--profile ' + AWSCLIUserProfile];
-                var command = 'aws ' + params.join(" ");
-                function execReq(command, policyArn, rlName) {
-                    exec(command, (err, stdout, stderr) => {
-                        if (err) {
-                            console.log(stdout);
-                            console.log(stderr);
-                            console.log("Failed policy attach: " + policyArn + " on " + rlName + ".");
-                            return;
-                        }
-                        console.log("Policy attach completed: " + policyArn + " on " + rlName + ".");
-                    });
-                }
-                execReq(command, policyArn, rlName);
-            });
-        }
-        console.log("Updating definitions file with results");
-        if (createRoleComplete === Object.keys(baseDefinitions[roleBase].roleDefinitions).length) {
-            awscommon.updateFile(argv.baseDefinitionsFile, function () {
-                return YAML.stringify(baseDefinitions, 15);
-            }, function (backupErr, writeErr) {
-                if (backupErr) {
-                    console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". API Id was not updated.");
-                    throw new Error(backupErr);
-                }
-                if (writeErr) {
-                    console.log("Unable to write updated definitions file.");
-                    throw new Error(writeErr);
-                }
-                if (createRoleSuccess !== createRoleComplete) {
-                    console.log("Some creation operations failed.");
-                }
-                console.log("Done.");
-            });
-        }
+                AwsRequest.createRequest({
+                    serviceName: 'iam',
+                    functionName: 'attach-role-policy',
+                    parameters: {
+                        'role-name': {type: 'string', value: rlName},
+                        'policy-arn': {type: 'string', value: policyArn},
+                        profile: {type: 'string', value: AWSCLIUserProfile}
+                    },
+                    returnSchema: 'none',
+                }, function (request) {
+                    if (request.response.error) {
+                        console.log("Failed policy attach: " + policyArn + " on " + rlName + ".");
+                        throw request.response.error;
+                    }
+                    console.log("Policy attach completed: " + policyArn + " on " + rlName + ".");
 
+                }).startRequest();
+            });
+        }
+        awsc.updateFile(argv.baseDefinitionsFile, function () {
+            return YAML.stringify(baseDefinitions, 15);
+        }, function (backupErr, writeErr) {
+            if (backupErr) {
+                console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". API Id was not updated.");
+                throw new Error(backupErr);
+            }
+            if (writeErr) {
+                console.log("Unable to write updated definitions file.");
+                throw new Error(writeErr);
+            }
+        });
     });
-
 });
 
 
-function createRoleAndUploadPolicies(createCommand, policyArray, roleKey, profileName, callback) {
+function createRoleAndUploadPolicies(policyDocument, policyArray, roleKey, callback) {
     var roleName;
-    if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
+    if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
     }
 
     console.log("Creating role \"" + roleName + "\"");
-
-    exec(createCommand, (err, stdout, stderr) => {
-        if (err) {
-            var existsMatches = stderr.toString('utf8').match(/EntityAlreadyExists/g);
-            console.log(err);
-            console.log(stderr);
-            if (existsMatches && existsMatches.length > 0) {
-                console.log("Role already exists.");
-                // perhas we should go and get the info
-                var params = ['iam',
-                'get-role',
-                '--role-name ' + roleName,
-                '--profile ' + profileName];
-                exec('aws ' + params.join(" "), (err, stdout, stderr) => {
-                    if (err) {
-                        console.log(err);
-                        console.log(stderr);
-                        console.log("Couldn't read role \"" + roleName + "\"");
-                        callback(null,null);
-                        return;
+    AwsRequest.createRequest({
+        serviceName: 'iam',
+        functionName: 'create-role',
+        parameters: {
+            'role-name': {type: 'string', value: roleName},
+            'assume-role-policy-document': {type: 'JSONObject', value: policyDocument},
+            profile: {type: 'string', value: AWSCLIUserProfile},
+        },
+        returnSchema: 'json',
+        returnValidation:[{path: ['Role','Arn'], type: 's'}],
+    }, function (request) {
+        if (request.response.error) {
+            if (request.response.errorId === "EntityAlreadyExists") {
+                console.log("Role '" + roleName + "' exists. Updating configuration.");
+                AwsRequest.createRequest({
+                    serviceName: 'iam',
+                    functionName: 'get-role',
+                    parameters: {
+                        'role-name': {type: 'string', value: roleName},
+                        profile: {type: 'string', value: AWSCLIUserProfile},
+                    },
+                    returnSchema: 'json',
+                    returnValidation:[{path:['Role','Arn'], type:'s'}],
+                }, function (request) {
+                    if (request.response.error) {
+                        throw request.response.error;
                     }
-                    processRoleResult(stdout, roleKey, policyArray, callback);
-                });
+                    callback(roleKey, request.response.parsedJSON.Role.Arn, policyArray);
+                }).startRequest();
+            } else {
+                throw request.response.error;
             }
-            return;
+        } else {
+            callback(roleKey, request.response.parsedJSON.Role.Arn, policyArray);
         }
-        processRoleResult(stdout, roleKey, policyArray, callback);
-    });
-
-}
-
-function processRoleResult(stdout, roleKey, policyArray, callback) {
-    console.log(stdout);
-    var result = JSON.parse(stdout);
-    if (typeof result !== 'object') {
-        console.log("AWS result could not be parsed. Command may have failed. roleArn was not updated in \"" + argv.baseDefinitionsFile + "\".");
-        callback(null,null);
-        return;
-    }
-
-    var verifyResult = awscommon.verifyPath(result,['Role','Arn'],'s','amazon role creation result');
-
-    if (verifyResult.isVerifyError) {
-        console.log(verifyResult.toString());
-        callback(null,null);
-        return;
-    }
-    callback(roleKey, result.Role.Arn, policyArray);
+    }).startRequest();
 }

@@ -61,6 +61,9 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+                    name: AWSLambdaVPCAccessExecutionRole
         userCreator:
             policyDocument:
                 Version: '2012-10-17'
@@ -80,6 +83,9 @@ lambdaInfo:
                 -
                     arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
                     name: AWSLambdaBasicExecutionRole
+                -
+                    arnPolicy: 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+                    name: AWSLambdaVPCAccessExecutionRole
 apiInfo:
     roleDefinitions:
         lambdaExecuteRole:
@@ -272,3 +278,60 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+s3Info:
+    buckets:
+        photobucket:
+            region: us-east-1
+            lambdaAliases:
+                resource: PHOTOBUCKET
+vpcInfo:
+    vpcs:
+        lambdaAuth:
+            instance-tenancy: default
+            cidr-block: 10.0.0.0/20
+routeTableInfo:
+    routeTables:
+        lambdaAuthpublic:
+            vpc: lambdaAuth
+            subnetAssociations:
+                - lambdaAuthpublic
+            routes:
+                -
+                    destination-cidr-block: 0.0.0.0/0
+                    internetGateway: lambdaAuth
+            Associations: null
+natGatewayInfo:
+    natGateways:
+        publicNat:
+            subnet: lambdaAuthpublic
+            trafficSourceRouters:
+                -
+                    vpcDefaultRouter: lambdaAuth
+                    destination-cidr-block: 0.0.0.0/0
+internetGatewayInfo:
+    internetGateways:
+        lambdaAuth:
+            vpc: lambdaAuth
+subnetInfo:
+    subnets:
+        lambdaAuth:
+            cidr-block: 10.0.0.0/24
+            vpc: lambdaAuth
+        lambdaAuthpublic:
+            cidr-block: 10.0.2.0/24
+            vpc: lambdaAuth
+elasticacheInfo:
+    elasticaches:
+        Memcache:
+            lambdaAliases:
+                resource: MEMCACHE
+            num-cache-nodes: 1
+            engine: memcached
+            vpcDefaultSecurityGroups:
+                - lambdaAuth
+            subnetGroup: lambdaAuth
+            cache-node-type: cache.m3.medium
+    subnetGroups:
+        lambdaAuth:
+            subnets:
+                - lambdaAuth

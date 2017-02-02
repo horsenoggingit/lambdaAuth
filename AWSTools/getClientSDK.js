@@ -34,6 +34,8 @@ if (!fs.existsSync(argv.clientDefinitionsDir)) {
     throw new Error("Clients path \"" + argv.clientDefinitionsDir + "\" not found.");
 }
 
+console.log("## Getting Clients ##");
+
 var AWSCLIUserProfile = "default";
 if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;

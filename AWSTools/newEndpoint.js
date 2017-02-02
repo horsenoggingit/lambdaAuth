@@ -288,5 +288,3 @@ regexp = new RegExp("{[$]urlPath}", "g");
 lambdaFile = lambdaFile.replace(regexp, argv.endpoint);
 
 fs.writeFileSync(newLambdaFile, lambdaFile);
-
-console.log("Done.");

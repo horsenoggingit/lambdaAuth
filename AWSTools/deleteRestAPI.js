@@ -30,6 +30,9 @@ if (typeof baseDefinitions.apiInfo === 'object') {
     }
 }
 
+console.log("## Deleting APIs ##");
+
+
 var AWSCLIUserProfile = "default";
 if (typeof baseDefinitions.environment !== 'object') {
 } else {
@@ -71,6 +74,5 @@ AwsRequest.createRequest({
             console.log("Unable to write updated definitions file.");
             throw writeErr;
         }
-        console.log("Done.");
     });
 }).startRequest();

@@ -5,6 +5,7 @@ const path = require("path");
 const LintStream = require("jslint").LintStream;
 const linter = "jshint";
 const JSHINT = require("jshint");
+const AWSRequest = require(path.join(__dirname, 'AwsRequest'));
 
 class VerifyResultString extends Object {
     constructor (errorMessage, isVerifyError) {
@@ -35,54 +36,57 @@ class VerifyResultString extends Object {
 
 exports.VerifyResultString = VerifyResultString;
 
-exports.verifyPath = function verifyPath(structure, pathArray, leafTypeKey, itemName, extraString) {
+
+function verifyPath(structure, pathArray, leafTypeKey, itemName, extraString) {
     var leafTypes = {"s" : "string",
-    "n" : "number",
-    "o" : "object",
-    "a" : "array",
-    "f" : "function",
-    "b" : "boolean"
-};
+        "n" : "number",
+        "o" : "object",
+        "a" : "array",
+        "f" : "function",
+        "b" : "boolean"
+    };
 
-if (!extraString) {
-    extraString = "";
-}
-
-var result = checkPath(structure, pathArray, leafTypeKey);
-if (!result) {
-    return new VerifyResultString();
-}
-var path = pathArray.join(".");
-var errorString;
-var key1String;
-var key2String;
-if (typeof leafTypeKey === "object") {
-    errorString = "Failed validation of action \"" + result.failAction + "\". ";
-    if (result.failIndex === 0) {
-        switch (result.failAction) {
-            case "oneOfs":
-            key1String = "string ([" + leafTypeKey.oneOfs.join("|") + "])";
-            key2String = leafTypes[getTypeKey(structure)];
-            break;
-            default:
-        }
+    if (!extraString) {
+        extraString = "";
     }
-} else {
-    errorString = "";
-    key1String = leafTypes[leafTypeKey];
-    key2String = leafTypes[getTypeKey(structure)];
-}
-if (result.failIndex === 0) {
-    errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" was not found because the \"" + itemName + "\" was of type " + key2String + ". " + extraString;
-} else if (result.failIndex < pathArray.length) {
-    errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was not an object. It was of type \"" + leafTypes[result.failType] + "\". " + extraString;
-} else {
-    errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was of type \"" + leafTypes[result.failType] + "\"." + extraString;
+
+    var result = checkPath(structure, pathArray, leafTypeKey);
+    if (!result) {
+        return new VerifyResultString();
+    }
+    var path = pathArray.join(".");
+    var errorString;
+    var key1String;
+    var key2String;
+    if (typeof leafTypeKey === "object") {
+        errorString = "Failed validation of action \"" + result.failAction + "\". ";
+        if (result.failIndex === 0) {
+            switch (result.failAction) {
+                case "oneOfs":
+                key1String = "string ([" + leafTypeKey.oneOfs.join("|") + "])";
+                key2String = leafTypes[getTypeKey(structure)];
+                break;
+                default:
+            }
+        }
+    } else {
+        errorString = "";
+        key1String = leafTypes[leafTypeKey];
+        key2String = leafTypes[getTypeKey(structure)];
+    }
+    if (result.failIndex === 0) {
+        errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" was not found because the \"" + itemName + "\" was of type " + key2String + ". " + extraString;
+    } else if (result.failIndex < pathArray.length) {
+        errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was not an object. It was of type \"" + leafTypes[result.failType] + "\". " + extraString;
+    } else {
+        errorString += "The item \"" + path + "\" of expected type \"" + key1String + "\" in the " + itemName + " was not found because \"" + pathArray[result.failIndex - 1] + "\" was of type \"" + leafTypes[result.failType] + "\"." + extraString;
+    }
+
+    var x = new VerifyResultString(errorString, true);
+    return x;
 }
 
-var x = new VerifyResultString(errorString, true);
-return x;
-};
+exports.verifyPath = verifyPath;
 
 function checkPath(structure, pathArray, leafTypeKey) {
     var items = [structure];
@@ -95,13 +99,13 @@ function checkPath(structure, pathArray, leafTypeKey) {
             var item = items[itemIndex];
             typeResult = getTypeKey(item);
             switch (typeResult) {
-            case "a":
+                case "a":
                 // if it is an array push each item for verification on the next pass
                 item.forEach(function (arrayItem) {
                     nextItems.push(arrayItem[pathArray[index]]);
                 });
                 break;
-            case "o":
+                case "o":
                 // when * is encountere on the path we push each item regardles of key.
                 if (pathArray[index] === "*") {
                     Object.keys(item).forEach(function (itemKey) {
@@ -111,7 +115,7 @@ function checkPath(structure, pathArray, leafTypeKey) {
                     nextItems.push(item[pathArray[index]]);
                 }
                 break;
-            default:
+                default:
                 breakOut = true;
             }
             if (breakOut) {
@@ -135,13 +139,13 @@ function checkPath(structure, pathArray, leafTypeKey) {
             for (var oneOfsIndex = 0; oneOfsIndex < actions.length; oneOfsIndex ++) {
                 var action = actions[oneOfsIndex];
                 switch (action) {
-                case "oneOfs":
+                    case "oneOfs":
                     // value for oneOfs is an array of strings.
                     if ((typeResult !== "s") || (leafTypeKey[action].indexOf(item2)) < 0) {
                         return {failIndex:index, failType:typeResult, failAction:action};
                     }
                     break;
-                default:
+                    default:
                     console.log("Unrecognized leafTypeKey command: " + action);
                 }
 
@@ -190,27 +194,33 @@ function getTypeKey(item) {
     return typeKey;
 }
 
-exports.updateFile = function updateFile(fName, dataCallback, callback) {
+exports.updateFile = function updateFile(fName, dataCallback, callback, retry) {
     if (fs.existsSync(fName + ".old")) {
         fs.unlinkSync(fName + ".old");
     }
-    setTimeout(function () {
-        fs.rename(fName, fName + ".old", function (err){
-            if (err) {
+    fs.rename(fName, fName + ".old", function (err){
+        if (err) {
+            // file does not exist... likely someone else trying to write it.
+            if (retry === 5) {
                 callback(err,null);
                 return;
             }
-            setTimeout(function () {
-                fs.writeFile(fName, dataCallback(), function (err) {
-                    if (err) {
-                        callback(null,err);
-                        return;
-                    }
-                    callback(null,null);
-                });
-            },250);
+            if (!retry) {
+                retry = 0;
+            }
+            setTimeout(function() {
+                exports.updateFile(fName, dataCallback, callback, retry + 1);
+            }, 250);
+            return;
+        }
+        fs.writeFile(fName, dataCallback(), function (err) {
+            if (err) {
+                callback(null,err);
+                return;
+            }
+            callback(null,null);
         });
-    }, 250);
+    });
 };
 
 exports.validatejs = function(lambdaDefintitions, lambdaPath) {
@@ -313,3 +323,136 @@ exports.isValidAWSResourceNamePrefix = function (baseDefinitions, fileName) {
     }
     return true;
 };
+
+exports.addLambdaVPCConfiguration = function(params, definitions, fileName, baseDefinitions, baseDefinitionsFileName) {
+    var secgroupNames;
+
+    if (verifyPath(definitions,["lambdaInfo", "securityGroups"], 'a').isVerifyError) {
+        secgroupNames = [];
+    } else {
+        secgroupNames = definitions.lambdaInfo.securityGroups;
+    }
+    var secGroupIds = [];
+    for (var index = 0; index < secgroupNames.length; index ++) {
+        verifyPath(baseDefinitions, ["securityGroupInfo", "securityGroups", secgroupNames[index], "GroupId"], 's', "for security group '" + secgroupNames[index] + "' in lambda definitions file '" + fileName + "'").exitOnError();
+        secGroupIds.push(baseDefinitions.securityGroupInfo.securityGroups[secgroupNames[index]].GroupId);
+    }
+
+    if (!verifyPath(definitions,["lambdaInfo", "vpcDefaultSecurityGroups"], 'a').isVerifyError) {
+        var vpcs = definitions.lambdaInfo.vpcDefaultSecurityGroups;
+        vpcs.forEach(function (vpcName) {
+           verifyPath(baseDefinitions,["vpcInfo", "vpcs", vpcName, "GroupId"], 's', "for security vpc default secrity group '" + vpcName + "' in lambda definitions file '" + fileName + "'").exitOnError();
+           secGroupIds.push(baseDefinitions.vpcInfo.vpcs[vpcName].GroupId);
+        });
+    }
+
+    // see if we have enough information to add VPC
+    var pathErrorSubnets = verifyPath(definitions,["lambdaInfo", "subnets"], 'a', "definitions file \"" + fileName + "\"");
+
+    var subnetIds = [];
+    if (!pathErrorSubnets.isVerifyError) {
+        var subnets = definitions.lambdaInfo.subnets;
+        subnets.forEach(function (subnetName) {
+            verifyPath(baseDefinitions, ["subnetInfo", "subnets", subnetName, "SubnetId"], "s", "base definition file " + baseDefinitionsFileName).exitOnError();
+            subnetIds.push(baseDefinitions.subnetInfo.subnets[subnetName].SubnetId);
+        });
+    }
+
+    if ((secGroupIds.length === 0) && (subnetIds.length === 0)) {
+        // nothing to do
+        return;
+    }
+
+    if (((secGroupIds.length === 0) && (subnetIds.length !== 0)) || ((secGroupIds.length !== 0) && (subnetIds.length === 0))) {
+        throw new Error("VPC configuration requires both a security group (either defined in secuityGroupInfo or a VPC default security group) and subnet in definitions file \"" + fileName + "\"");
+    }
+    // make a list if sec group ids
+
+    console.log("Adding VPC configuration");
+
+    var vpcConfigString = "SubnetIds=" + subnetIds.join(",") + ",SecurityGroupIds=" + secGroupIds.join(",");
+
+    params["vpc-config"]= {type: "string", value: vpcConfigString};
+};
+
+function checkEc2ResourceTagName(nameTag, resourceName, AWSCLIUserProfile, callback) {
+    AWSRequest.createRequest({
+        serviceName: "ec2",
+        functionName: "describe-tags",
+        parameters:{
+            "filters": {type: "string", value: "Name=value,Values=" + nameTag},
+            "profile": {type: "string", value: AWSCLIUserProfile}
+        },
+        returnSchema:'json',
+    },
+    function (request) {
+        if (request.response.error) {
+            callback(false, null, nameTag, resourceName);
+            return;
+        }
+        if (!request.response.parsedJSON.Tags || (request.response.parsedJSON.Tags.length === 0)) {
+            callback(false, null, nameTag, resourceName);
+            return;
+        }
+        callback(true, request.response.parsedJSON.Tags, nameTag, resourceName);
+    }).startRequest();
+}
+
+exports.checkEc2ResourceTagName = checkEc2ResourceTagName;
+
+function describeEc2ResourceForService(describeCommand, resourceResult, name, VpcId, AWSCLIUserProfile, waitForAtLeastOneResult, callback, retryCount) {
+    AWSRequest.createRequest({
+        serviceName: "ec2",
+        functionName: describeCommand,
+        parameters:{
+            "filters": {type: "string", value: "Name=" + name + ",Values=" + VpcId},
+            "profile": {type: "string", value: AWSCLIUserProfile}
+        },
+        returnSchema:'json',
+        retryCount: 3,
+        retryDelay: 5000
+    },
+    function (request) {
+        if (!retryCount) {
+            retryCount = 0;
+        }
+        if (request.response.error || retryCount === 3) {
+            console.log(request.response.error);
+            console.log("Unable to fetch " + resourceResult);
+            if (request.response.error) {
+                callback(request.response.error);
+                return;
+            }
+            callback(new Error("Unable to fetch " + resourceResult));
+            return;
+        }
+        if (waitForAtLeastOneResult && request.response.parsedJSON[resourceResult].length === 0) {
+            setTimeout(function() {describeEc2ResourceForService(describeCommand, resourceResult, name, VpcId, AWSCLIUserProfile, waitForAtLeastOneResult, callback, retryCount + 1);}, 5000);
+            return;
+        }
+        callback(null, request.response.parsedJSON[resourceResult]);
+   }).startRequest();
+}
+
+exports.describeEc2ResourceForService = describeEc2ResourceForService;
+
+function createEc2ResourceTag(resourceId, nameTag, AWSCLIUserProfile, callback) {
+    AWSRequest.createRequest({
+        serviceName: "ec2",
+        functionName: "create-tags",
+        parameters:{
+            "resource": {type: "string", value: resourceId},
+            "tags": {type: "string", value: "Key=Name,Value=" + nameTag},
+            "profile": {type: "string", value: AWSCLIUserProfile}
+        },
+        returnSchema:'none',
+        retryCount: 3,
+        retryDelay: 5
+    },
+    function (request) {
+        callback(request.response.error);
+    }).startRequest();
+
+}
+
+exports.createEc2ResourceTag = createEc2ResourceTag;

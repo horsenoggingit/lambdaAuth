@@ -11,6 +11,9 @@ lambdaInfo:
             -
                 type: dynamodbInfo
                 resourceName: Users
+            -
+                type: s3Info
+                resourceName: photobucket
     roleName: userConsumer
     functionName: userMe
     region: us-east-1

@@ -29,6 +29,8 @@ if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
+console.log("## Deleting Identity Pools ##");
+
 awscommon.verifyPath(baseDefinitions, ['cognitoIdentityPoolInfo', 'identityPools'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var deleteRequests = [];
@@ -72,7 +74,7 @@ function requestsDoneFunction(requestBatch){
     });
 
     if (successCount === requestBatch.requestArray.length) {
-        console.log("Success");
+        console.log("All Identity pools were deleted.");
     } else {
         throw new Error("Failed " + (requestBatch.requestArray.length - successCount) + " of " + requestBatch.requestArray.length + " requests.");
     }
@@ -88,6 +90,5 @@ function requestsDoneFunction(requestBatch){
             console.log("Unable to write updated definitions file.");
             throw writeErr;
         }
-        console.log("Done.");
     });
 }

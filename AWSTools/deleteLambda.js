@@ -35,6 +35,8 @@ if (!fs.existsSync(argv.lambdaDefinitionsDir)) {
 
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
+console.log("## Deleting Lambdas ##");
+
 var AWSCLIUserProfile = "default";
 if (typeof baseDefinitions.environment !== 'object') {
 } else {
@@ -108,7 +110,6 @@ function deleteLambda(reqParams, defaultsFileName) {
         console.log("Unable to write updated definitions file.");
         throw writeErr;
       }
-      console.log("Done.");
     });
   });
 

@@ -1,17 +1,19 @@
 # lambdaAuth
-A framework for native and web applications on AWS using Lambda, Api Gateway, DynamoDB and Cognito Auth.
+A framework for full stack native and web applications on AWS using Lambda, Api Gateway, DynamoDB, Cognito Auth, S3 and ElastiCache (memcached).
 
 This project started from a desire to learn about creating apps using AWS lambda as a backend for web and native clients. I also wanted to learn more about lambda (node) and integration with API Gateway, DynamoDB and Cognito for developer authenticated federated identity pools as well as how to manage permissions across AWS resources. Additionally I wanted to learn about the strengths and weaknesses of the AWS CLI for configuration.
 
 The resulting project tackles these goals and provides a simple framework for rapidly deploying APIs backed by lambdas and managing AWS resources so that a project's deployment can be easily recreated, torn down and shared between developers. This framework also supports multiple deployments of a project on a single AWS account.
 
-The default configuration of this project creates a series of API endpoints (/signup, /login, /token, /user/me/get) with associated lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. For convenience angular, iOS (and Android coming soon) iOS clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience (see the last installation step) - if you want to be fancy you can easly configure cloudfront to serve the site using https and other fancy features. I will discuss this further in the web client section.
+The default configuration of this project creates a series of API endpoints (/signup, /login, /token, /user/me/get) with associated lambdas, DynamoDB tables and a federated identity pool that allow a user to create accounts and handle the transition from unauthenticated to authenticated API requests. The /signup endpoint also uses ElastiCache (memcached) to perform rudimentary throttling. Since ElastiCache requires the lambda to work in a VPC this endpoint also shows how to configure a lambda to work both inside a VPC and have access to non VPC services on the open internet. 
+
+For convenience angular, iOS (and Android coming soon) iOS clients have been provided. The angular client can run locally, but is automatically hosted on S3 for convenience (see the last installation step) - if you want to be fancy you can easly configure cloudfront to serve the site using https and other  features. I will discuss this further in the web client section.
 
 # Installation
 
 1. If it isn't installed on your machine install node.js from https://nodejs.org (node is used for local AWS tools as well as lambdas - npm rules!).
 2. Create an AWS free account.
-3. Add an IAM user to act as proxy (it isn’t good to use your master user day to day)
+3. Add an IAM user in the us-east-1 region to act as proxy (it isn’t good to use your master user day to day)
   * http://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html
 4. Install the AWS CLI
   * http://docs.aws.amazon.com/cli/latest/userguide/installing.html
@@ -61,14 +63,14 @@ You will get the following text and parameter definitions. "Helper script to get
 
 In this excersize we will create a new authenticated get endpoint that accepts a parameter and makes a new response object.
 
-Lets say we want to have an endpoint that returns a specific number of users we'd like to introduce to currently authenticated user, we'll call it /intro/Random and it will accept a required parameter "quantity" that is a number representing  how many "user" objects we wish to be returned. We already have a "user" model defined in this project (see the file base.definitions.yaml in the root project directory) so we would like to piggyback off that in the response.
+Lets say we want to have an endpoint that returns a specific number of users we'd like to introduce to currently authenticated user, we'll call it /intro/random and it will accept a required parameter "quantity" that is a number representing  how many "user" objects we wish to be returned. We already have a "user" model defined in this project (see the file base.definitions.yaml in the root project directory) so we would like to piggyback off that in the response.
 
 The comand for this is:
 
 `AWSTools/newEndpoint.js --endpoint "/intro/random" --methodExecution "get" --response '{"type": "array", "items": {"$ref": "#/definitions/user"}}' --queryParameters '[{"name":"quantity","type":"number", "required": true}]' --authenticated`
 
 In this command string you can see represented all the requirements we wanted to add:
-* `--endpoint` parameter allows use to specify a path for the request
+* `--endpoint` parameter used to specify a path for the request
 * `--methodExecution` indicates that we would like to use the get method.
 * `--response` is a simple json schema object that follows http://json-schema.org and references the already define "user" object
 * `--queryParameters` is another simple json array that creates a query parameter "quantity" of type "number" that is required
@@ -136,7 +138,7 @@ AWSTools/createLambda.js --lambdaName introRandom;
 AWSTools/coalesceSwaggerAPIDefinition.js;  
 AWSTools/uploadRestAPI.js;  
 AWSTools/deployAPI.js;  
-AWSTools/getClientSDK.js;`  
+AWSTools/getClientSDK.js; 
 ```
 
 ##AWS Utilities##
@@ -144,7 +146,7 @@ AWSTools/getClientSDK.js;`
 The follwing utilities parse the various definitions files to create or destroy AWS resources. They are intended to be executed in the project root folder and their defaults should be sufficient for most cases. If a lambda or client is not specified the action will occur on all lambdas or clients in scope.
 
 ```
-**coalesceSwaggerAPIDefinition.js**  
+** coalesceSwaggerAPIDefinition.js **
 Create a single API definitions file to upload to AWS.
 x-amazon-apigateway-integration fields are updated with latest role and lambda
 arn.
@@ -161,18 +163,7 @@ Options:
   -c, --commonModelDefinitionFile  yaml file with common definitions of models
   -h, --help                       Show help                           [boolean]
 
-**createAngularClientBucket.js**  
-Creates an s3 bucket if needed and configures as static web host.
-Usage: createAngularClientBucket.js [options]
-
-Options:
-  -s, --baseDefinitionsFile   yaml file that contains information about your API
-                                            [default: "./base.definitions.yaml"]
-  -l, --clientDefinitionsDir  directory that contains client definition files
-                              and implementations.        [default: "./clients"]
-  -h, --help                  Show help                                [boolean]
-
-**createDynamodb.js**  
+** createDynamodb.js **
 Create the tables required for the project.
 If a table with the same name already exists a new table
 will not be create and the existing table information will be used.
@@ -187,7 +178,17 @@ Options:
                              If not specified all db found will be created
   -h, --help                 Show help                                 [boolean]
 
-**createIdentityPool.js**  
+** createElastiCache.js **
+Creates ElastiCache clusters. This method will wait until the cache cluster is
+'available' (necessary so configurationEndpoint is defined).
+Usage: createElastiCache.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** createIdentityPool.js **
 Create the identity pools required for the project.
 If identity pools with the same name already exist a new pool will not be
 created and the existing pool infomation will be used.
@@ -198,7 +199,16 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -h, --help                 Show help                                 [boolean]
 
-**createLambda.js**  
+** createInternetGateway.js **
+Creates Internet Gateways and assignes them to a VPC.
+Usage: createInternetGateway.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** createLambda.js **
 Create the lambdas for the project.
 If a lambda with the same name already exists the operation will fail.
 Use "deleteLambda" first to remove the exisiting function.
@@ -218,7 +228,16 @@ Options:
                               value on success
   -h, --help                  Show help                                [boolean]
 
-**createRestAPI.js**  
+** createNatGateway.js **
+Creates NAT Gateways and assignes them to a VPC.
+Usage: createNatGateway.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** createRestAPI.js **
 Create a new API
 Usage: createRestAPI.js [options]
 
@@ -232,7 +251,7 @@ Options:
                              success
   -h, --help                 Show help                                 [boolean]
 
-**createRole.js**  
+** createRole.js **
 Create project roles and attach policies.
 Usage: createRole.js [options]
 
@@ -243,18 +262,47 @@ Options:
                                 [required] [choices: "api", "lambda", "cognito"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteAngularClientBucket.js**  
-Deletes the s3 bucket and removes it from the client defiition file.
-Usage: deleteAngularClientBucket.js [options]
+** createRouteTable.js **
+Creates Route Tables.
+Usage: createRouteTable.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** createS3Bucket.js **
+Creates an s3 bucket if needed and configures as static web host.
+Usage: createS3Bucket.js [options]
 
 Options:
   -s, --baseDefinitionsFile   yaml file that contains information about your API
                                             [default: "./base.definitions.yaml"]
   -l, --clientDefinitionsDir  directory that contains client definition files
                               and implementations.        [default: "./clients"]
+  -t, --type                  create client or lambda buckets.
+                                     [required] [choices: "lambda", "webClient"]
   -h, --help                  Show help                                [boolean]
 
-**deleteDynamodb.js**  
+** createSubnet.js **
+Creates Subnets to use with VPCs.
+Usage: createSubnet.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** createVPC.js **
+Creates VPCs. By default VPCs come with a default ACL and Security Group
+Usage: createVPC.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deleteDynamodb.js **
 Delete project dynamodb.
 Usage: deleteDynamodb.js [options]
 
@@ -266,7 +314,16 @@ Options:
                              specified all tables found will be deleted
   -h, --help                 Show help                                 [boolean]
 
-**deleteIdentityPool.js**  
+** deleteElastiCache.js **
+Creates ElastiCache clusters.
+Usage: deleteElastiCache.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deleteIdentityPool.js **
 Delete project identity pools.
 Usage: deleteIdentityPool.js [options]
 
@@ -275,7 +332,16 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteLambda.js**  
+** deleteInternetGateway.js **
+Delete Internet Gateways and assignes them to a VPC.
+Usage: deleteInternetGateway.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deleteLambda.js **
 Delete the project lambdas.
 Usage: deleteLambda.js [options]
 
@@ -289,7 +355,16 @@ Options:
                               lambdas found will be uploaded
   -h, --help                  Show help                                [boolean]
 
-**deleteRestAPI.js**  
+** deleteNatGateway.js **
+Creates NAT Gateways and assignes them to a VPC.
+Usage: deleteNatGateway.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deleteRestAPI.js **
 Delete project API definitions.
 Usage: deleteRestAPI.js [options]
 
@@ -298,7 +373,7 @@ Options:
                                             [default: "./base.definitions.yaml"]
   -h, --help                 Show help                                 [boolean]
 
-**deleteRole.js**  
+** deleteRole.js **
 Delete a role, detaching policies first.
 Note: at the moment this script only detaches policies specified
 in config files.
@@ -311,7 +386,47 @@ Options:
                                 [required] [choices: "api", "lambda", "cognito"]
   -h, --help                 Show help                                 [boolean]
 
-**deployAPI.js**  
+** deleteRouteTable.js **
+Deletes Route Tables and Associations.
+Usage: deleteRouteTable.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deleteS3Bucket.js **
+Deletes the s3 bucket and removes it from the client defiition file.
+Usage: deleteS3Bucket.js [options]
+
+Options:
+  -s, --baseDefinitionsFile   yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -l, --clientDefinitionsDir  directory that contains client definition files
+                              and implementations.        [default: "./clients"]
+  -t, --type                  create client or lambda buckets.
+                                     [required] [choices: "lambda", "webClient"]
+  -h, --help                  Show help                                [boolean]
+
+** deleteSubnet.js **
+Delete Subnets.
+Usage: deleteSubnet.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deleteVPC.js **
+Delete VPCs.
+Usage: deleteVPC.js [options]
+
+Options:
+  -s, --baseDefinitionsFile  yaml file that contains information about your API
+                                            [default: "./base.definitions.yaml"]
+  -h, --help                 Show help                                 [boolean]
+
+** deployAPI.js **
 Deploy API to a stage.
 Usage: deployAPI.js [options]
 
@@ -324,11 +439,11 @@ Options:
                              resource to create.                [default: "dev"]
   -h, --help                 Show help                                 [boolean]
 
-**deployParameters.js**
+** deployParameters.js **
 Print or delete deploy parameters from project.
 WARNING: You cannot recover these settings and will have to remove the deploy
 manually in the AWS console once deleted.
-Usage: AWSTools/deployParameters.js <command> [options] filename
+Usage: deployParameters.js <command> [options] filename
 
 Commands:
   print             print current parameters
@@ -346,9 +461,9 @@ Options:
   -h, --help                  Show help                                [boolean]
 
 Examples:
-  AWSTools/deployParameters.js save foo.js  save parameters to the given file
+  deployParameters.js save foo.js  save parameters to the given file
 
-**getClientSDK.js**  
+** getClientSDK.js **
 Get AWS API Gateway SDK for the project clients.
 Usage: getClientSDK.js [options]
 
@@ -361,7 +476,7 @@ Options:
                               clients found will be uploaded
   -h, --help                  Show help                                [boolean]
 
-**newEndpoint.js**  
+** newEndpoint.js **
 Helper script to get started with a new endpoint. This script will initialize a
 new lambda configuration file and setup a boilerplate lambda node.js file. You
 can start with either post or get method, authed or unauthed, and specify
@@ -402,7 +517,7 @@ Options:
                                              [required] [choices: "get", "post"]
   -h, --help                  Show help                                [boolean]
 
-**syncAngularClientBucket.js**  
+** syncAngularClientBucket.js **
 Syncs client angular files to their s3 bucket. Creates the bucket if needed and
 configures as static web host.
 Usage: syncAngularClientBucket.js [options]
@@ -414,7 +529,7 @@ Options:
                               and implementations.        [default: "./clients"]
   -h, --help                  Show help                                [boolean]
 
-**updateAWSConstants.js**  
+** updateAWSConstants.js **
 Create a json description of constants needed to access AWS services.
 Usage: updateAWSConstants.js [options]
 
@@ -431,7 +546,9 @@ Options:
                                         [required] [choices: "lambda", "client"]
   -h, --help                 Show help                                 [boolean]
 
-**updateLambdaHandlerEventParams.js**  
+** updateDynamodb.js **
+-bash: ./updateDynamodb.js: Permission denied
+** updateLambdaHandlerEventParams.js **
 Create a json description compatible with APIParamVerify.js to validate lambda
 input arguments from API.
 Usage: updateLambdaHandlerEventParams.js [options]
@@ -445,7 +562,7 @@ Options:
                               directory
   -h, --help                  Show help                                [boolean]
 
-**updateLinkedFiles.js**  
+** updateLinkedFiles.js **
 Removes and re-creates link files base on linkFiles in
 [your_lambda].definitions.yaml.
 Usage: updateLinkedFiles.js [options]
@@ -457,7 +574,7 @@ Options:
   -c, --cleanOnly             Just delete the links
   -h, --help                  Show help                                [boolean]
 
-**uploadLambda.js**  
+** uploadLambda.js **
 Update project lambdas.
 "createLambda" should have been previously called.
 "Usage: uploadLambda.js [options]
@@ -478,7 +595,7 @@ Options:
                                             not upload
   -h, --help                                Show help                  [boolean]
 
-**uploadRestAPI.js**  
+** uploadRestAPI.js **
 Upldate project API.
 "createAPI" should have been previously called.
 Usage: uploadRestAPI.js [options]
@@ -489,7 +606,8 @@ Options:
   -a, --apiDefinitionFile    yaml swagger API file to upload to AWS
                                                   [default: "./swaggerAPI.yaml"]
   -h, --help                 Show help                                 [boolean]
-  ```
+
+```
 
 
 

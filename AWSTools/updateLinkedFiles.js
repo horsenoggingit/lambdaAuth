@@ -18,7 +18,7 @@ const path = require('path');
 
 // the "paths" component is in the lambdaDefinitions
 // at apiInfo.path
-console.log("Updating Link Files");
+console.log("## Updating Link Files ##");
 fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
     if (err) {
         console.log(err);
@@ -68,5 +68,4 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
             }
         }
     }
-    console.log("Done");
 });

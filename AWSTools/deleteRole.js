@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const awscommon = require(path.join(__dirname, 'awscommonutils'));
+const awsc = require(path.join(__dirname, 'awscommonutils'));
 const fs = require('fs');
 const YAML = require('yamljs');
-const exec = require('child_process').exec;
+const AwsRequest = require(path.join(__dirname, 'AwsRequest'));
 
 const argv = require('yargs')
 .usage('Delete a role, detaching policies first.\nNote: at the moment this script only detaches policies specified\nin config files.\nUsage: $0 [options]')
@@ -38,27 +38,26 @@ switch (argv.roleType) {
     default:
 }
 
+console.log("## Deleting Roles (" + argv.roleType + ") ##");
+
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 
-awscommon.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
+awsc.verifyPath(baseDefinitions, [roleBase, 'roleDefinitions'], 'o', "definitions file \""+argv.baseDefinitionsFile+"\"").exitOnError();
 
 var AWSCLIUserProfile = "default";
-if (!awscommon.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
+if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
 }
-
-var numRoles = Object.keys(baseDefinitions[roleBase].roleDefinitions).length;
-var successDecCount = numRoles;
 
 Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey) {
     var roleDef = baseDefinitions[roleBase].roleDefinitions[roleKey];
     // need a name, policyDocument and perhaps some policies
-    awscommon.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleKey).exitOnError();
+    awsc.verifyPath(roleDef, ['policyDocument'], 'o', "role definition " + roleKey).exitOnError();
 
-    awscommon.verifyPath(roleDef, ['policies'], 'a', "role definition " + roleKey).exitOnError();
+    awsc.verifyPath(roleDef, ['policies'], 'a', "role definition " + roleKey).exitOnError();
     var policyArray = [];
     roleDef.policies.forEach(function (policy) {
-        awscommon.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleKey).exitOnError();
+        awsc.verifyPath(policy, ['arnPolicy'], 's', "policy definition " + roleKey).exitOnError();
         policyArray.push(policy.arnPolicy);
     });
     // all done verifying now lets have some fun
@@ -67,75 +66,69 @@ Object.keys(baseDefinitions[roleBase].roleDefinitions).forEach(function (roleKey
 
 function deletePolicies(policyArray, roleKey) {
     var roleName;
-    if (awscommon.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
+    if (awsc.isValidAWSResourceNamePrefix(baseDefinitions, argv.baseDefinitionsFile)) {
         roleName = baseDefinitions.environment.AWSResourceNamePrefix + roleKey;
     }
 
     var policyArrayLength = policyArray.length;
     policyArray.forEach(function (policy){
 
-        var params = ['iam',
-        'detach-role-policy',
-        '--role-name ' + roleName,
-        '--policy-arn ' + policy,
-        '--profile ' + AWSCLIUserProfile];
-        function execPolDelete (params, policy, doneCallback) {
-            exec('aws ' + params.join(" "), function (err) {
-                doneCallback(policy, err);
-            });
-        }
-        execPolDelete(params, policy, function (pol, err) {
-            if (err) {
-                console.log(err);
-                console.log("Failed to detach policy" + pol + " from " + roleName + ".");
+        AwsRequest.createRequest({
+            serviceName: 'iam',
+            functionName: 'detach-role-policy',
+            parameters: {
+                'role-name': {type: 'string', value: roleName},
+                'policy-arn': {type: 'string', value: policy},
+                profile: {type: 'string', value: AWSCLIUserProfile}
+            },
+            returnSchema: 'none',
+        }, function (request) {
+            if (request.response.error && request.response.errorId !== "NoSuchEntity") {
+                console.log("Failed to detach policy" + request.parameters["policy-arn"].value + " from " + roleName + ".");
+                console.log(request.response.error);
             } else {
-                console.log("Successfully detached policy " + pol + " from " + roleName + ".");
+                console.log("Successfully detached policy " + request.parameters["policy-arn"].value + " from " + roleName + ".");
             }
 
             policyArrayLength --;
 
             if (policyArrayLength === 0) {
                 // now delete role
-                var params = ['iam',
-                'delete-role',
-                '--role-name ' + roleName,
-                '--profile ' + AWSCLIUserProfile];
-                function execRoleDelete(params, rlKey, doneCallback) {
-                    exec('aws ' + params.join(" "), (err) => {
-                        doneCallback(rlKey, err);
+                AwsRequest.createRequest({
+                    serviceName: 'iam',
+                    functionName: 'delete-role',
+                    parameters: {
+                        'role-name': {type: 'string', value: roleName},
+                        profile: {type: 'string', value: AWSCLIUserProfile}
+                    },
+                    returnSchema: 'none',
+                }, function (request) {
+                    if (request.response.error && request.response.errorId !== "NoSuchEntity") {
+                         console.log("Failed to delete role " + roleKey + ".");
+                         throw request.response.error;
+                    }
+
+                    console.log("Successfully deleted role " + roleKey + ".");
+                    delete baseDefinitions[roleBase].roleDefinitions[roleKey].arnRole;
+
+                    awsc.updateFile(argv.baseDefinitionsFile, function () {
+                        return YAML.stringify(baseDefinitions, 15);
+                    }, function (backupErr, writeErr) {
+                        if (backupErr) {
+                            console.log(backupErr);
+                            console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". API Id was not updated.");
+                            process.exit(1);
+                        }
+                        if (writeErr) {
+                            console.log("Unable to write updated definitions file.");
+                            throw new Error(writeErr);
+                        }
                     });
-                }
-                execRoleDelete(params, roleKey, function (rKey, err) {
-                    if (err) {
-                        console.log(err);
-                        console.log("Failed to delete role " + rKey + ".");
-                    } else {
-                        console.log("Successfully deleted role " + rKey + ".");
-                        delete baseDefinitions[roleBase].roleDefinitions[rKey].arnRole;
-                        successDecCount --;
-                    }
-                    numRoles --;
-                    if (numRoles === 0) {
-                        awscommon.updateFile(argv.baseDefinitionsFile, function () {
-                            return YAML.stringify(baseDefinitions, 15);
-                        }, function (backupErr, writeErr) {
-                            if (backupErr) {
-                                console.log(backupErr);
-                                console.log("Could not create backup of \"" + argv.baseDefinitionsFile + "\". API Id was not updated.");
-                                process.exit(1);
-                            }
-                            if (writeErr) {
-                                console.log("Unable to write updated definitions file.");
-                                throw new Error(writeErr);
-                            }
-                            if (successDecCount !== 0) {
-                                console.log("Some creation operations failed.");
-                            }
-                            console.log("Done.");
-                        });
-                    }
-                });
+
+                }).startRequest();
+
             }
-        });
+        }).startRequest();
+
     });
 }

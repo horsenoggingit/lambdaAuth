@@ -8,6 +8,7 @@
     }
   ],
   "dependencies": {
-    "node-uuid": "latest"
+    "node-uuid": "latest",
+    "memcache-plus": "latest"
   }
 }

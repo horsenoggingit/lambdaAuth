@@ -14,6 +14,10 @@ const yargs = require('yargs')
 .alias('l','clientDefinitionsDir')
 .describe('l','directory that contains client definition files and implementations.')
 .default('l','./clients')
+.alias('t', 'type')
+.describe('t','create client or lambda buckets.')
+.choices('t', ['lambda', 'webClient'])
+.require(['t'])
 .help('h')
 .alias('h', 'help');
 const argv = yargs.argv;
@@ -32,6 +36,8 @@ if (!fs.existsSync(argv.clientDefinitionsDir)) {
     throw new Error("Clients path \"" + argv.clientDefinitionsDir + "\" not found.");
 }
 
+console.log("## Deleting " + argv.type + " S3 Buckets ##");
+
 var AWSCLIUserProfile = "default";
 if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').isVerifyError) {
     AWSCLIUserProfile = baseDefinitions.environment.AWSCLIUserProfile;
@@ -39,48 +45,61 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
     console.log("using \"default\" AWSCLIUserProfile");
 }
 
-console.log("Deleting Angular clinet s3 bucket.");
-forEachLambdaDefinition(function (fileName) {
-    // here we would want to fork to do ops in parallel
-    var definitions = YAML.load(path.join(argv.clientDefinitionsDir,fileName));
+if (argv.type === 'webClient') {
+    forEachLambdaDefinition(function (fileName) {
+        // here we would want to fork to do ops in parallel
+        var definitions = YAML.load(path.join(argv.clientDefinitionsDir,fileName));
+        deleteBucketForDefinitions(definitions, path.join(argv.clientDefinitionsDir,fileName));
+    });
+} else if (argv.type === 'lambda') {
+    deleteBucketForDefinitions(baseDefinitions, argv.baseDefinitionsFile);
+}
+
+function deleteBucketForDefinitions(definitions, fileName) {
     if (typeof definitions !== 'object') {
         throw new Error("Definitions file \"" + fileName + "\" could not be parsed");
     }
 
-    if (!awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'name'], 's', 'in angular client definition file').isVerifyError) {
-        awsc.verifyPath(definitions, ['s3Info', 'bucketInfo', 'namePrefix'], 's', 'in angular client definition file').exitOnError();
-        // no bucket - lets create one.
-        deleteBucket(definitions, function (err, definitions) {
-            if (err) {
-                console.log(err);
-            }
-            delete definitions.s3Info.bucketInfo.name;
-            delete definitions.s3Info.bucketInfo.location;
-            writeOut(path.join(argv.clientDefinitionsDir, fileName), definitions, "bucket name was not removed.", function () {
-                console.log("Done.");
-            });
-        });
-    } else {
-        console.log('No bucket name found.');
+    if (awsc.verifyPath(definitions, ['s3Info', 'buckets'], 'o', 'in angular client definition file').isVerifyError) {
+        console.log("No buckets defined in '" + fileName + "'");
     }
-});
 
-function deleteBucket(definitions, callback) {
+    Object.keys(definitions.s3Info.buckets).forEach(function (bucketPrefix) {
+        console.log("Deleting bucket '" + bucketPrefix + "'");
+
+        if (!awsc.verifyPath(definitions, ['s3Info', 'buckets', bucketPrefix, 'name'], 's', 'in angular client definition file').isVerifyError) {
+            deleteBucket(bucketPrefix, definitions, function (err, bucketPrefix, definitions) {
+                if (err) {
+                    console.log(err);
+                }
+                delete definitions.s3Info.buckets[bucketPrefix].name;
+                delete definitions.s3Info.buckets[bucketPrefix].location;
+                writeOut(fileName, definitions, "bucket name was not removed.", function () {
+
+                });
+            });
+        } else {
+            console.log('No bucket name found. Nothing to remove.');
+        }
+    });
+}
+
+function deleteBucket(bucketPrefix, definitions, callback) {
 
     AWSRequest.createRequest(
         {
             serviceName: "s3",
             functionName: "rb",
-            context:{definitions : definitions},
+            context:{bucketPrefix: bucketPrefix, definitions : definitions},
             parameters: {
                 'force' : {type:'none', value:""},
                 'profile' : {type:'string', value:AWSCLIUserProfile},
             },
-            customParamString: "s3://" + definitions.s3Info.bucketInfo.name,
+            customParamString: "s3://" + definitions.s3Info.buckets[bucketPrefix].name,
             returnSchema: 'none',
         },
         function (request) {
-            callback(request.response.error, definitions);
+            callback(request.response.error, request.context.bucketPrefix, request.context.definitions);
         }
     ).startRequest();
 }
