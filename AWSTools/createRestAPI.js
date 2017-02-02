@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+console.log("## Creating API ##");
+
 const path = require('path');
 const awsc = require(path.join(__dirname, 'awscommonutils'));
 const AwsRequest = require(path.join(__dirname, 'AwsRequest'));
@@ -44,8 +46,8 @@ if (typeof baseDefinitions.apiInfo.region !== 'string') {
 var baseDefinitions = YAML.load(argv.baseDefinitionsFile);
 if (typeof baseDefinitions.apiInfo === 'object') {
     if (typeof baseDefinitions.apiInfo.awsId === 'string' && !argv.updateAWSId) {
-        console.log("Error: There is already an \"awsId\" in \"apiInfo\" section of base definitions file \"" + argv.baseDefinitionsFile + "\". Use \"--updateAWSId\" to force update.");
-        process.exit(1);
+        console.log("Warning: There is already an \"awsId\" in \"apiInfo\" section of base definitions file \"" + argv.baseDefinitionsFile + "\". Use \"--updateAWSId\" to force update.");
+        return;
     }
 }
 
@@ -55,8 +57,6 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
 } else {
     console.log("using \"default\" AWSCLIUserProfile");
 }
-
-console.log("## Creating API ##");
 
 AwsRequest.createRequest({
     serviceName: 'apigateway',

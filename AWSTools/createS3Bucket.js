@@ -22,6 +22,7 @@ const yargs = require('yargs')
 .alias('h', 'help');
 var argv = yargs.argv;
 
+console.log("## Creating " + argv.type + " S3 Buckets ##");
 
 if (!fs.existsSync(argv.baseDefinitionsFile)) {
     console.log("Base definitions file \"" + argv.baseDefinitionsFile + "\" not found.");
@@ -42,8 +43,6 @@ if (!awsc.verifyPath(baseDefinitions,['environment', 'AWSCLIUserProfile'],'s').i
 } else {
     console.log("using \"default\" AWSCLIUserProfile");
 }
-
-console.log("## Creating " + argv.type + " S3 Buckets ##");
 
 if (argv.type === 'webClient') {
     forEachLambdaDefinition(function (fileName) {

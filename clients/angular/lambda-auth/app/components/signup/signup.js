@@ -77,7 +77,15 @@ function signup(apiUnauthedClientFactory, authService, lastLoginSignupInfo, $loc
         }).catch( function(result){
             $scope.$apply(function(){
                 ctrl.signupButtonDisable = false;
+                ctrl.shakeSignupButton = true;
+                setTimeout(function() {
+                    $scope.$apply(function(){
+                        ctrl.shakeSignupButton = false;
+                    });
+                }, 500);
+
             });
+
             //This is where you would put an error callback
             console.log("signup fail");
             console.log(result);
