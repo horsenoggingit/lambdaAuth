@@ -211,6 +211,7 @@ exports.updateFile = function updateFile(fName, dataCallback, callback, retry) {
             setTimeout(function() {
                 exports.updateFile(fName, dataCallback, callback, retry + 1);
             }, 250);
+            return;
         }
         fs.writeFile(fName, dataCallback(), function (err) {
             if (err) {

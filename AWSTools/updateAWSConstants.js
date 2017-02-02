@@ -154,7 +154,7 @@ forEachDefinition(function (fileName) {
                 break;
                 default:
             }
-            fs.writeFile(outFname, JSON.stringify(constantsJson,null, '\t'));
+            fs.writeFile(outFname, JSON.stringify(constantsJson, null, '\t'));
         });
     }
 });

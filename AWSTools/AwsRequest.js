@@ -27,7 +27,7 @@ const EventEmitter = require('events').EventEmitter;
 * functionName: string
 * parameters:
 *      paramName:
-*        type: ["none","string","fileNameBinary", "fileName","jsonString","jsonObject"]
+*        type: ["none","string","fileNameBinary", "fileName","JSONString","JSONObject"]
 *        value: ?
 *      ...
 * customParamString: string - a string that will be appended to the command.
@@ -178,7 +178,7 @@ class AWSRequest extends EventEmitter {
         this.requestComplete = false;
         this.retryAttempt++;
     }
-    
+
     retry() {
         if (!this.requestComplete) {
             throw new Error("Attenpting to retry a request that has not been started");

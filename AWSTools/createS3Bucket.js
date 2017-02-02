@@ -90,7 +90,6 @@ function createBucketForDefinitions(definitions, fileName) {
                             });
                             return;
                         }
-                        console.log('Done.');
                     });
                 });
             });
