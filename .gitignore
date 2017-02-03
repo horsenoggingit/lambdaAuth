@@ -133,3 +133,13 @@ lambdas/signup/Devices.js
 lambdas/token/Devices.js
 
 lambdas/token/UserIdentity.js
+
+lambdas/userPhotoUploadurl/APIParamVerify.js
+
+lambdas/userPhotoUploadurl/AWSConstants.json
+
+lambdas/userPhotoUploadurl/eventParams.json
+
+lambdas/userPhotoUploadurl.zip
+
+lambdas/userPhotoUploadurl.definitions.yaml.old

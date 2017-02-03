@@ -93,7 +93,17 @@ function createBucketForDefinitions(definitions, fileName) {
                 });
             });
         } else {
-            console.log('Bucket already defined. Use "deleteS3Bucket.js" first.');
+            console.log('Bucket already defined.');
+            enableWeb(bucketPrefix, definitions, function (err, bucketPrefix) {
+                if (err) {
+                    throw err;
+                }
+                addBucketPolicy(bucketPrefix, definitions, function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                });
+            });
         }
     });
 }
@@ -190,6 +200,16 @@ function addBucketPolicy(bucketPrefix, definitions, callback) {
         var policy = definitions.s3Info.buckets[bucketPrefix].policy;
         for (var index = 0; index < policy.Statement.length; index++) {
             policy.Statement[index].Resource = policy.Statement[index].Resource.replace('$name', definitions.s3Info.buckets[bucketPrefix].name);
+        }
+        // for the Principal, search for any lambda roles prefixed with a $ and substitute the ARN
+        if (!awsc.verifyPath(baseDefinitions, ['lambdaInfo', 'roleDefinitions'], 'o').isVerifyError) {
+            Object.keys(baseDefinitions.lambdaInfo.roleDefinitions).forEach(function (roleName) {
+                var role = baseDefinitions.lambdaInfo.roleDefinitions[roleName];
+                for (var index = 0; index < policy.Statement.length; index++) {
+                    policy.Statement[index].Resource = policy.Statement[index].Resource.replace('$name', definitions.s3Info.buckets[bucketPrefix].name);
+                    awsc.replaceAnyOccuranceOfStringInObject(policy.Statement[index].Principal, "$" + roleName, role.arnRole);
+                }
+            });
         }
         AWSRequest.createRequest(
             {

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FrontPageViewController : UIViewController
+@interface FrontPageViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *resultTextView;
 

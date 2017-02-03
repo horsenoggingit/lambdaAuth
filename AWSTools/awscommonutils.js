@@ -456,3 +456,25 @@ function createEc2ResourceTag(resourceId, nameTag, AWSCLIUserProfile, callback) 
 }
 
 exports.createEc2ResourceTag = createEc2ResourceTag;
+
+function replaceAnyOccuranceOfStringInObject(object, string, replaceString) {
+    if (Array.isArray(object)) {
+        object.slice().forEach(function (item, index) {
+            if (Array.isArray(item) || (typeof item === 'object')) {
+                replaceAnyOccuranceOfStringInObject(item, string, replaceString);
+            } else if (typeof item === 'string') {
+                object[index] = item.replace(string, replaceString);
+            }
+        });
+    } else if (typeof object === 'object') {
+        Object.keys(object).forEach(function (itemName) {
+            if (Array.isArray(object[itemName]) || (typeof object[itemName] === 'object')) {
+                replaceAnyOccuranceOfStringInObject(object[itemName], string, replaceString);
+            } else if (typeof object[itemName] === 'string') {
+                object[itemName] = object[itemName].replace(string, replaceString);
+            }
+        });
+    }
+}
+
+exports.replaceAnyOccuranceOfStringInObject = replaceAnyOccuranceOfStringInObject;

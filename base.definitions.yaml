@@ -211,10 +211,13 @@ apiInfo:
                     type: string
                 requestId:
                     type: string
-        introRandomResponse:
-            type: array
-            items:
-                $ref: '#/definitions/user'
+        userPhotoUploadurlResponse:
+            type: object
+            properties:
+                upload_url:
+                    type: string
+                photo_id:
+                    type: string
     sharedSecurityDefinitions:
         sigv4:
             type: apiKey
@@ -233,6 +236,7 @@ dynamodbInfo:
                 LAST_LOGIN_TIMESTAMP: lastLoginTimestamp
                 PASSWORD: password
                 SIGNUP_TIMESTAMP: signupTimestamp
+                PHOTO_BASE_ID: photoBaseId
         attributeDefinitions:
             -
                 AttributeName: id
@@ -284,6 +288,20 @@ s3Info:
             region: us-east-1
             lambdaAliases:
                 resource: PHOTOBUCKET
+            policy:
+                Version: '2012-10-17'
+                Statement:
+                    -
+                        Sid: RolePutSetACL
+                        Effect: Allow
+                        Principal:
+                            AWS:
+                                - $userConsumer
+                                - $userCreator
+                        Action:
+                            - 's3:PutObject'
+                            - 's3:PutObjectAcl'
+                        Resource: 'arn:aws:s3:::$name/*'
 vpcInfo:
     vpcs:
         lambdaAuth:

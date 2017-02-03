@@ -229,17 +229,17 @@
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JS3-so-lh3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" fixedFrame="YES" editable="NO" text="Wait for it..." translatesAutoresizingMaskIntoConstraints="NO" id="UZq-BF-Lc5">
-                                <rect key="frame" x="58" y="141" width="259" height="467"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="16" y="108" width="343" height="127"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You are:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLc-Sm-9LU">
-                                <rect key="frame" x="58" y="112" width="62" height="21"/>
+                                <rect key="frame" x="16" y="79" width="62" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -251,6 +251,15 @@
                                 <state key="normal" title="Invalidate Token"/>
                                 <connections>
                                     <action selector="invalidateTokenAction:" destination="81w-nu-54q" eventType="touchUpInside" id="mQO-Ck-ipP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bZC-aQ-nAK">
+                                <rect key="frame" x="140" y="255" width="94" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Upload Photo"/>
+                                <connections>
+                                    <action selector="invalidateTokenAction:" destination="81w-nu-54q" eventType="touchUpInside" id="3kw-zd-PtI"/>
+                                    <action selector="uploadPhotoAction:" destination="81w-nu-54q" eventType="touchUpInside" id="gsw-r0-kxu"/>
                                 </connections>
                             </button>
                         </subviews>
