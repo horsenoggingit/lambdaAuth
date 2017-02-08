@@ -71,6 +71,10 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
             console.log("Reading: " + fileName);
             var definitions = YAML.load(path.join(argv.lambdaDefinitionsDir,fileName));
             // We need to update all lambda uri in apiInfo.paths.*.*.uri to include the lambda arn
+            if (awsc.verifyPath(definitions, ['apiInfo', 'paths'], 'o').isVerifyError) {
+                console.log("No API defintions for '" + definitions.lambdaInfo.functionName + "'.");
+                continue;
+            }
             updateLambadInvocation(definitions);
             updateCredentials(baseDefinitions,definitions);
             if (typeof definitions.apiInfo.paths === 'object') {
@@ -109,10 +113,12 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
 });
 
 function updateLambadInvocation(definitions) {
+
     if (awsc.verifyPath(definitions,['lambdaInfo', 'arnLambda'], 's', "").isVerifyError) {
         throw new Error("No lambda ARN found, cannot make x-amazon-apigateway-integration with lambda \"" + definitions.lambdaInfo.functionName + "\"");
     }
     //all apiInfo.paths.*.*.uri
+
     var pathKeys = Object.keys(definitions.apiInfo.paths);
     pathKeys.forEach(function (pathKey) {
         var methodKeys = Object.keys(definitions.apiInfo.paths[pathKey]);
@@ -133,6 +139,7 @@ function updateLambadInvocation(definitions) {
 }
 
 function updateCredentials(baseDefinitions, definitions) {
+
     //all apiInfo.paths.*.*.uri
     var pathKeys = Object.keys(definitions.apiInfo.paths);
     pathKeys.forEach(function (pathKey) {

@@ -112,17 +112,86 @@ forEachLambdaDefinition(function (fileName) {
     awsc.validatejs(definitions, path.join(argv.lambdaDefinitionsDir, definitions.lambdaInfo.functionName));
 
     // capture values here by creating a function
-    zipAndUpload(definitions.lambdaInfo.functionName, zipCommandString, params, path.join(argv.lambdaDefinitionsDir, fileName));
+    zipAndUpload(definitions, zipCommandString, params, path.join(argv.lambdaDefinitionsDir, fileName), function (definitions) {
+        // now check to see if any s3 buckets trigger this lambda
+        addS3Triggers(definitions, function () {
+
+        });
+    });
 
 });
 
-function createLambda(functionName, reqParams, defaultsFileName) {
+function addS3Triggers (definitions, callback){
+    if (!awsc.verifyPath(definitions, ['s3Info', 'buckets'], 'o').isVerifyError) {
+        Object.keys(definitions.s3Info.buckets).forEach(function (bucketName) {
+            console.log("Adding events to s3 bucket '" + bucketName + "' for lambda '" + definitions.lambdaInfo.functionName + "'.");
+            // check to make sure this bucket exists and has a real (instance) name
+            if (!awsc.verifyPath(baseDefinitions, ['s3Info', 'buckets', bucketName, 'name'], 's').isVerifyError) {
+                // check to make sure we actually have some triggers
+                if (!awsc.verifyPath(definitions, ['s3Info', 'buckets', bucketName, 'Events'], 'a').isVerifyError) {
+                    // first give the lambda the permission to be triggered by S3
+                    AWSRequest.createRequest({
+                        serviceName: "lambda",
+                        functionName: "add-permission",
+                        parameters: {
+                            'function-name': {type: 'string', value: definitions.lambdaInfo.arnLambda},
+                            'profile' : {type: 'string', value:AWSCLIUserProfile},
+                            'statement-id' : {type: 'string', value: bucketName + "-" + definitions.lambdaInfo.functionName + "-" + "action"},
+                            'action' : {type: 'string', value: "lambda:InvokeFunction"},
+                            'principal' : {type: 'string', value: "s3.amazonaws.com"},
+                            'source-arn' : {type: 'string', value: "arn:aws:s3:::" + baseDefinitions.s3Info.buckets[bucketName].name}
+                        },
+                        returnSchema:'none',
+                    },
+                    function (request) {
+                        if (request.response.error) {
+                            throw request.response.error;
+                        }
+                        // now we can create an object to convert to json for the event.
+                        // eventually we'll want to collect all of the s3 info from all the lambdas to make this proper.
+                        var notificationConfiguration = {
+                            LambdaFunctionConfigurations: [{
+                                Id: definitions.lambdaInfo.functionName,
+                                LambdaFunctionArn: definitions.lambdaInfo.arnLambda,
+                                Events: definitions.s3Info.buckets[bucketName].Events,
+                            }]
+                        };
+                        AWSRequest.createRequest({
+                            serviceName: "s3api",
+                            functionName: "put-bucket-notification-configuration",
+                            parameters: {
+                                'bucket': {type: 'string', value: baseDefinitions.s3Info.buckets[bucketName].name},
+                                'profile' : {type: 'string', value:AWSCLIUserProfile},
+                                'notification-configuration' : {type: 'JSONObject', value: notificationConfiguration}
+                            },
+                            returnSchema:'none',
+                        },
+                        function (request) {
+                            if (request.response.error) {
+                                throw request.response.error;
+                            }
+                            if (callback) {
+                                callback(definitions);
+                            }
+                        }).startRequest();
+                   }).startRequest();
+               } else {
+                    console.log("No trigger events defined for bucket name '" + bucketName + "' when adding event for lambda '" + definitions.lambdaInfo.functionName + "'.");
+                }
+            } else {
+                throw new Error("Invalid bucket name '" + bucketName + "' when adding event for lambda '" + definitions.lambdaInfo.functionName + "'.");
+            }
+        });
+    }
+}
+
+function createLambda(definitions, reqParams, defaultsFileName, callback) {
     // lets upload!
 
     AWSRequest.createRequest({
         serviceName: "lambda",
         functionName: "create-function",
-        context: {reqParams:reqParams, defaultsFileName:defaultsFileName, functionName: functionName},
+        context: {reqParams:reqParams, defaultsFileName:defaultsFileName, definitions: definitions},
         parameters:reqParams,
         returnSchema:'json',
         returnValidation:[{path:['FunctionArn'], type:'s'},
@@ -133,7 +202,7 @@ function createLambda(functionName, reqParams, defaultsFileName) {
             if (request.response.errorId === 'ResourceConflictException') {
                 // delete and recreate the lambda
                 console.log("Lambda \"" + request.context.reqParams['function-name'].value + "\" already exists. Deleting and re-creating.");
-                deleteLambda(request.context.functionName, request.context.reqParams, request.context.defaultsFileName);
+                deleteLambda(request.context.definitions, request.context.reqParams, request.context.defaultsFileName, callback);
                 return;
             } else if (request.response.errorId === 'InvalidParameterValueException') {
                 // retry
@@ -151,10 +220,9 @@ function createLambda(functionName, reqParams, defaultsFileName) {
             }
         }
         console.log("Updating defaults file: \"" + defaultsFileName + "\"");
-        var localDefinitions = YAML.load(defaultsFileName);
         awsc.updateFile(defaultsFileName, function () {
-            localDefinitions.lambdaInfo.arnLambda = request.response.parsedJSON.FunctionArn;
-            return YAML.stringify(localDefinitions, 15);
+            request.context.definitions.lambdaInfo.arnLambda = request.response.parsedJSON.FunctionArn;
+            return YAML.stringify(request.context.definitions, 15);
         }, function (backupErr, writeErr) {
             if (backupErr) {
                 console.log("Could not create backup of \"" + defaultsFileName + "\". arnLambda was not updated.");
@@ -164,12 +232,13 @@ function createLambda(functionName, reqParams, defaultsFileName) {
                 console.log("Unable to write updated definitions file.");
                 throw writeErr;
             }
+            callback(request.context.definitions);
         });
 
     }).startRequest();
 }
 
-function zipAndUpload(functionName, zipCommand, reqParams, defaultsFileName) {
+function zipAndUpload(definitions, zipCommand, reqParams, defaultsFileName, callback) {
     exec(zipCommand, function (err, stdout, stderr) {
         if (err) {
             console.log(stdout);
@@ -178,7 +247,7 @@ function zipAndUpload(functionName, zipCommand, reqParams, defaultsFileName) {
         }
         console.log(stdout);
         if (!argv.archiveOnly) {
-            createLambda(functionName, reqParams, defaultsFileName);
+            createLambda(definitions, reqParams, defaultsFileName, callback);
         }
     });
 }
@@ -208,7 +277,7 @@ function forEachLambdaDefinition (callback) {
     });
 }
 
-function deleteLambda(functionName, createParams, defaultsFileName) {
+function deleteLambda(definitions, createParams, defaultsFileName, callback) {
     var params = {
         'function-name': {type: 'string', value: createParams['function-name'].value},
         'profile' : {type: 'string', value:AWSCLIUserProfile}
@@ -216,7 +285,7 @@ function deleteLambda(functionName, createParams, defaultsFileName) {
     var deleteRequest = AWSRequest.createRequest({
         serviceName: "lambda",
         functionName: "delete-function",
-        context:{createParams: createParams, defaultsFileName: defaultsFileName, functionName: functionName},
+        context:{createParams: createParams, defaultsFileName: defaultsFileName, definitions: definitions},
         parameters: params,
         retryCount: 3,
         retryErrorIds: ['ServiceException'],
@@ -232,11 +301,11 @@ function deleteLambda(functionName, createParams, defaultsFileName) {
             }
         }
         console.log("Deleted lambda \"" + request.parameters["function-name"].value + "\"");
-        createLambda(request.context.functionName, request.context.createParams, request.context.defaultsFileName);
+        createLambda(definitions, request.context.createParams, request.context.defaultsFileName, callback);
     });
 
     deleteRequest.on('AwsRequestRetry', function () {
-        console.log("Warning: unable to delete lambda \"" + this.parameters["function-name"].value + "\" due to \"ServiceException\". This happens occasionally when deleting a number of lambdas at once. Trying again...");
+        console.log("Warning: unable to delete lambda \"" + definitions.lambdaInfo.functionName + "\" due to \"ServiceException\". This happens occasionally when deleting a number of lambdas at once. Trying again...");
     });
 
     deleteRequest.startRequest();

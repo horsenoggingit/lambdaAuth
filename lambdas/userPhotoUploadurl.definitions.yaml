@@ -4,6 +4,7 @@ implementationFiles:
 linkFiles:
     common:
         - APIParamVerify.js
+        - Photos.js
     ./:
         - node_modules
 AWSCLIProfile: adminuser
@@ -13,6 +14,9 @@ lambdaInfo:
             -
                 type: dynamodbInfo
                 resourceName: Users
+            -
+                type: dynamodbInfo
+                resourceName: PhotoUsers
             -
                 type: s3Info
                 resourceName: photobucket

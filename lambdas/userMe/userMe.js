@@ -62,6 +62,18 @@ function handler(event, context, callback) {
             if (userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP]) {
                 userParams.signup_timestamp = userData.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP];
             }
+            if (typeof userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_COUNT] === 'number') {
+                userParams.photo_count = userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_COUNT];
+            }
+            if (userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_ID]) {
+                userParams.photo_id = userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_ID];
+            }
+            if (userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID]) {
+                userParams.photo_base_id = userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID];
+            }
+            if (AWSConstants.S3.PHOTOBUCKET.pathUrl) {
+                userParams.photo_path_url = AWSConstants.S3.PHOTOBUCKET.pathUrl;
+            }
 
             userParams.logins = {};
             var providerSplit = event.auth_provider.split(',');

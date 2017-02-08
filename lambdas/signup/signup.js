@@ -168,6 +168,7 @@ function handler(event, context, callback) {
         paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.EMAIL] = event.email;
         paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.SIGNUP_TIMESTAMP] = now;
         paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.LAST_LOGIN_TIMESTAMP] = -1;
+        paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_COUNT] = 0;
         if (event.name) {
             paramsUser.Item[AWSConstants.DYNAMO_DB.USERS.NAME] = event.name;
         }

@@ -135,6 +135,15 @@ forEachDefinition(function (fileName) {
                 case 's3Info':
                     resourceRoot[source.resource].name = baseDefinitions[resource.type].buckets[resource.resourceName].name;
                     resourceRoot[source.resource].location = baseDefinitions[resource.type].buckets[resource.resourceName].location;
+                    var pathUrl;
+                    switch (baseDefinitions[resource.type].buckets[resource.resourceName].region) {
+                        case 'us-east-1':
+                            pathUrl = 'https://s3.amazonaws.com/' + baseDefinitions[resource.type].buckets[resource.resourceName].name;
+                        break;
+                        default:
+                            pathUrl = 'https://s3- ' + baseDefinitions[resource.type].buckets[resource.resourceName].region + '.amazonaws.com/' + baseDefinitions[resource.type].buckets[resource.resourceName].name;
+                    }
+                    resourceRoot[source.resource].pathUrl = pathUrl;
                 break;
                 case 'elasticacheInfo':
                     resourceRoot[source.resource].cacheClusterId = baseDefinitions[resource.type].elasticaches[resource.resourceName].CacheCluster.CacheClusterId;

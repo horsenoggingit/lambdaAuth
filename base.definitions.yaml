@@ -139,6 +139,14 @@ apiInfo:
                     type: number
                 signup_timestamp:
                     type: number
+                photo_count:
+                    type: number
+                photo_base_id:
+                    type: string
+                photo_id:
+                    type: string
+                photo_path_url:
+                    type: string
                 logins:
                     type: object
                     additionalProperties:
@@ -237,6 +245,8 @@ dynamodbInfo:
                 PASSWORD: password
                 SIGNUP_TIMESTAMP: signupTimestamp
                 PHOTO_BASE_ID: photoBaseId
+                PHOTO_ID: photoId
+                PHOTO_COUNT: photoCount
         attributeDefinitions:
             -
                 AttributeName: id
@@ -282,6 +292,24 @@ dynamodbInfo:
         provisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+    PhotoUsers:
+        lambdaAliases:
+            resource: PHOTOS
+            attributes:
+                PHOTO_BASE_ID: photoBaseId
+                ID: id
+                PHOTO_IDS: photoIds
+        attributeDefinitions:
+            -
+                AttributeName: photoBaseId
+                AttributeType: S
+        keySchema:
+            -
+                AttributeName: photoBaseId
+                KeyType: HASH
+        provisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
 s3Info:
     buckets:
         photobucket:
@@ -317,7 +345,6 @@ routeTableInfo:
                 -
                     destination-cidr-block: 0.0.0.0/0
                     internetGateway: lambdaAuth
-            Associations: null
 natGatewayInfo:
     natGateways:
         publicNat:

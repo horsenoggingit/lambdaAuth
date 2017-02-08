@@ -143,3 +143,13 @@ lambdas/userPhotoUploadurl/eventParams.json
 lambdas/userPhotoUploadurl.zip
 
 lambdas/userPhotoUploadurl.definitions.yaml.old
+
+lambdas/userPhotoUploadurl/Photos.js
+
+lambdas/userPhotoUploadEvent/Photos.js
+
+lambdas/userPhotoUploadEvent.zip
+
+lambdas/userPhotoUploadEvent.definitions.yaml.old
+
+lambdas/userPhotoUploadEvent/AWSConstants.json

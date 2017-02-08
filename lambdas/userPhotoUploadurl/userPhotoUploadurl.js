@@ -6,7 +6,7 @@ const fs = require('fs');
 const AWSConstants = JSON.parse(fs.readFileSync('./AWSConstants.json', 'utf8'));
 const APIParamVerify = require('./APIParamVerify');
 const AWS = require("aws-sdk");
-const docClient = new AWS.DynamoDB.DocumentClient();
+const Photos = require('./Photos');
 const UUID = require('node-uuid');
 const s3 = new AWS.S3();
 
@@ -27,7 +27,7 @@ function handler(event, context, callback) {
         return;
     }
 
-    checkForPhotoBaseID(event.awsParams.identity_id, context.awsRequestId, function (err, userData) {
+    Photos.checkForPhotoBaseID(event.awsParams.identity_id, context.awsRequestId, function (err, userData) {
         if (err) {
             callback(JSON.stringify(err));
             return;
@@ -40,7 +40,7 @@ function handler(event, context, callback) {
             Key: key,
             Expires: 900,
             ContentType: "image/jpeg",
-            ACL: 'public-read'
+            ACL: 'public-read',
         };
 
         s3.getSignedUrl('putObject', params, function (err, data) {
@@ -50,7 +50,7 @@ function handler(event, context, callback) {
                     requestId: context.awsRequestId,
                     errorType: "InternalServerError",
                     httpStatus: 500,
-                    message: "Get signed url falied."
+                    message: "Get signed url failed."
                 };
                 callback(JSON.stringify(errorObject));
                 return;
@@ -63,57 +63,3 @@ function handler(event, context, callback) {
 }
 
 exports.handler = handler;
-
-function checkForPhotoBaseID(userID, awsRequestId, callback) {
-    var userGetParams = {
-        TableName: AWSConstants.DYNAMO_DB.USERS.name,
-        Key: {}
-    };
-    userGetParams.Key[AWSConstants.DYNAMO_DB.USERS.ID] = userID;
-    // get the user
-    docClient.get(userGetParams, function (err, userData) {
-        if (err) {
-            console.log(err);
-            console.log("Could not get user info from db for request: " + awsRequestId);
-            var errorObject = {
-                requestId: awsRequestId,
-                errorType: "InternalServerError",
-                httpStatus: 500,
-                message: "Could not get user info."
-            };
-            callback(errorObject);
-        } else {
-            // if the user doesn't have a photo_id base then assign one and save the user object
-            if (!userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID]) {
-                var photoBaseId = UUID.v4();
-                var paramsUser = {
-                    TableName: AWSConstants.DYNAMO_DB.USERS.name,
-                    Key: {},
-                    UpdateExpression: "set " + AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID + " = :t",
-                    ExpressionAttributeValues: {
-                        ":t": photoBaseId
-                    }
-                };
-                paramsUser.Key[AWSConstants.DYNAMO_DB.USERS.ID] = userID;
-                docClient.update(paramsUser, function (err) {
-                    if (err) {
-                        console.log("unable to update photo id base for request: " + awsRequestId);
-                        var errorObject = {
-                             requestId: awsRequestId,
-                             errorType: "InternalServerError",
-                             httpStatus: 500,
-                             message: "Could not set user info."
-                         };
-                         callback(errorObject);
-                         return;
-                    }
-                    userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID] = photoBaseId;
-                    callback(null, userData);
-                });
-            } else {
-                callback(null, userData);
-                return;
-            }
-        }
-    });
-}

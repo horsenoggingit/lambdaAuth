@@ -102,6 +102,20 @@ UploadManager *__sharedManager;
         _uploadInfo[task][@"response"] = task.response;
         _uploadInfo[task][@"statusCode"] = @([(NSHTTPURLResponse *)task.response statusCode]);
         NSLog(@"Status code %ld", [_uploadInfo[task][@"statusCode"] integerValue]);
+        if ([_uploadInfo[task][@"statusCode"] integerValue] != 200) {
+            _uploadInfo[task][@"state"] = @"error";
+        }
+    }
+    if (_uploadInfo[task][@"data"]) {
+        NSLog(@"upload data %@", [[NSString alloc] initWithData:_uploadInfo[task][@"data"] encoding:NSUTF8StringEncoding]);
+    }
+    if ([_uploadInfo[task][@"state"] isEqual:@"success"]) {
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSError *error;
+        [fm removeItemAtPath:_uploadInfo[task][@"filename"] error:&error];
+        if (error) {
+            NSLog(@"%@", error.description);
+        }
     }
 }
 
@@ -112,6 +126,11 @@ UploadManager *__sharedManager;
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-    NSLog(@"data %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    if (!_uploadInfo[dataTask][@"data"]) {
+        _uploadInfo[dataTask][@"data"] = [NSMutableData dataWithData:data];
+    } else {
+        [_uploadInfo[dataTask][@"data"] appendData:data];
+    }
+    
 }
 @end
