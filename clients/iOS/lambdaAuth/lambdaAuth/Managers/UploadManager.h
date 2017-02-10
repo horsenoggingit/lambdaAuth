@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^FileProgressBlock)(id uploadId, int64_t bytesSent, int64_t bytesExpectedToSend);
+typedef void (^FileTransferDoneBlock)(id uploadId, NSString *state, NSError *error, NSInteger statusCode);
+
 @interface UploadManager : NSObject <NSURLSessionDelegate, NSURLSessionDataDelegate>
 
 +(UploadManager *)sharedUploadManager;
--(void)uploadImage:(UIImage *)image withUploadURLString:(NSString *)urlString;
+-(id)uploadImage:(UIImage *)image withUploadURLString:(NSString *)urlString progressBlock:(FileProgressBlock)progressBlock finishedBlock:(FileTransferDoneBlock)finishedBlock;
 
 @end

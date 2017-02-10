@@ -9,6 +9,7 @@
 #import "FrontPageViewController.h"
 #import "AWSAPIClientsManager.h"
 #import "UploadManager.h"
+#import "AsyncImageView.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface FrontPageViewController ()
@@ -17,17 +18,30 @@
 @property (nonatomic) UIImagePickerController *imagePicker;
 @property (nonatomic) UIImage *selectedImage;
 
-@property (nonatomic) MYPREFIXUserPhotoUploadurlResponse *uploadURLResponse;
-@property (nonatomic) BOOL isFetchingUploadResponse;
+@property (strong, nonatomic) IBOutlet UIButton *uploadPhotoButton;
+@property (strong, nonatomic) IBOutlet UILabel *uploadLabel;
+
+@property (strong, nonatomic) MYPREFIXUser *user;
+
+@property (strong, nonatomic) NSMutableArray *userFetchCallbackArray;
+
+@property (strong, nonatomic) NSString *photoId;
+@property (nonatomic) NSInteger userFetchRetry;
+@property (nonatomic) BOOL isFetchingUser;
+@property (strong, nonatomic) IBOutlet AsyncImageView *asyncImageView;
+
 @end
 
 @implementation FrontPageViewController
 
 - (void)viewDidLoad {
+    _userFetchCallbackArray = [NSMutableArray array];
     [super viewDidLoad];
     _originalResultTextViewString = _resultTextView.text;
-    [self fetchMe];
-    [self getUploadUrl];
+    __weak FrontPageViewController *weakSelf = self;
+    [self fetchMe:^{
+        [weakSelf loadBackgroundImage];
+    }];
 }
 
 -(void)viewDidLayoutSubviews {
@@ -41,17 +55,23 @@
 
 
 - (IBAction)refreshAction:(UIBarButtonItem *)sender {
-    [self fetchMe];
+    [self fetchMe:nil];
 }
 
-- (void)fetchMe {
+- (void)fetchMe:(void(^)())completionBlock {
     _resultTextView.text = _originalResultTextViewString;
-//    _resultTextView.contentOffset = CGPointZero;
-
-    // Do any additional setup after loading the view.
+    if (completionBlock) {
+        [_userFetchCallbackArray addObject:[completionBlock copy]];
+    }
+    
+    if (_isFetchingUser) {
+        return;
+    }
+    _isFetchingUser = YES;
     AWSTask *meGetTask = [[AWSAPIClientsManager authedClient] userMeGet];
     [meGetTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            _isFetchingUser = NO;
             NSLog(@"got something");
             
             if (task.error) {
@@ -59,45 +79,25 @@
                     NSError *error;
                     MYPREFIXError *myError = [MYPREFIXError modelWithDictionary:task.error.userInfo[@"HTTPBody"] error:&error];
                     NSLog(@"%@", myError.description);
+                    _resultTextView.text = myError.description;
                 } else {
                     NSLog(@"%@", task.error.description);
+                    _resultTextView.text = task.error.description;
                 }
-                return;
+            } else {
+                _user = task.result;
+                _resultTextView.text = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:_user.dictionaryValue options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
             }
-            MYPREFIXUser *user = task.result;
-            _resultTextView.text = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:user.dictionaryValue options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];
-        });
-        
-        return nil;
-    }];
-}
+            NSArray *userFetchArrayCopy = [_userFetchCallbackArray copy];
+            [_userFetchCallbackArray removeAllObjects];
+            [userFetchArrayCopy enumerateObjectsUsingBlock:^(void(^callbackBlock)() , NSUInteger idx, BOOL * _Nonnull stop) {
+                callbackBlock();
+            }];
 
-- (void)getUploadUrl {
-    // also fetch an upload URL
-    AWSTask *uploadUrlTask = [[AWSAPIClientsManager authedClient] userPhotoUploadurlGet];
-    _isFetchingUploadResponse = YES;
-    [uploadUrlTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _isFetchingUploadResponse = NO;
-            if (task.error) {
-                if (task.error.userInfo[@"HTTPBody"]) {
-                    NSError *error;
-                    MYPREFIXError *myError = [MYPREFIXError modelWithDictionary:task.error.userInfo[@"HTTPBody"] error:&error];
-                    NSLog(@"%@", myError.description);
-                } else {
-                    NSLog(@"%@", task.error.description);
-                }
-                return;
-            }
-            _uploadURLResponse = task.result;
-            if (_selectedImage) {
-                [self uploadSelectedImage];
-            }
         });
         
         return nil;
     }];
-    
 }
 
 - (IBAction)invalidateTokenAction:(id)sender {
@@ -130,25 +130,91 @@
     }];
 }
 
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     [self dismissViewControllerAnimated:YES completion:^{
         _imagePicker = nil;
     }];
     _selectedImage = info[UIImagePickerControllerOriginalImage];
-    if (_uploadURLResponse) {
-        [self uploadSelectedImage];
-    } else if (!_isFetchingUploadResponse) {
-        [self getUploadUrl];
+    [self uploadSelectedImage];
+}
+
+-(void)loadBackgroundImage {
+    if (_user.photoCount > 0) {
+        [_asyncImageView setImageURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@", _user.photoPathUrl, _user.photoBaseId, _user.photoId]]];
     }
 }
 
+-(void)checkForNewPhoto {
+    __weak FrontPageViewController *weakSelf = self;
+    [self fetchMe:^{
+        if ([weakSelf.user.photoId isEqual:weakSelf.photoId]) {
+            // load new photo
+            [self loadBackgroundImage];
+        } else {
+            if (self.userFetchRetry++ < 5) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [weakSelf checkForNewPhoto];
+                });
+            }
+        }
+    }];
+}
+
 -(void)uploadSelectedImage {
-    if (!_selectedImage || !_uploadURLResponse) {
+    if (!_selectedImage) {
         return;
     }
-    [[UploadManager sharedUploadManager] uploadImage:_selectedImage withUploadURLString:_uploadURLResponse.uploadUrl];
-    _selectedImage = nil;
-    _uploadURLResponse = nil;
-    [self getUploadUrl];
+    _uploadPhotoButton.enabled = NO;
+    _uploadLabel.alpha = 1;
+    _uploadLabel.text = @"Fetching upload url.";
+    // also fetch an upload URL
+    AWSTask *uploadUrlTask = [[AWSAPIClientsManager authedClient] userPhotoUploadurlGet];
+    [uploadUrlTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            if (task.error) {
+                if (task.error.userInfo[@"HTTPBody"]) {
+                    NSError *error;
+                    MYPREFIXError *myError = [MYPREFIXError modelWithDictionary:task.error.userInfo[@"HTTPBody"] error:&error];
+                    NSLog(@"%@", myError.description);
+                } else {
+                    NSLog(@"%@", task.error.description);
+                }
+                _uploadPhotoButton.enabled = YES;
+                self.uploadLabel.text = [NSString stringWithFormat:@"Fetch upload url failed."];
+                [UIView animateKeyframesWithDuration:1 delay:2 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+                    self.uploadLabel.alpha = 0;
+                } completion:^(BOOL finished) {
+                    
+                }];
+                return;
+            }
+            __weak FrontPageViewController *weakSelf = self;
+            _uploadLabel.text = @"Uploading image...";
+            _photoId = [[task.result photoId] componentsSeparatedByString:@"/"][1];
+            [[UploadManager sharedUploadManager] uploadImage:_selectedImage withUploadURLString:[task.result uploadUrl] progressBlock:^(id uploadId, int64_t bytesSent, int64_t bytesExpectedToSend) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakSelf.uploadLabel.text = [NSString stringWithFormat:@"Uploaded %ld%%.", (long) (100.0 * (double)bytesSent/(double)bytesExpectedToSend)];
+                });
+            } finishedBlock:^(id uploadId, NSString *state, NSError *error, NSInteger statusCode) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakSelf.uploadPhotoButton.enabled = YES;
+                    weakSelf.uploadLabel.text = [NSString stringWithFormat:@"Upload result: %@.", state];
+                    [UIView animateKeyframesWithDuration:1 delay:2 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+                        weakSelf.uploadLabel.alpha = 0;
+                    } completion:^(BOOL finished) {
+                        
+                    }];
+                    if ([state isEqual:@"success"]) {
+                        weakSelf.userFetchRetry = 0;
+                        [weakSelf checkForNewPhoto];
+                    }
+
+                });
+            }];
+            _selectedImage = nil;
+        });
+        return nil;
+    }];
 }
 @end

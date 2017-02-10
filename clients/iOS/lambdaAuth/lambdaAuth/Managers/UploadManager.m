@@ -69,7 +69,7 @@ UploadManager *__sharedManager;
 }
 
 
--(void)uploadImage:(UIImage *)image withUploadURLString:(NSString *)urlString {
+-(id)uploadImage:(UIImage *)image withUploadURLString:(NSString *)urlString progressBlock:(FileProgressBlock)progressBlock finishedBlock:(FileTransferDoneBlock)finishedBlock {
     NSString *fname = [[self getUploadDirectory] stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
 
     [UIImageJPEGRepresentation(image, 0.9) writeToFile:fname atomically:YES];
@@ -86,9 +86,15 @@ UploadManager *__sharedManager;
     _uploadInfo[uploadTask] = [[NSMutableDictionary alloc] init];
     _uploadInfo[uploadTask][@"filename"] = fname;
     _uploadInfo[uploadTask][@"state"] = @"uploading";
+    if (progressBlock) {
+        _uploadInfo[uploadTask][@"progressBlock"] = [progressBlock copy];
+    }
+    if (finishedBlock) {
+        _uploadInfo[uploadTask][@"finishedBlock"] = [finishedBlock copy];
+    }
     
     [uploadTask resume];
-
+    return uploadTask;
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
@@ -117,12 +123,20 @@ UploadManager *__sharedManager;
             NSLog(@"%@", error.description);
         }
     }
+    FileTransferDoneBlock doneBlock = _uploadInfo[task][@"finishedBlock"];
+    if (doneBlock) {
+        doneBlock(task, _uploadInfo[task][@"state"], _uploadInfo[task][@"error"], [_uploadInfo[task][@"statusCode"] integerValue]);
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     _uploadInfo[task][@"bytesSet"] = @(totalBytesSent);
     _uploadInfo[task][@"bytesExpectedToSend"] = @(totalBytesExpectedToSend);
     NSLog(@"Upload %lld of %lld", totalBytesSent, totalBytesExpectedToSend);
+    FileProgressBlock progressBlock = _uploadInfo[task][@"progressBlock"];
+    if (progressBlock) {
+        progressBlock(task, totalBytesSent, totalBytesExpectedToSend);
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
