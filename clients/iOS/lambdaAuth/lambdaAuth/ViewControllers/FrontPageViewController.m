@@ -191,7 +191,7 @@
             }
             __weak FrontPageViewController *weakSelf = self;
             _uploadLabel.text = @"Uploading image...";
-            _photoId = [[task.result photoId] componentsSeparatedByString:@"/"][1];
+            _photoId = [task.result photoId];
             [[UploadManager sharedUploadManager] uploadImage:_selectedImage withUploadURLString:[task.result uploadUrl] progressBlock:^(id uploadId, int64_t bytesSent, int64_t bytesExpectedToSend) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     weakSelf.uploadLabel.text = [NSString stringWithFormat:@"Uploaded %ld%%.", (long) (100.0 * (double)bytesSent/(double)bytesExpectedToSend)];

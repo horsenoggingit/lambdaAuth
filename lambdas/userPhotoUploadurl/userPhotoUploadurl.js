@@ -32,8 +32,8 @@ function handler(event, context, callback) {
             callback(JSON.stringify(err));
             return;
         }
-
-        var key = userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID] + "/" + UUID.v4();
+        var photoId = UUID.v4();
+        var key = userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID] + "/" + photoId;
 
         const params = {
             Bucket: AWSConstants.S3.PHOTOBUCKET.name,
@@ -56,7 +56,7 @@ function handler(event, context, callback) {
                 return;
             }
             // successful result should terminate with callback(null, [resopnseObject]);
-            callback(null, {upload_url: data, photo_id: key});
+            callback(null, {upload_url: data, photo_id: photoId, photo_base_id: userData.Item[AWSConstants.DYNAMO_DB.USERS.PHOTO_BASE_ID]});
             return;
         });
     });

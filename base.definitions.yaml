@@ -1,6 +1,5 @@
 environment:
     AWSCLIUserProfile: adminuser
-    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -225,6 +224,8 @@ apiInfo:
                 upload_url:
                     type: string
                 photo_id:
+                    type: string
+                photo_base_id:
                     type: string
     sharedSecurityDefinitions:
         sigv4:
