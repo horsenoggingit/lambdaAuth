@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # remove API
 AWSTools/deleteRestAPI.js

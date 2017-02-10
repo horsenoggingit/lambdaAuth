@@ -67,29 +67,24 @@ function createBucketForDefinitions(definitions, fileName) {
        console.log("Creating bucket '" + bucketPrefix + "'");
        if (awsc.verifyPath(definitions, ['s3Info', 'buckets', bucketPrefix, 'name'], 's', 'in angular client definition file').isVerifyError) {
             // no bucket - lets create one.
-            createBucket(bucketPrefix, definitions, fileName, function (err, bucketPrefix, definitions, fileName) {
+            createBucket(bucketPrefix, definitions, fileName, function (err, bucketPrefix, definitions) {
                 if (err) {
                     throw err;
                 }
                 enableWeb(bucketPrefix, definitions, function (err, bucketPrefix) {
                     if (err) {
-                        delete definitions.s3Info.buckets[bucketPrefix].name;
-                        delete definitions.s3Info.buckets[bucketPrefix].Location;
-                        writeOut(fileName, definitions, "bucket name was not removed.", function () {
-                            throw err;
-                        });
-                        return;
+                        throw err;
                     }
                     addBucketPolicy(bucketPrefix, definitions, function (err) {
                         if (err) {
-                            delete definitions.s3Info.buckets[bucketPrefix].name;
-                            delete definitions.s3Info.buckets[bucketPrefix].Location;
-                            writeOut(fileName, definitions, "bucket name was not removed.", function () {
-                                throw err;
-                            });
-                            return;
+                            throw err;
                         }
-                    });
+                        addBucketCORS(bucketPrefix, definitions, function (err) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
+                  });
                 });
             });
         } else {
@@ -102,8 +97,13 @@ function createBucketForDefinitions(definitions, fileName) {
                     if (err) {
                         throw err;
                     }
+                    addBucketCORS(bucketPrefix, definitions, function (err) {
+                        if (err) {
+                            throw err;
+                        }
+                    });
                 });
-            });
+           });
         }
     });
 }
@@ -195,7 +195,7 @@ function enableWeb(bucketPrefix, definitions, callback) {
 
 function addBucketPolicy(bucketPrefix, definitions, callback) {
     if (!awsc.verifyPath(definitions,['s3Info', 'buckets', bucketPrefix, 'policy'],'o').isVerifyError) {
-        console.log("Found bucket policy.");
+        console.log("Found bucket policy for '" + bucketPrefix + "'.");
         // substitute any occurrence of $name in Resources with bucket name.
         var policy = definitions.s3Info.buckets[bucketPrefix].policy;
         for (var index = 0; index < policy.Statement.length; index++) {
@@ -226,7 +226,7 @@ function addBucketPolicy(bucketPrefix, definitions, callback) {
                 if (request.response.error) {
                     callback(request.response.error, null);
                 } else {
-                    console.log("Put bucket policy.");
+                    console.log("Put bucket policy for '" + bucketPrefix + "'.");
                     callback(null, bucketPrefix);
                 }
             }
@@ -235,6 +235,36 @@ function addBucketPolicy(bucketPrefix, definitions, callback) {
         callback(null, bucketPrefix);
     }
 }
+
+function addBucketCORS(bucketPrefix, definitions, callback) {
+    if (!awsc.verifyPath(definitions,['s3Info', 'buckets', bucketPrefix, 'cors'],'o').isVerifyError) {
+        console.log("Found bucket CORS for '" + bucketPrefix + "'.");
+
+        AWSRequest.createRequest(
+            {
+                serviceName: "s3api",
+                functionName: "put-bucket-cors",
+                parameters: {
+                    'bucket' : {type:'string', value: definitions.s3Info.buckets[bucketPrefix].name},
+                    'cors-configuration' : {type:'JSONObject', value: definitions.s3Info.buckets[bucketPrefix].cors},
+                    'profile' : {type:'string', value:AWSCLIUserProfile}
+                },
+                returnSchema: 'none',
+            },
+            function (request) {
+                if (request.response.error) {
+                    callback(request.response.error, null);
+                } else {
+                    console.log("Put bucket CORS for '" + bucketPrefix + "'.");
+                    callback(null, bucketPrefix);
+                }
+            }
+        ).startRequest();
+    } else {
+        callback(null, bucketPrefix);
+    }
+}
+
 
 function forEachLambdaDefinition (callback, doneCallback) {
     fs.readdir(argv.clientDefinitionsDir, function (err, files) {

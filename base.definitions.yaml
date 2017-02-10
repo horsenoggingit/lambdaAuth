@@ -1,6 +1,5 @@
 environment:
     AWSCLIUserProfile: adminuser
-    AWSResourceNamePrefix: test
 cognitoIdentityPoolInfo:
     roleDefinitions:
         apiAccessRole:
@@ -330,6 +329,17 @@ s3Info:
                             - 's3:PutObject'
                             - 's3:PutObjectAcl'
                         Resource: 'arn:aws:s3:::$name/*'
+            cors:
+                CORSRules:
+                    -
+                        AllowedOrigins:
+                            - '*'
+                        AllowedHeaders:
+                            - '*'
+                        AllowedMethods:
+                            - GET
+                            - PUT
+                        MaxAgeSeconds: 3000
 vpcInfo:
     vpcs:
         lambdaAuth:

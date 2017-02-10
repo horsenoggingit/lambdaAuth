@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # create roles and attach policies
 AWSTools/createRole.js --roleType lambda

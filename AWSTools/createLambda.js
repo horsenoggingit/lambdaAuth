@@ -245,7 +245,8 @@ function zipAndUpload(definitions, zipCommand, reqParams, defaultsFileName, call
             console.log(stderr);
             throw err;
         }
-        console.log(stdout);
+        // this logs all the files that were zipped
+        //console.log(stdout);
         if (!argv.archiveOnly) {
             createLambda(definitions, reqParams, defaultsFileName, callback);
         }

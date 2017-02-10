@@ -112,6 +112,8 @@ function fetchSecurityGroupId(nameTag, vpcName) {
                                             if (err) {
                                                 throw err;
                                             }
+                                            // go through associations and find the "Main" one that matches the VPC Id
+
                                             baseDefinitions.vpcInfo.vpcs[vpcName].GroupId = resourceResult[0].GroupId;
                                             writeOut("Could not update GroupId for VPC '" + vpcName + "'.");
                                         });
@@ -128,7 +130,24 @@ function fetchRouteTableId(nameTag, vpcName) {
                                             if (err) {
                                                 throw err;
                                             }
-                                            baseDefinitions.vpcInfo.vpcs[vpcName].RouteTableId = resourceResult[0].RouteTableId;
+                                            var mainRouteTable;
+                                            resourceResult.forEach(function (routeTable) {
+                                                if (routeTable.Associations) {
+                                                    routeTable.Associations.forEach(function (association) {
+                                                        if (association.Main === true && association.RouteTableId === routeTable.RouteTableId) {
+                                                            if (mainRouteTable) {
+                                                                console.log("Warning found multiple main route tables for VPC '" + vpcName + "'.");
+                                                            }
+                                                            mainRouteTable = routeTable;
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            if (!mainRouteTable) {
+                                                throw new Error("Unable to find main route table for VPC '" + vpcName + "'.");
+                                            }
+                                            // find the default route table
+                                            baseDefinitions.vpcInfo.vpcs[vpcName].RouteTableId = mainRouteTable.RouteTableId;
                                             writeOut("Could not update RouteTableId for VPC '" + vpcName + "'.");
                                         });
 }
@@ -144,7 +163,21 @@ function fetchNetworkAclId(nameTag, vpcName) {
                                             if (err) {
                                                 throw err;
                                             }
-                                            baseDefinitions.vpcInfo.vpcs[vpcName].NetworkAclId = resourceResult[0].NetworkAclId;
+                                            var defaultNetworkACL;
+                                            resourceResult.forEach(function (networkACL) {
+                                                if (networkACL.IsDefault && networkACL.IsDefault === true) {
+                                                    if (defaultNetworkACL) {
+                                                        console.log("Warning found multiple default network ACLs for VPC '" + vpcName + "'.");
+                                                    }
+                                                    defaultNetworkACL = networkACL;
+                                                }
+                                            });
+                                            
+                                            if (!defaultNetworkACL) {
+                                                throw new Error("Unable to find default network ACL for VPC '" + vpcName + "'.");
+                                            }
+
+                                            baseDefinitions.vpcInfo.vpcs[vpcName].NetworkAclId = defaultNetworkACL.NetworkAclId;
                                             writeOut("Could not update NetworkAclId for VPC '" + vpcName + "'.");
                                         });
 }

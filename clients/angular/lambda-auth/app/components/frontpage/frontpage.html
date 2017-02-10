@@ -1,4 +1,7 @@
 <center>
   <p><h1>FRONT PAGE</h1></p>
   <p>You are: {{$ctrl.user}}</p>
+  <p></p>
+  <input name="file" id="fileelem" title="Upload Image" accept="image/jpeg" type="file" file="$ctrl.upload()" style="display:none" />
+  <p><button onclick="document.getElementById('fileelem').click()">Upload Image</button></p>
 </center>
