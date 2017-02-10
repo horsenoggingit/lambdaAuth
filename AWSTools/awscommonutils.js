@@ -7,6 +7,10 @@ const linter = "jshint";
 const JSHINT = require("jshint");
 const AWSRequest = require(path.join(__dirname, 'AwsRequest'));
 
+/**
+ * This class acts as a container for a 'verifyPath' result and
+ * allows the caller to halt execution on error.
+ */
 class VerifyResultString extends Object {
     constructor (errorMessage, isVerifyError) {
         super();
@@ -106,7 +110,7 @@ function checkPath(structure, pathArray, leafTypeKey) {
                 });
                 break;
                 case "o":
-                // when * is encountere on the path we push each item regardles of key.
+                // when * is encountered on the path we push each item regardless of key.
                 if (pathArray[index] === "*") {
                     Object.keys(item).forEach(function (itemKey) {
                         nextItems.push(item[itemKey]);

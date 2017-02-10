@@ -20,7 +20,7 @@ const EventEmitter = require('events').EventEmitter;
 * The success case will ether be an empty output or json
 *
 *
-* I'll use a simple object to descrive what I expect
+* I'll use a simple object to describe what I expect
 * Request Object:
 *
 * serviceName: string
@@ -32,14 +32,13 @@ const EventEmitter = require('events').EventEmitter;
 *      ...
 * customParamString: string - a string that will be appended to the command.
 * outFile: string - a path to a file that will store the output of a request.
-* context: ? -- this is a user defined object to pass context throught the request
+* context: ? -- this is a user defined object to pass context though the request
 * returnSchema:['none'|'json']
 * returnValidation:
 *      - path:
 *          - string of path names
 *          - ...
 *        type: ['s','o','b','a',{oneOfs:[...]}...]
-
 *      - ...
 * retryCount: number -- number of retries that should be attempted
 * retryErrorIds: string array -- ids that trigger a retry (all if not set)
