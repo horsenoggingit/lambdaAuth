@@ -34,6 +34,7 @@
 		1A8A770D1E441528006340C7 /* MYPREFIXUserPhotoUploadurlResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A77051E441527006340C7 /* MYPREFIXUserPhotoUploadurlResponse.m */; };
 		1A8A770F1E44223E006340C7 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A8A770E1E44223E006340C7 /* MobileCoreServices.framework */; };
 		1A8A77121E4426D5006340C7 /* UploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A77111E4426D5006340C7 /* UploadManager.m */; };
+		1A90E1B31E53B9F500549547 /* AuthedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A90E1B21E53B9F500549547 /* AuthedViewController.m */; };
 		1AC9B4631E1F345100962F77 /* UIView+ProjectFormBehaviors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9B4621E1F345100962F77 /* UIView+ProjectFormBehaviors.m */; };
 		1AC9B4661E1F625700962F77 /* FormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9B4651E1F625700962F77 /* FormViewController.m */; };
 		1AE9FA971E24DA1E004C1377 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE9FA961E24DA1E004C1377 /* RootViewController.m */; };
@@ -123,6 +124,8 @@
 		1A8A770E1E44223E006340C7 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		1A8A77101E4426D5006340C7 /* UploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadManager.h; path = Managers/UploadManager.h; sourceTree = "<group>"; };
 		1A8A77111E4426D5006340C7 /* UploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadManager.m; path = Managers/UploadManager.m; sourceTree = "<group>"; };
+		1A90E1B11E53B9F500549547 /* AuthedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthedViewController.h; path = ViewControllers/AuthedViewController.h; sourceTree = "<group>"; };
+		1A90E1B21E53B9F500549547 /* AuthedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthedViewController.m; path = ViewControllers/AuthedViewController.m; sourceTree = "<group>"; };
 		1AC9B4611E1F345100962F77 /* UIView+ProjectFormBehaviors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+ProjectFormBehaviors.h"; path = "Categories/UIView+ProjectFormBehaviors.h"; sourceTree = "<group>"; };
 		1AC9B4621E1F345100962F77 /* UIView+ProjectFormBehaviors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+ProjectFormBehaviors.m"; path = "Categories/UIView+ProjectFormBehaviors.m"; sourceTree = "<group>"; };
 		1AC9B4641E1F625700962F77 /* FormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FormViewController.h; path = ViewControllers/FormViewController.h; sourceTree = "<group>"; };
@@ -257,6 +260,8 @@
 				1AC9B4651E1F625700962F77 /* FormViewController.m */,
 				1AE9FA951E24DA1E004C1377 /* RootViewController.h */,
 				1AE9FA961E24DA1E004C1377 /* RootViewController.m */,
+				1A90E1B11E53B9F500549547 /* AuthedViewController.h */,
+				1A90E1B21E53B9F500549547 /* AuthedViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -557,6 +562,7 @@
 				1A2937F71E1CBB0A00AD957E /* AWSAPIClientsManager.m in Sources */,
 				1A043D9D1E1AE0A000019A33 /* main.m in Sources */,
 				1A8A770B1E441528006340C7 /* MYPREFIXTokenRequest.m in Sources */,
+				1A90E1B31E53B9F500549547 /* AuthedViewController.m in Sources */,
 				1A2937E11E1B07DA00AD957E /* LogoutViewController.m in Sources */,
 				1A2937F41E1C79A400AD957E /* DeveloperAuthenticatedIdentityProvider.m in Sources */,
 				1AE9FA971E24DA1E004C1377 /* RootViewController.m in Sources */,

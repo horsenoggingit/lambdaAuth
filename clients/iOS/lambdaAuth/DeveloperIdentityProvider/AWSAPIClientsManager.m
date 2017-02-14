@@ -10,8 +10,18 @@
 #import "DeveloperAuthenticatedIdentityProvider.h"
 #import "UICKeyChainStore.h"
 
+NSString * const kResponceErrorAction = @"action";
+NSString * const vResponceErrorActionHalt = @"haltFutureOperations";
+NSString * const vResponceErrorActionGainAuth = @"gainAuth";
+
+NSString * const kResponceAPIError = @"apiError";
+NSString * const kResponceError = @"error";
+
 
 #define AWSAPIClientsManagerDomanin @"AWSAPIClientsManagerDomanin"
+@protocol SessionProtocol <NSObject>
+-(NSURLSession *) session;
+@end
 
 @implementation AWSAPIClientsManager
 
@@ -19,12 +29,12 @@ AWSRegionType __AWSRegionType;
 UICKeyChainStore  *__keychain;
 
 MYPREFIXAuthClient *__apiUnAuthInstance;
-MYPREFIXAuthClient *__apiAuthInstance;
+MYPREFIXAuthClient<SessionProtocol> *__apiAuthInstance;
 
 +(void)initialize {
     if (self == [AWSAPIClientsManager class]) {
         static dispatch_once_t onceToken;
-        
+
         dispatch_once(&onceToken, ^{
             __keychain = [UICKeyChainStore keyChainStoreWithService:@"com.lambdaAuth.AWSAPIClientsManager"];
         });
@@ -34,12 +44,12 @@ MYPREFIXAuthClient *__apiAuthInstance;
 #pragma mark - client getters
 +(MYPREFIXAuthClient *)unauthedClient {
     if (!__apiUnAuthInstance) {
-        
+
         AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUnknown
                                                                              credentialsProvider:nil];
-       
+
         [MYPREFIXAuthClient registerClientWithConfiguration:configuration forKey:@"unAuthClient"];
-       
+
         __apiUnAuthInstance = [MYPREFIXAuthClient clientForKey:@"unAuthClient"];
     }
     return __apiUnAuthInstance;
@@ -73,7 +83,7 @@ MYPREFIXAuthClient *__apiAuthInstance;
     }
 
     __AWSRegionType = [__keychain[@"poolRegionString"] aws_regionTypeValue];
-    
+
     DeveloperAuthenticatedIdentityProvider * devAuth = [[DeveloperAuthenticatedIdentityProvider alloc] initWithRegionType:__AWSRegionType
                                                                                                            identityPoolId:@""
                                                                                                           useEnhancedFlow:YES
@@ -85,7 +95,7 @@ MYPREFIXAuthClient *__apiAuthInstance;
                                                                 devAuthResponse.token = token;
                                                                 return [AWSTask taskWithResult:devAuthResponse];
                                                             }
-                                                            
+
                                                             MYPREFIXTokenRequest *tokenRequest = [MYPREFIXTokenRequest new];
                                                             tokenRequest.providerName = __keychain[@"providerName"];
                                                             tokenRequest._id = [self loginForProviderName:__keychain[@"providerName"]];
@@ -101,7 +111,7 @@ MYPREFIXAuthClient *__apiAuthInstance;
                                                                     } else {
                                                                         NSLog(@"%@", task.error.description);
                                                                     }
-                                                                    
+
                                                                     return [AWSTask taskWithError:task.error];
                                                                 }
                                                                 MYPREFIXCredentials *credentials = task.result;
@@ -120,15 +130,15 @@ MYPREFIXAuthClient *__apiAuthInstance;
                                                                          credentialsProvider:credentialsProvider];
     [MYPREFIXAuthClient registerClientWithConfiguration:configuration forKey:@"authClient"];
 
-    __apiAuthInstance = [MYPREFIXAuthClient clientForKey:@"authClient"];
-    
-    
+    __apiAuthInstance = (MYPREFIXAuthClient<SessionProtocol> *)[MYPREFIXAuthClient clientForKey:@"authClient"];
+
+
     // get the user to obtain logins
     AWSTask *meGetTask = [__apiAuthInstance userMeGet];
     [meGetTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"got something");
-            
+
             if (task.error) {
                 if (task.error.userInfo[@"HTTPBody"]) {
                     NSError *error;
@@ -143,7 +153,7 @@ MYPREFIXAuthClient *__apiAuthInstance;
             __keychain[@"providerName"] = user.providerName;
             [self setLogin:user.logins[user.providerName] forProviderName:__keychain[@"providerName"]];
         });
-        
+
         return nil;
     }];
 }
@@ -154,7 +164,7 @@ MYPREFIXAuthClient *__apiAuthInstance;
     if (!__keychain[@"UUID"]) {
         __keychain[@"UUID"] = [[NSUUID UUID] UUIDString];
     }
-    
+
     return __keychain[@"UUID"];
 }
 
@@ -166,6 +176,19 @@ MYPREFIXAuthClient *__apiAuthInstance;
 }
 
 +(void)logout {
+    if (__apiAuthInstance) {
+        [[__apiAuthInstance session] getTasksWithCompletionHandler:^(NSArray<NSURLSessionDataTask *> * _Nonnull dataTasks, NSArray<NSURLSessionUploadTask *> * _Nonnull uploadTasks, NSArray<NSURLSessionDownloadTask *> * _Nonnull downloadTasks) {
+            [dataTasks enumerateObjectsUsingBlock:^(NSURLSessionDataTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj cancel];
+            }];
+            [uploadTasks enumerateObjectsUsingBlock:^(NSURLSessionUploadTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj cancel];
+            }];
+            [downloadTasks enumerateObjectsUsingBlock:^(NSURLSessionDownloadTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj cancel];
+            }];
+        }];
+    }
     [self clearLogins];
     [self invalidateAuth];
     __apiAuthInstance = nil;
@@ -200,5 +223,56 @@ MYPREFIXAuthClient *__apiAuthInstance;
         __keychain[__keychain[@"providerName"]] = nil;
         __keychain[@"providerName"] = nil;
     }
+}
+
++(NSDictionary *)handleResponseError:(NSError *)error {
+
+    if (!error) {
+        return nil;
+    }
+    MYPREFIXError *myError;
+    if (error.userInfo[@"HTTPBody"]) {
+        NSLog(@"Deceived error with HTTPBODY");
+        myError = [MYPREFIXError modelWithDictionary:error.userInfo[@"HTTPBody"] error:nil];
+    }
+    
+    if (myError && myError.type) {
+        NSLog(@"%@, %@",myError.type, myError.description);
+        // things we can do here are defined by the applicaitons error message, perhaps.
+        // TODO: check to see what a crash in lambda looks like.
+        // TODO: check to see what appens when the auth is incorrect
+        
+        // if the object is valid we can get responses:
+        //  httpStatus: 400, errorType: "BadRequest" (Validation error)
+        //  httpStatus: 404, errorType: "NotFound" (the request URL does not exist)
+        //  httpStatus: 405, errorType: "MethodNotAllowed", e.g. tried to PUT a GET
+        //  httpStatus: 401, errorType: "Unauthorized", e.g. login failed
+        //  httpStatus: 409, errorType: "Conflict", e.g. signing up with an existing email
+        //  httpStatus: 500, errorType: "InternalServerError", backend had an unfixable error
+        
+        // requests can return Unauthorized if the token fails or if logins do not match. This can happen at token
+        // renewal.
+        if ([myError.type isEqual:@"Unauthorized"]) {
+            [AWSAPIClientsManager logout];
+            return @{kResponceAPIError: myError, kResponceErrorAction: vResponceErrorActionGainAuth};
+        }
+        return @{kResponceAPIError: myError};
+    } else {
+        // here is more critical...
+        // NSURLErrorDomain
+        // code = -1200 ssl connection cannot be made
+        // code = -1009 internet connection offline
+        // code = -1003 server with specified host name could not be found
+        // code= -999 "cancelled" <- this one is generated when we terminate a session or logout
+        
+        NSLog(@"%@", error.description);
+        if (error.code == -999) {
+            return @{kResponceError: error, kResponceErrorAction: vResponceErrorActionHalt};
+        }
+        return @{kResponceError: error};
+    }
+
+    return nil;
+
 }
 @end

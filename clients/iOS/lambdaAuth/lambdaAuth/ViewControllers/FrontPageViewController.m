@@ -11,6 +11,7 @@
 #import "UploadManager.h"
 #import "AsyncImageView.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "NavigationController.h"
 
 @interface FrontPageViewController ()
 @property (nonatomic) NSString *originalResultTextViewString;
@@ -75,14 +76,8 @@
             NSLog(@"got something");
             
             if (task.error) {
-                if (task.error.userInfo[@"HTTPBody"]) {
-                    NSError *error;
-                    MYPREFIXError *myError = [MYPREFIXError modelWithDictionary:task.error.userInfo[@"HTTPBody"] error:&error];
-                    NSLog(@"%@", myError.description);
-                    _resultTextView.text = myError.description;
-                } else {
-                    NSLog(@"%@", task.error.description);
-                    _resultTextView.text = task.error.description;
+                if (![self shouldContinueTakeActionsForResopnseError:task.error]) {
+                    return;
                 }
             } else {
                 _user = task.result;
@@ -171,14 +166,9 @@
     AWSTask *uploadUrlTask = [[AWSAPIClientsManager authedClient] userPhotoUploadurlGet];
     [uploadUrlTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         dispatch_async(dispatch_get_main_queue(), ^{
-
             if (task.error) {
-                if (task.error.userInfo[@"HTTPBody"]) {
-                    NSError *error;
-                    MYPREFIXError *myError = [MYPREFIXError modelWithDictionary:task.error.userInfo[@"HTTPBody"] error:&error];
-                    NSLog(@"%@", myError.description);
-                } else {
-                    NSLog(@"%@", task.error.description);
+                if (![self shouldContinueTakeActionsForResopnseError:task.error]) {
+                    return;
                 }
                 _uploadPhotoButton.enabled = YES;
                 self.uploadLabel.text = [NSString stringWithFormat:@"Fetch upload url failed."];

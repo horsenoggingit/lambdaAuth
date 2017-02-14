@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AuthedViewController.h"
 
-@interface FrontPageViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface FrontPageViewController : AuthedViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *resultTextView;
 

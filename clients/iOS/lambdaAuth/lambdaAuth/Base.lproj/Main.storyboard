@@ -13,7 +13,7 @@
         <!--Login-->
         <scene sceneID="fNf-pH-zy9">
             <objects>
-                <viewController title="Login" id="3TO-4K-kmW" customClass="LoginViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" title="Login" id="3TO-4K-kmW" customClass="LoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YpE-6z-70x"/>
                         <viewControllerLayoutGuide type="bottom" id="eJ5-fF-82s"/>
@@ -491,8 +491,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Uaj-wz-2JI"/>
         <segue reference="gI8-uv-FVu"/>
-        <segue reference="BNE-gj-XzU"/>
+        <segue reference="ROP-dK-jRh"/>
+        <segue reference="cSJ-AG-2DV"/>
     </inferredMetricsTieBreakers>
 </document>

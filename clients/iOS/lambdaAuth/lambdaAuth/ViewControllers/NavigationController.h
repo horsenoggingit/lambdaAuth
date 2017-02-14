@@ -10,6 +10,7 @@
 
 @interface  NavigationController : UINavigationController
 
+- (void)resetState;
 
 @end
 
