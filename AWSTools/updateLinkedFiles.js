@@ -52,7 +52,7 @@ fs.readdir(argv.lambdaDefinitionsDir, function (err, files) {
                                 if (fs.existsSync(lnkPath)) {
                                     fs.unlinkSync(lnkPath);
                                 } else {
-                                    console.log("Cound not find ${lnkPath} to delete");
+                                    console.log("Warning: Cound not find " + lnkPath + " to delete.");
                                 }
                                 if (!argv.cleanOnly) {
                                     fs.linkSync(sourceFile, lnkPath);

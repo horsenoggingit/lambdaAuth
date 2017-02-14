@@ -14,7 +14,15 @@ const Photos = require('./Photos');
 * @param  {Function} callback [description]
 */
 function handler(event, context, callback) {
-
+    process.on("uncaughtException", ( err ) => {
+        console.log(err);
+        callback(JSON.stringify({
+            requestId: context.awsRequestId,
+            errorType: "InternalServerError",
+            httpStatus: 500,
+            message: "Internal Error."
+        }));
+    });
     console.log(JSON.stringify(event));
 
     if (!Array.isArray(event.Records) || (event.Records.length === 0)) {
@@ -54,7 +62,7 @@ function handler(event, context, callback) {
                     UpdateExpression: "set " + AWSConstants.DYNAMO_DB.USERS.PHOTO_ID + " = :t, " + AWSConstants.DYNAMO_DB.USERS.PHOTO_COUNT + " = " + AWSConstants.DYNAMO_DB.USERS.PHOTO_COUNT + " + :q",
                     ExpressionAttributeValues: {
                         ":t": photoId,
-                        ":q": 1                    
+                        ":q": 1
                     }
                 };
                 paramsUser.Key[AWSConstants.DYNAMO_DB.USERS.ID] = item[AWSConstants.DYNAMO_DB.PHOTOS.ID];

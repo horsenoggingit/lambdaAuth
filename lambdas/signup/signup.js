@@ -27,6 +27,15 @@ var client = new MemcachePlus({
 *
 */
 function handler(event, context, callback) {
+    process.on("uncaughtException", ( err ) => {
+        console.log(err);
+        callback(JSON.stringify({
+            requestId: context.awsRequestId,
+            errorType: "InternalServerError",
+            httpStatus: 500,
+            message: "Internal Error."
+        }));
+    });
     // memcache plus seems to linger on the event loop.
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -116,7 +125,7 @@ function handler(event, context, callback) {
             } else {
 
                 // now create a cognito identity with ths id and custome provider
-                UserIdentity.getOpenIDToken(AWS, AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, newID, function (err, OpenIDToken) {
+                UserIdentity.getOpenIDToken(AWSConstants.COGNITO.IDENTITY_POOL.identityPoolId, null, AWSConstants.COGNITO.IDENTITY_POOL.authProviders.custom.developerProvider, newID, function (err, OpenIDToken) {
                     if (err) {
                         console.log(err);
                         console.log("Could not generate open id token for request: " + context.awsRequestId);

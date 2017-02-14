@@ -19,7 +19,15 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 *
 */
 function handler(event, context, callback) {
-
+    process.on("uncaughtException", ( err ) => {
+        console.log(err);
+        callback(JSON.stringify({
+            requestId: context.awsRequestId,
+            errorType: "InternalServerError",
+            httpStatus: 500,
+            message: "Internal Error."
+        }));
+    });
     // make sure we have needed params
     var verifyResult = APIParamVerify.verify("/user/me", "get", event);
     if (verifyResult) {

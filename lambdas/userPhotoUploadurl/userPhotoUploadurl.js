@@ -17,7 +17,15 @@ const s3 = new AWS.S3();
 * @param  {Function} callback [description]
 */
 function handler(event, context, callback) {
-
+    process.on("uncaughtException", ( err ) => {
+        console.log(err);
+        callback(JSON.stringify({
+            requestId: context.awsRequestId,
+            errorType: "InternalServerError",
+            httpStatus: 500,
+            message: "Internal Error."
+        }));
+    });
     // make sure we have needed params
     var verifyResult = APIParamVerify.verify("/user/photo/uploadurl", "get", event);
     if (verifyResult) {

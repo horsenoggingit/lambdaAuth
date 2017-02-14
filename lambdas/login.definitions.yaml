@@ -23,7 +23,7 @@ lambdaInfo:
             -
                 type: cognitoIdentityPoolInfo
                 resourceName: Pool
-    roleName: userConsumer
+    roleName: userCreator
     functionName: login
     region: us-east-1
     language: nodejs4.3
