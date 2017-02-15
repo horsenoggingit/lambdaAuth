@@ -10,6 +10,9 @@
 #import <AWSCore/AWSCore.h>
 #import "MYPREFIXAuthClient.h"
 
+FOUNDATION_EXPORT NSString *const kAuthGainedNotification;
+FOUNDATION_EXPORT NSString *const kAuthLostNotification;
+
 FOUNDATION_EXPORT NSString * const kResponceErrorAction;
 FOUNDATION_EXPORT NSString * const vResponceErrorActionHalt;
 FOUNDATION_EXPORT NSString * const vResponceErrorActionGainAuth;

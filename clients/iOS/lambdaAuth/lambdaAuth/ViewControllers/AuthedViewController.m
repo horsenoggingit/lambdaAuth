@@ -35,7 +35,6 @@
     }
     
     if ([responseError[kResponceErrorAction] isEqualToString:vResponceErrorActionGainAuth]) {
-        [(NavigationController *)self.navigationController resetState];
         return NO;
     }
     return YES;

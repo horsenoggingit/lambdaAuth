@@ -73,7 +73,6 @@
     [meGetTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         dispatch_async(dispatch_get_main_queue(), ^{
             _isFetchingUser = NO;
-            NSLog(@"got something");
             
             if (task.error) {
                 if (![self shouldContinueTakeActionsForResopnseError:task.error]) {

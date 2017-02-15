@@ -10,6 +10,10 @@
 #import "DeveloperAuthenticatedIdentityProvider.h"
 #import "UICKeyChainStore.h"
 
+
+NSString * const kAuthGainedNotification = @"kAuthGainedNotification";
+NSString * const kAuthLostNotification = @"kAuthLostNotification";
+
 NSString * const kResponceErrorAction = @"action";
 NSString * const vResponceErrorActionHalt = @"haltFutureOperations";
 NSString * const vResponceErrorActionGainAuth = @"gainAuth";
@@ -137,7 +141,6 @@ MYPREFIXAuthClient<SessionProtocol> *__apiAuthInstance;
     AWSTask *meGetTask = [__apiAuthInstance userMeGet];
     [meGetTask continueWithBlock:^id _Nullable(AWSTask * _Nonnull task) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"got something");
 
             if (task.error) {
                 if (task.error.userInfo[@"HTTPBody"]) {
@@ -156,6 +159,7 @@ MYPREFIXAuthClient<SessionProtocol> *__apiAuthInstance;
 
         return nil;
     }];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAuthGainedNotification object:nil];
 }
 
 
@@ -254,6 +258,7 @@ MYPREFIXAuthClient<SessionProtocol> *__apiAuthInstance;
         // renewal.
         if ([myError.type isEqual:@"Unauthorized"]) {
             [AWSAPIClientsManager logout];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kAuthLostNotification object:nil];
             return @{kResponceAPIError: myError, kResponceErrorAction: vResponceErrorActionGainAuth};
         }
         return @{kResponceAPIError: myError};
