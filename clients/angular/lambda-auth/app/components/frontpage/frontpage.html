@@ -1,7 +1,45 @@
+<style>
+img {
+    opacity: 0.3;
+    max-height:100%;
+    max-width:100%;
+    object-fit: contain;
+    image-orientation: from-image;
+}
+#outer {
+    position: relative;
+    width:1200px;
+    height: 1200px;
+}
+#container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-position:center;
+    width:1200px;
+    z-index: 1;
+}
+#content {
+    position: relative;
+    z-index: 2;
+}​
+</style>
+
+<div id="outer">
+<div id="container">
+    <center>
+    <img ng-src="{{$ctrl.imageurl}}" />
+    </center>
+</div>
+<div id="content">
 <center>
   <p><h1>FRONT PAGE</h1></p>
   <p>You are: {{$ctrl.user}}</p>
   <p></p>
   <input name="file" id="fileelem" title="Upload Image" accept="image/jpeg" type="file" file="$ctrl.upload()" style="display:none" />
-  <p><button onclick="document.getElementById('fileelem').click()">Upload Image</button></p>
+  <p><button onclick="document.getElementById('fileelem').click()" ng-disabled="$ctrl.uploadButtonDisable">Upload Image</button></p>
 </center>
+</div>
+</div>

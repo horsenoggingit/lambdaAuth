@@ -3,29 +3,43 @@
 
 function frontpage(authService, $location, $scope, $http) {
   var ctrl = this;
-  ctrl.user = "wait for it...";
 
-  authService.authedClient(function(client,err) {
-      if (err) {
-          console.log(err);
-          $location.path('login').replace();
-      } else {
-          client.userMeGet().then(function(result){
-              console.log("user me get success");
-              $scope.$apply(function(){
-                  ctrl.user = JSON.stringify(result.data, null, '\t');
+  ctrl.updateUser = function (callback) {
+      ctrl.user = "wait for it...";
+      authService.authedClient(function(client,err) {
+          if (err) {
+              console.log(err);
+              $location.path('login').replace();
+          } else {
+              client.userMeGet().then(function(result){
+                  console.log("user me get success");
+                  $scope.$apply(function(){
+                      ctrl.user = JSON.stringify(result.data, null, '\t');
+                      if (callback) {
+                          callback(result.data);
+                      }
+                   });
+              }).catch(function(result) {
+                  console.log("user me get fail");
+                  console.log(result);
+                  $scope.$apply(function(){
+                      ctrl.user = "cannot be found.";
+                  });
               });
-          }).catch(function(result) {
-              console.log("user me get fail");
-              console.log(result);
-              $scope.$apply(function(){
-                  ctrl.user = "cannot be found.";
-              });
-          });
+          }
+      });
+    };
+
+  ctrl.updateUser(function (user) {
+      if (user.photo_id) {
+          var imgurl = user.photo_path_url + '/' + user.photo_base_id + '/' + user.photo_id;
+          ctrl.imageurl = imgurl;
       }
   });
 
   ctrl.upload = function(file) {
+       ctrl.uploadButtonDisable = true;
+
       authService.authedClient(function(client, err) {
           if (err) {
               console.log(err);
@@ -37,12 +51,27 @@ function frontpage(authService, $location, $scope, $http) {
                   $http.put(result.data.upload_url, file, {headers: {'Content-Type': file.type}})
                     .success(function() {
                       //Finally, We're done
-                      alert('Upload Done!');
-                    })
-                    .error(function() {
-                      alert("An Error Occurred Attaching Your File");
-                  });
-              });
+                      setTimeout(function () {
+                          $scope.$apply(function(){
+                              ctrl.updateUser(function (user) {
+                                  if (user.photo_id) {
+                                      var imgurl = user.photo_path_url + '/' + user.photo_base_id + '/' + user.photo_id;
+                                      ctrl.imageurl = imgurl;
+                                  }
+                              });
+                          });
+                      }, 3); // wait for new photo to be registered... we should pole the user object for changes
+                      ctrl.uploadButtonDisable = false;
+                   })
+                   .error(function() {
+                       ctrl.uploadButtonDisable = false;
+                       alert("An Error Occurred Attaching Your File");
+                   });
+               }, function (reason) {
+                   console.log("userPhotoUploadurlGet failed");
+                   console.log(reason);
+                   ctrl.uploadButtonDisable = false;
+               });
            }
       });
   };
