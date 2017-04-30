@@ -45,7 +45,7 @@ Android coming soon...
 # Documentation #
 This project started as my Hello World app for javascript and node.js. As such there is an evident evolution of coding patterns as I became familiar with the language. I will be improving the situation. By and large you will likely see that this project is written by a long time client developer, so please be forgiving.
 
-##Framework Overview##
+## Framework Overview ##
 When working with the AWS web gui to build services and configure how services should work together it became quickly apparent that managing and re-creating an infrastucture (collection of services) would become very complex. Also, managing how services are accessed by the business logic in lambdas did not see well defined (e.g. which lambdas have access to which services).
 
 To tackle this issue I've taken the some common AWS services for building an application (dynamoDB, cognito, API Gateway, lambda) and managed their configuration with easy to read and edit yaml definitions files. All the AWS Utilities described in the section below use these definitions files as their primary configuration source.
@@ -54,7 +54,7 @@ In the **root** directory of the project you will find **base.definitions.yaml**
 
 **Next introduce the definitions.yaml files in the lambda and client directories**
 
-##Adding a New Endpoint##
+## Adding a New Endpoint ##
 To help get the ball rolling new API endpoints can be easily added using a command line tool. After going through the installation process outlined above it should only take a few minutes to add another endpoint and update the clients.
 
 In the root project folder run the command "AWSTools/newEndpoint.js -h".
@@ -141,7 +141,7 @@ AWSTools/deployAPI.js;
 AWSTools/getClientSDK.js; 
 ```
 
-##AWS Utilities##
+## AWS Utilities ##
 
 The follwing utilities parse the various definitions files to create or destroy AWS resources. They are intended to be executed in the project root folder and their defaults should be sufficient for most cases. If a lambda or client is not specified the action will occur on all lambdas or clients in scope.
 
@@ -611,5 +611,5 @@ Options:
 
 
 
-##Project Configuration##
+## Project Configuration ##
 TODO
